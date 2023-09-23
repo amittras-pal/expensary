@@ -1,0 +1,46 @@
+@keyframes blink {
+  from {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+.cls-1 {
+  fill: #1a1b1e;
+}
+.cls-2 {
+  fill: #263238;
+}
+.cls-3 {
+  fill: #455a64;
+}
+.cls-4 {
+  fill: #f5f5f5;
+}
+
+.cls-4,
+.cls-5 {
+  animation: blink 1.5s forwards infinite;
+}
+.cls-6 {
+  fill: #4c6ef5;
+}
+.cls-7 {
+  fill: #5c7cfa;
+}
+.cls-8 {
+  fill: #748ffc;
+}
+.cls-9 {
+  fill: #4263eb;
+}
+.cls-10 {
+  fill: #3b5bdb;
+}
+.cls-11 {
+  fill: #ed1c24;
+}

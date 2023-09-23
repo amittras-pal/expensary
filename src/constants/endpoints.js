@@ -1,4 +1,5 @@
 export const ENDPOINTS = Object.freeze({
+  ping: "/api/wake",
   login: "/api/user/login",
   register: "/api/user/register",
   budget: "/api/budget",
