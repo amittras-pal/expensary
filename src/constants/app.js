@@ -1,4 +1,4 @@
-export const APP_TITLE = "MTrace";
+export const APP_TITLE = "Expensary";
 export const primaryColor = "indigo";
 export const planDetailsPath = /\/plans\/\w+/;
 export const urlMatcher =

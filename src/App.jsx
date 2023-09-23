@@ -7,6 +7,7 @@ import UserProvider from "./context/user";
 import BudgetMonitor from "./modules/budgetMonitor/BudgetMonitor";
 import theme from "./theme";
 import { ModalsProvider } from "@mantine/modals";
+import ServerConnecting from "./modules/server/ServerConnecting";
 
 export default function App() {
   return (
@@ -16,16 +17,18 @@ export default function App() {
       withCSSVariables
       theme={theme}
     >
-      <ModalsProvider>
-        <UserProvider>
-          <Notifications position="top-center" autoClose={3500} />
-          <BudgetMonitor />
-          <Themer />
-          <Suspense fallback={<LoadingOverlay visible overlayBlur={5} />}>
-            <Outlet />
-          </Suspense>
-        </UserProvider>
-      </ModalsProvider>
+      <ServerConnecting>
+        <ModalsProvider>
+          <UserProvider>
+            <Notifications position="top-center" autoClose={3500} />
+            <BudgetMonitor />
+            <Themer />
+            <Suspense fallback={<LoadingOverlay visible overlayBlur={5} />}>
+              <Outlet />
+            </Suspense>
+          </UserProvider>
+        </ModalsProvider>
+      </ServerConnecting>
     </MantineProvider>
   );
 }
