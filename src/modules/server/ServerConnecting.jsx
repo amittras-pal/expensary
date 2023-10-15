@@ -1,4 +1,11 @@
-import { Box, Button, Text, createStyles } from "@mantine/core";
+import {
+  Box,
+  Button,
+  Container,
+  Progress,
+  Text,
+  createStyles,
+} from "@mantine/core";
 import { IconRefresh } from "@tabler/icons-react";
 import React, { useEffect } from "react";
 import Artwork from "./Artwork";
@@ -26,23 +33,43 @@ const colors = ["lime", "blue", "green", "yellow", "cyan"];
 export default function ServerConnecting({ children }) {
   const { classes } = useStyles();
 
-  const [index, setIndex] = useState(0);
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIndex((v) => (v === colors.length - 1 ? 0 : v + 1));
-    }, 750);
-    return () => clearInterval(interval);
-  }, []);
-
   const { isLoading, isError } = useServerPing({
     staleTime: 20 * 60 * 1000,
     refetchOnWindowFocus: true,
   });
 
+  const [ci, setCi] = useState(0);
+  const [progress, setProgress] = useState(0);
+  useEffect(() => {
+    const colorsInterval = setInterval(() => {
+      setCi((v) => (v === colors.length - 1 ? 0 : v + 1));
+    }, 750);
+    const progressInterval = setInterval(() => {
+      setProgress(
+        (v) => v + Math.floor((Math.random() * Math.PI) / 1.6) + 0.07
+      );
+    }, 500);
+
+    if (isError) clearInterval(progressInterval);
+
+    return () => {
+      clearInterval(colorsInterval);
+      clearInterval(progressInterval);
+    };
+  }, [isError]);
+
   if (isLoading || isError)
     return (
       <Box className={classes.wrapper}>
-        <Artwork color={isLoading ? colors[index] : "red"} />
+        <Artwork color={isLoading ? colors[ci] : "red"} />
+        <Container sx={{ width: "75%" }} mb="xl">
+          <Progress
+            value={progress}
+            color={isError ? "red" : "blue"}
+            sx={{ width: "100%" }}
+            size="sm"
+          />
+        </Container>
         <Text fw="bold" color={isLoading ? "indigo" : "red"}>
           {isLoading
             ? "Please wait while we connect to the server..."
