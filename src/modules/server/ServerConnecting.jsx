@@ -2,15 +2,17 @@ import {
   Box,
   Button,
   Container,
+  Group,
   Progress,
   Text,
+  ThemeIcon,
+  Tooltip,
   createStyles,
 } from "@mantine/core";
-import { IconRefresh } from "@tabler/icons-react";
-import React, { useEffect } from "react";
+import { IconHelp, IconRefresh } from "@tabler/icons-react";
+import React, { useEffect, useState } from "react";
 import Artwork from "./Artwork";
 import { useServerPing } from "./services";
-import { useState } from "react";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -65,16 +67,35 @@ export default function ServerConnecting({ children }) {
         <Container sx={{ width: "75%" }} mb="xl">
           <Progress
             value={progress}
-            color={isError ? "red" : "blue"}
+            color={isError ? "red" : "indigo"}
             sx={{ width: "100%" }}
             size="sm"
           />
         </Container>
-        <Text fw="bold" color={isLoading ? "indigo" : "red"}>
-          {isLoading
-            ? "Please wait while we connect to the server..."
-            : "Failed to connect to the server!!"}
-        </Text>
+        <Group spacing="xs" noWrap>
+          <Text fw="bold" color={isLoading ? "indigo" : "red"}>
+            {isLoading
+              ? "Connecting to server, please wait..."
+              : "Failed to connect to the server!!"}
+          </Text>
+          <Tooltip
+            position="top"
+            w={350}
+            multiline
+            events={{ hover: true, focus: true, touch: true }}
+            label={
+              <Text fz="xs" color="dimmed" align="left">
+                The API server is hosted on a free-tier NodeJS hosting platform
+                and might take a while to boot up after being idle for a time.
+                Thank you for your patience!
+              </Text>
+            }
+          >
+            <ThemeIcon color="gray" radius={"xl"} variant="light">
+              <IconHelp size={16} />
+            </ThemeIcon>
+          </Tooltip>
+        </Group>
         {isError && (
           <Button
             variant="subtle"
