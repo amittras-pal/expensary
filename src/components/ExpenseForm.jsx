@@ -18,14 +18,14 @@ import { IconCheck, IconCurrencyRupee } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import React, { useMemo } from "react";
 import { useForm } from "react-hook-form";
-import { useCurrentUser } from "../context/user";
-import { useErrorHandler } from "../hooks/useErrorHandler";
+import { useErrorHandler } from "../hooks/error-handler";
 import { useCreateExpense, useEditExpense } from "../modules/home/services";
 import { expenseSchema } from "../modules/home/utils";
 import { useCategories } from "../services/categories";
 import CategorySelectItem from "./CategorySelectItem";
 import { useExpensePlans } from "../modules/plans/services";
 import { useParams } from "react-router-dom";
+import { useCurrentUser } from "../context/user.context";
 
 export default function ExpenseForm({ data, onComplete }) {
   const { primaryColor } = useMantineTheme();

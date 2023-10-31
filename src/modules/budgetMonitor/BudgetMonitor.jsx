@@ -6,8 +6,8 @@ import { getAuthToken } from "../../utils";
 import { useBudget, useCreateBudget } from "./services";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useCurrentUser } from "../../context/user";
-import { useErrorHandler } from "../../hooks/useErrorHandler";
+import { useErrorHandler } from "../../hooks/error-handler";
+import { useCurrentUser } from "../../context/user.context";
 
 export default function BudgetMonitor() {
   const { budget, setBudget } = useCurrentUser();

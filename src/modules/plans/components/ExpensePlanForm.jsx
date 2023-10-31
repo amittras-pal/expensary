@@ -13,7 +13,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { expensePlanSchema } from "../utils";
 import { useCreatePlan, useUpdatePlan } from "../services";
-import { useErrorHandler } from "../../../hooks/useErrorHandler";
+import { useErrorHandler } from "../../../hooks/error-handler";
 import { notifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
 

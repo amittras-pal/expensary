@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom";
 import DeleteExpense from "../../components/DeleteExpense";
 import ExpenseForm from "../../components/ExpenseForm";
 import { APP_TITLE, primaryColor } from "../../constants/app";
-import { useErrorHandler } from "../../hooks/useErrorHandler";
+import { useErrorHandler } from "../../hooks/error-handler";
 import PlanDetailsPanel from "./components/PlanDetailsPanel";
 import PlanExpensesList from "./components/PlanExpensesList";
 import PlanSummary from "./components/PlanSummary";

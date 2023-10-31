@@ -12,10 +12,10 @@ import { IconDownload } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import React, { useMemo, useState } from "react";
 import { APP_TITLE, primaryColor } from "../../constants/app";
-import { useCurrentUser } from "../../context/user";
-import { useErrorHandler } from "../../hooks/useErrorHandler";
+import { useErrorHandler } from "../../hooks/error-handler";
 import { useDownloadReport } from "./services";
 import { downloadFile } from "./utils/downloadFile";
+import { useCurrentUser } from "../../context/user.context";
 
 export default function DownloadReport() {
   useDocumentTitle(`${APP_TITLE} | Download Report`);

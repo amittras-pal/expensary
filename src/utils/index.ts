@@ -1,4 +1,5 @@
 import { MantineColor } from "@mantine/core";
+import dayjs from "dayjs";
 
 export function getAuthToken() {
   return localStorage.getItem("authToken");
@@ -11,6 +12,10 @@ const formatter = new Intl.NumberFormat("en-IN", {
 
 export function formatCurrency(amount: number) {
   return formatter.format(amount);
+}
+
+export function dateFormatter({ value }: { value: string }) {
+  return dayjs(value).format("DD MMM, hh:mm a");
 }
 
 export function getPercentage(amount: number, total: number): number {

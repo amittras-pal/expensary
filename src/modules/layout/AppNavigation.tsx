@@ -12,7 +12,7 @@ import React, { useMemo, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { primaryColor } from "../../constants/app";
 import { ROUTES } from "../../constants/routes";
-import { useMediaMatch } from "../../hooks/useMediaMatch";
+import { useMediaMatch } from "../../hooks/media-match";
 import { useAppStyles, useNavBtnStyle } from "./styles";
 
 type RouteChange = {

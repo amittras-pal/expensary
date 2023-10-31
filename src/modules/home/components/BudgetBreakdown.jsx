@@ -24,9 +24,8 @@ import dayjs from "dayjs";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import BudgetItem from "../../../components/BudgetItem";
-import { useCurrentUser } from "../../../context/user";
-import { useErrorHandler } from "../../../hooks/useErrorHandler";
-import { useMediaMatch } from "../../../hooks/useMediaMatch";
+import { useErrorHandler } from "../../../hooks/error-handler";
+import { useMediaMatch } from "../../../hooks/media-match";
 import {
   formatCurrency,
   getPercentage,
@@ -35,6 +34,7 @@ import {
 import { useSummary } from "../services";
 import { useStyles } from "../styles";
 import { useHotkeys } from "@mantine/hooks";
+import { useCurrentUser } from "../../../context/user.context";
 
 export default function BudgetBreakdown({ showForm, showRecent, recents }) {
   const [showSelection, setShowSelection] = useState(false);

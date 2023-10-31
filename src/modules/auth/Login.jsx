@@ -16,14 +16,14 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { APP_TITLE, primaryColor } from "../../constants/app";
-import { useCurrentUser } from "../../context/user";
-import { useErrorHandler } from "../../hooks/useErrorHandler";
+import { useErrorHandler } from "../../hooks/error-handler";
 import { useTZChangeDetection } from "../../utils/tzCheck";
 import PublicGuard from "../guards/PublicGuard";
 import { useLoginUser } from "./services";
 import { useAuthStyles } from "./styles";
 import { loginSchema } from "./utils";
 import PinInput from "../../components/pin-input/PinInput";
+import { useCurrentUser } from "../../context/user.context";
 
 export default function Login() {
   const { classes } = useAuthStyles();
@@ -32,7 +32,6 @@ export default function Login() {
   const [target, setTarget] = useState("/");
   useDocumentTitle(`${APP_TITLE} | Login`);
   const { onError } = useErrorHandler();
-  const { checkTZChange } = useTZChangeDetection();
 
   const {
     register,
@@ -52,7 +51,6 @@ export default function Login() {
   const { mutate: login, isLoading: loggingIn } = useLoginUser({
     onSuccess: (res) => {
       localStorage.setItem("authToken", res.data?.response?.token);
-      checkTZChange(res.data?.response?.user?.timeZone);
       setUserData(res.data?.response?.user);
       notifications.show({
         title: res.data?.message,
@@ -99,7 +97,6 @@ export default function Login() {
             error={Boolean(errors?.pin?.message)}
             errorMsg={errors?.pin?.message ?? ""}
             label="Secure Pin"
-            secret
             required
           />
           <Text fw="bold" mb="sm">

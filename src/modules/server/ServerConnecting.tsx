@@ -10,9 +10,11 @@ import {
   createStyles,
 } from "@mantine/core";
 import { IconHelp, IconRefresh } from "@tabler/icons-react";
+import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
+import { blinkColors, time20Min } from "../../constants/app";
+import { pingServer } from "../../services/server.service";
 import Artwork from "./Artwork";
-import { useServerPing } from "./services";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -30,13 +32,17 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const colors = ["lime", "blue", "green", "yellow", "cyan"];
+type PingerProps = {
+  children: JSX.Element;
+};
 
-export default function ServerConnecting({ children }) {
+export default function ServerConnecting({ children }: PingerProps) {
   const { classes } = useStyles();
 
-  const { isLoading, isError } = useServerPing({
-    staleTime: 20 * 60 * 1000,
+  const { isLoading, isError } = useQuery({
+    queryKey: ["wake-server"],
+    queryFn: pingServer,
+    staleTime: time20Min,
     refetchOnWindowFocus: true,
   });
 
@@ -44,7 +50,7 @@ export default function ServerConnecting({ children }) {
   const [progress, setProgress] = useState(0);
   useEffect(() => {
     const colorsInterval = setInterval(() => {
-      setCi((v) => (v === colors.length - 1 ? 0 : v + 1));
+      setCi((v) => (v === blinkColors.length - 1 ? 0 : v + 1));
     }, 750);
     const progressInterval = setInterval(() => {
       setProgress(
@@ -63,7 +69,7 @@ export default function ServerConnecting({ children }) {
   if (isLoading || isError)
     return (
       <Box className={classes.wrapper}>
-        <Artwork color={isLoading ? colors[ci] : "red"} />
+        <Artwork color={isLoading ? blinkColors[ci] : "red"} />
         <Container sx={{ width: "75%" }} mb="xl">
           <Progress
             value={progress}

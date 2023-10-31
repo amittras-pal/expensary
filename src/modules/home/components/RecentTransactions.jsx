@@ -2,7 +2,7 @@ import { Box, Divider, ScrollArea, Text } from "@mantine/core";
 import React from "react";
 import ExpenseCard from "../../../components/ExpenseCard";
 import ExpenseListSkeleton from "../../../components/ExpenseListSkeleton";
-import { useMediaMatch } from "../../../hooks/useMediaMatch";
+import { useMediaMatch } from "../../../hooks/media-match";
 import { useStyles } from "../styles";
 
 export default function RecentTransactions({

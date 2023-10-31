@@ -1,30 +1,38 @@
-import { Box, Button, Group, Text } from "@mantine/core";
-import { notifications } from "@mantine/notifications";
+import React, { useEffect } from "react";
+import { useErrorHandler } from "../../hooks/error-handler";
+import { useCurrentUser } from "../../context/user.context";
 import { IconClockCheck, IconClockExclamation } from "@tabler/icons-react";
-import { useErrorHandler } from "../hooks/useErrorHandler";
-import { useUpdateUser } from "../services/user";
-import { useCurrentUser } from "../context/user";
+import { notifications } from "@mantine/notifications";
+import { updateUserDetails } from "../../services/user.service";
+import { useMutation } from "@tanstack/react-query";
+import { Box, Button, Group, Text } from "@mantine/core";
 
-export function useTZChangeDetection() {
+const TimezoneMonitor = () => {
   const { onError } = useErrorHandler();
-  const { setUserData } = useCurrentUser();
-  const { mutate: updateTZ, isLoading } = useUpdateUser({
+  const { setUserData, userData } = useCurrentUser();
+
+  const { mutate: updateTZ, isLoading } = useMutation({
+    mutationFn: updateUserDetails,
+    onError,
     onSuccess: (res) => {
-      console.log(res.data?.response);
       notifications.hide("tz-change");
       notifications.show({
         title: "Timezone updated successfully!",
         color: "green",
+        message: null,
         icon: <IconClockCheck size={16} />,
       });
-      setUserData(res?.data?.response);
+      setUserData(res.response);
     },
-    onError,
   });
 
-  const checkTZChange = (tzOnRecord) => {
+  // TODO: change this to a modal.
+  useEffect(() => {
+    if (!userData?.timeZone) return;
     const systemTZ = new Intl.DateTimeFormat().resolvedOptions().timeZone;
-    if (tzOnRecord !== systemTZ)
+    const tzOnRecord = userData.timeZone;
+
+    if (tzOnRecord !== systemTZ) {
       notifications.show({
         title: "Timezone Change Detected",
         id: "tz-change",
@@ -58,7 +66,10 @@ export function useTZChangeDetection() {
           </Box>
         ),
       });
-  };
+    }
+  }, [isLoading, updateTZ, userData]);
 
-  return { checkTZChange };
-}
+  return null;
+};
+
+export default TimezoneMonitor;

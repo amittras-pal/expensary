@@ -10,7 +10,7 @@ import {
 import { notifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
 import React from "react";
-import { useErrorHandler } from "../hooks/useErrorHandler";
+import { useErrorHandler } from "../hooks/error-handler";
 import { useDeleteExpense } from "../modules/home/services";
 import ExpenseCard from "./ExpenseCard";
 

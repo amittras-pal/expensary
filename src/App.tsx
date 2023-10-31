@@ -2,13 +2,14 @@ import { LoadingOverlay, MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
-import Themer from "./components/Themer";
-import UserProvider from "./context/user";
+import Themer from "./components/monitors/Themer";
 import BudgetMonitor from "./modules/budgetMonitor/BudgetMonitor";
 import theme from "./theme";
 import React from "react";
 import { ModalsProvider } from "@mantine/modals";
 import ServerConnecting from "./modules/server/ServerConnecting";
+import UserProvider from "./context/user.context";
+import TimezoneMonitor from "./components/monitors/TimezoneMonitor";
 
 export default function App() {
   return (
@@ -22,8 +23,11 @@ export default function App() {
         <ModalsProvider>
           <UserProvider>
             <Notifications position="top-center" autoClose={3500} />
+            {/* Monitors */}
             <BudgetMonitor />
             <Themer />
+            <TimezoneMonitor />
+            {/* Main App */}
             <Suspense fallback={<LoadingOverlay visible overlayBlur={5} />}>
               <Outlet />
             </Suspense>

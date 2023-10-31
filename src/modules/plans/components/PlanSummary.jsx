@@ -12,7 +12,7 @@ import React, { useMemo } from "react";
 import { useParams } from "react-router-dom";
 import BudgetItem from "../../../components/BudgetItem";
 import { primaryColor } from "../../../constants/app";
-import { useErrorHandler } from "../../../hooks/useErrorHandler";
+import { useErrorHandler } from "../../../hooks/error-handler";
 import { useSummary } from "../../home/services";
 import { formatCurrency } from "../../../utils";
 

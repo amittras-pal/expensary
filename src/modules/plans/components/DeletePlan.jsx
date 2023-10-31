@@ -7,7 +7,7 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import React from "react";
-import { useErrorHandler } from "../../../hooks/useErrorHandler";
+import { useErrorHandler } from "../../../hooks/error-handler";
 import { useDeletePlan } from "../services";
 import { notifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";

@@ -21,7 +21,7 @@ import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
-import { useErrorHandler } from "../../hooks/useErrorHandler";
+import { useErrorHandler } from "../../hooks/error-handler";
 
 export default function Plans() {
   const { data, isLoading } = useExpensePlans(true);

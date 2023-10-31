@@ -14,7 +14,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { APP_TITLE, primaryColor } from "../../constants/app";
-import { useErrorHandler } from "../../hooks/useErrorHandler";
+import { useErrorHandler } from "../../hooks/error-handler";
 import PublicGuard from "../guards/PublicGuard";
 import { useRegisterUser } from "./services";
 import { useAuthStyles } from "./styles";
@@ -104,7 +104,6 @@ export default function Register() {
             required
           />
           <PinInput
-            secret
             length={6}
             onChange={(e) => setFieldValue("confirmPin", e)}
             error={Boolean(errors?.confirmPin?.message)}

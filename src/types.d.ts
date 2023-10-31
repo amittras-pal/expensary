@@ -14,3 +14,21 @@ interface RouteItem {
 interface GuardProps {
   children: JSX.Element;
 }
+
+// ========================ENTITIES========================
+interface IUser {
+  _id?: string;
+  userName: string;
+  email: string;
+  pin?: string;
+  timeZone: string;
+}
+
+interface ICategory {
+  _id?: string;
+  label: string;
+  group: string;
+  color: string;
+  icon: string;
+  description?: string;
+}

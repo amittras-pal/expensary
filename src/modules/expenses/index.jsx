@@ -26,14 +26,13 @@ import {
   CategoryFilter,
   SubCategoryFilter,
 } from "../../components/ag-grid/plugins/filters";
-import { dateFormatter } from "../../components/ag-grid/plugins/formatters";
 import { APP_TITLE } from "../../constants/app";
-import { useCurrentUser } from "../../context/user";
-import { useErrorHandler } from "../../hooks/useErrorHandler";
-import { useMediaMatch } from "../../hooks/useMediaMatch";
-import { formatCurrency } from "../../utils";
+import { useErrorHandler } from "../../hooks/error-handler";
+import { useMediaMatch } from "../../hooks/media-match";
+import { dateFormatter, formatCurrency } from "../../utils";
 import { useBudget } from "../budgetMonitor/services";
 import { useExpenseList } from "./services";
+import { useCurrentUser } from "../../context/user.context";
 
 export default function Expenses() {
   useDocumentTitle(`${APP_TITLE} | Transactions`);

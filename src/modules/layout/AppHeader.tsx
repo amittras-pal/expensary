@@ -23,7 +23,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { APP_TITLE, primaryColor } from "../../constants/app";
-import { useMediaMatch } from "../../hooks/useMediaMatch";
+import { useMediaMatch } from "../../hooks/media-match";
 import ShortcutsList from "./ShortcutsList";
 import { useAppStyles } from "./styles";
 import logoPath from "../../resources/app-logo.svg";

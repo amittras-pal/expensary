@@ -1,41 +1,42 @@
-import { useMantineTheme } from "@mantine/core";
+import { MantineColor, useMantineTheme } from "@mantine/core";
 import React, { useEffect, useRef } from "react";
 import "./Artwork.scss";
 
 const barClasses = [".cls-10", ".cls-9", ".cls-6", ".cls-7", ".cls-8"];
 
-export default function Artwork({ color }) {
-  const ref = useRef();
+export default function Artwork({ color }: { color: MantineColor }) {
+  const ref = useRef<SVGSVGElement>(null);
   const { colors } = useMantineTheme();
 
   useEffect(() => {
     const svg = ref.current;
-    const colorDots = svg.querySelectorAll(".cls-5");
-    const whiteDots = svg.querySelectorAll(".cls-4");
-    colorDots.forEach((blinker, i) => {
-      blinker.style.animationDelay = `${(i % 5) * 200}ms`;
+    const colorDots = svg?.querySelectorAll(".cls-5");
+    const whiteDots = svg?.querySelectorAll(".cls-4");
+    colorDots?.forEach((blinker, i) => {
+      (blinker as HTMLElement).style.animationDelay = `${(i % 5) * 200}ms`;
     });
-    whiteDots.forEach((blinker, i) => {
-      blinker.style.animationDelay = `${(i % 5) * 200}ms`;
+    whiteDots?.forEach((blinker, i) => {
+      (blinker as HTMLElement).style.animationDelay = `${(i % 5) * 200}ms`;
     });
 
-    const bars = barClasses.map((bar) => svg.querySelector(bar));
+    const bars = barClasses.map((bar) => svg?.querySelector(bar));
     bars.forEach((bar, i) => {
-      bar.style.animationDelay = `${(i % 5) * 200}ms`;
+      if (bar) (bar as HTMLElement).style.animationDelay = `${(i % 5) * 200}ms`;
     });
   }, []);
 
   useEffect(() => {
     const svg = ref.current;
-    const colorDots = svg.querySelectorAll(".cls-5");
-    const whiteDots = svg.querySelectorAll(".cls-4");
+    const colorDots = svg?.querySelectorAll(".cls-5") ?? [];
+    const whiteDots = svg?.querySelectorAll(".cls-4") ?? [];
 
-    colorDots.forEach((dot) => {
-      dot.style.fill = colors[color][5];
+    colorDots?.forEach((dot) => {
+      (dot as HTMLElement).style.fill = colors[color][5];
     });
 
     [...colorDots, ...whiteDots].forEach((dot) => {
-      dot.style.animationPlayState = color === "red" ? "paused" : "running";
+      (dot as HTMLElement).style.animationPlayState =
+        color === "red" ? "paused" : "running";
     });
   }, [color, colors]);
 
