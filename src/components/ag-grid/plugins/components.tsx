@@ -21,19 +21,20 @@ import {
   IconTemplate,
   IconTrash,
 } from "@tabler/icons-react";
+import React from "react";
 import dayjs from "dayjs";
 import { useEffect, useMemo, useState } from "react";
 import { primaryColor } from "../../../constants/app";
 import ExpenseDescription from "../../ExpenseDescription";
 import { formatCurrency } from "../../../utils";
 
-function getNextSortOrder(current) {
+function getNextSortOrder(current: string | null) {
   if (!current) return "asc";
   if (current === "asc") return "desc";
   return null;
 }
 
-export function ColumnHeader(props) {
+export function ColumnHeader(props: any) {
   const [isFilterActive, setIsFilterActive] = useState(false);
   useEffect(() => {
     const instance = props.api.getFilterInstance(props.column.colId);
@@ -41,7 +42,7 @@ export function ColumnHeader(props) {
   }, [props]);
 
   return (
-    <Group position="start" sx={{ width: "100%" }} spacing="xs">
+    <Group position="left" sx={{ width: "100%" }} spacing="xs">
       <Text fw="bold" mr="auto">
         {props.displayName}
       </Text>
@@ -75,7 +76,7 @@ export function ColumnHeader(props) {
   );
 }
 
-export function RowCountHeader({ api }) {
+export function RowCountHeader({ api }: any) {
   return (
     <Text component="span" mx="auto" color="red" fw="bold">
       {api.getDisplayedRowCount()}
@@ -106,7 +107,7 @@ export function MetaHeader() {
   );
 }
 
-export function MetaCell({ data, page }) {
+export function MetaCell({ data, page }: any) {
   if (!data.description && !data.linked && data.amount > 0) return null;
   return (
     <Popover withinPortal withArrow shadow="md" width={280} position="bottom">
@@ -166,7 +167,7 @@ export function MetaCell({ data, page }) {
   );
 }
 
-export function CategoryCell({ data, value }) {
+export function CategoryCell({ data, value }: any) {
   return (
     <Badge
       size="sm"
@@ -185,7 +186,7 @@ export function RowMenuCell({
   onDeleteExpense,
   rowIndex,
   plan,
-}) {
+}: any) {
   const availableActions = useMemo(() => {
     const actions = [];
     if (plan) {
@@ -236,7 +237,7 @@ export function RowMenuCell({
   );
 }
 
-export function AmountCell({ value }) {
+export function AmountCell({ value }: any) {
   return (
     <Text
       sx={{ height: "100%", display: "flex", alignItems: "center" }}
@@ -248,7 +249,7 @@ export function AmountCell({ value }) {
   );
 }
 
-export function NoDataOverlay(props) {
+export function NoDataOverlay(props: any) {
   return (
     <Box
       sx={{

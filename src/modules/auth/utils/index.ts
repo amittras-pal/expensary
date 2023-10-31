@@ -21,6 +21,9 @@ export const registerSchema = yup.object().shape({
     .max(999999, "Invalid Pin."),
   confirmPin: yup
     .number()
-    .oneOf([yup.ref("pin"), null], "Pins do not match")
+    .oneOf([yup.ref("pin"), 0], "Pins do not match")
     .required("Please enter pin again"),
 });
+
+export type LoginForm = yup.InferType<typeof loginSchema>;
+export type RegisterForm = yup.InferType<typeof registerSchema>;

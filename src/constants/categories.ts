@@ -1,7 +1,6 @@
-import { IconReceipt2 } from "@tabler/icons-react";
-import { IconArmchair2, IconScissors } from "@tabler/icons-react";
 import {
   IconApps,
+  IconArmchair2,
   IconBasket,
   IconBook,
   IconCategory,
@@ -25,7 +24,9 @@ import {
   IconParking,
   IconPaw,
   IconPingPong,
+  IconReceipt2,
   IconRouter,
+  IconScissors,
   IconStereoGlasses,
   IconTags,
   IconTie,
@@ -34,9 +35,10 @@ import {
   IconTrash,
   IconUserShield,
   IconUserStar,
+  TablerIconsProps,
 } from "@tabler/icons-react";
 
-export const Icons = {
+export const Icons: Record<string, (props: TablerIconsProps) => JSX.Element> = {
   IconApps,
   IconBasket,
   IconBook,

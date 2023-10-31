@@ -20,15 +20,20 @@ import {
   IconPower,
 } from "@tabler/icons-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { APP_TITLE, primaryColor } from "../../constants/app";
 import { useMediaMatch } from "../../hooks/useMediaMatch";
-import logo from "../../resources/app-logo.svg";
 import ShortcutsList from "./ShortcutsList";
 import { useAppStyles } from "./styles";
+import logoPath from "../../resources/app-logo.svg";
 
-export default function AppHeader({ open, setOpen }) {
+interface IAppHeaderProps {
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export default function AppHeader({ open, setOpen }: IAppHeaderProps) {
   const { classes } = useAppStyles();
   const theme = useMantineTheme();
   const client = useQueryClient();
@@ -38,16 +43,15 @@ export default function AppHeader({ open, setOpen }) {
   const [showShortcuts, shortcuts] = useDisclosure(false);
   useHotkeys([["i", shortcuts.open]]);
 
-  const titleHandler = useCallback((entries) => {
-    const title = entries[0]?.addedNodes?.[0]?.data
-      ?.split("|")
-      .map((segment) => segment.trim());
-    setTitle(title);
+  const titleHandler = useCallback((entries: MutationRecord[]) => {
+    const nodeVal = entries.at(0)?.addedNodes.item(0)?.nodeValue ?? "";
+    const pageTitle = nodeVal?.split("|").map((part) => part.trim()) ?? [];
+    setTitle(pageTitle);
   }, []);
 
   useEffect(() => {
     const observer = new MutationObserver(titleHandler);
-    observer.observe(document.querySelector("title"), {
+    observer.observe(document.querySelector("title")!, {
       childList: true,
       subtree: false,
     });
@@ -99,7 +103,7 @@ export default function AppHeader({ open, setOpen }) {
           variant="outline"
           sx={(theme) => ({ borderColor: theme.colors.dark[4] })}
         >
-          <Image src={logo} />
+          <Image src={logoPath} />
         </ThemeIcon>
         <Text
           fz="lg"
@@ -115,7 +119,7 @@ export default function AppHeader({ open, setOpen }) {
           label={title[1]}
           disabled={!isMobile}
           color="dark"
-          events={{ touch: true }}
+          events={{ touch: true, hover: true, focus: false }}
         >
           <Text fz="sm" fw={400} color="dimmed" mr="auto" lineClamp={1}>
             {title[1]}

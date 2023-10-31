@@ -1,20 +1,13 @@
-import {
-  Box,
-  Divider,
-  Kbd,
-  SimpleGrid,
-  Text,
-  ThemeIcon,
-  createStyles,
-} from "@mantine/core";
+import { Box, Divider, Kbd, SimpleGrid, Text, ThemeIcon } from "@mantine/core";
 import { IconMapPinFilled } from "@tabler/icons-react";
 import React from "react";
 import { useLocation } from "react-router-dom";
 import { planDetailsPath, primaryColor } from "../../constants/app";
+import { useShortcutBlockStyles } from "./styles";
 
 export default function ShortcutsList() {
   const { pathname } = useLocation();
-  const { classes, cx } = useStyles();
+  const { classes, cx } = useShortcutBlockStyles();
 
   return (
     <>
@@ -109,18 +102,6 @@ export default function ShortcutsList() {
     </>
   );
 }
-
-const useStyles = createStyles((theme) => ({
-  block: {
-    padding: theme.spacing.sm,
-    borderRadius: theme.radius.md,
-  },
-  highlight: {
-    backgroundColor: theme.colors.dark[8],
-    border: "1px solid",
-    borderColor: theme.primaryColor,
-  },
-}));
 
 function YouAreHere() {
   return (

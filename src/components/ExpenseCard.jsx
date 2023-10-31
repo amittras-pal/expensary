@@ -2,7 +2,6 @@ import {
   ActionIcon,
   Badge,
   Box,
-  createStyles,
   Group,
   Menu,
   Text,
@@ -21,10 +20,11 @@ import {
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { memo, useMemo } from "react";
+import { primaryColor } from "../constants/app";
 import { Icons } from "../constants/categories";
 import { formatCurrency } from "../utils";
 import ExpenseDescription from "./ExpenseDescription";
-import { primaryColor } from "../constants/app";
+import { useExpenseStyles } from "./styles/expenseCard";
 dayjs.extend(relativeTime);
 
 function ExpenseCard({
@@ -197,16 +197,3 @@ export default memo(
   ExpenseCard,
   (prev, next) => JSON.stringify(prev.data) === JSON.stringify(next.data)
 );
-
-const useExpenseStyles = createStyles((theme) => ({
-  wrapper: {
-    height: "100%",
-    border: `1px solid ${theme.colors.dark[4]}`,
-    padding: theme.spacing.xs,
-    borderRadius: theme.radius.sm,
-    transition: "all 0.25s ease-in-out",
-    "&:not(:last-child)": {
-      marginBottom: theme.spacing.xs,
-    },
-  },
-}));

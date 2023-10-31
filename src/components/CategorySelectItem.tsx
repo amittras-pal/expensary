@@ -1,8 +1,19 @@
 import { Group, Text, ThemeIcon } from "@mantine/core";
-import { forwardRef, useMemo } from "react";
+import React, { forwardRef, useMemo } from "react";
 import { Icons } from "../constants/categories";
 
-function CategorySelectItem({ label, value, icon, color, ...rest }, ref) {
+interface ItemProps extends React.ComponentPropsWithoutRef<"div"> {
+  image: string;
+  value: string;
+  icon: string;
+  label: string;
+  description: string;
+}
+
+function CategorySelectItem(
+  { label, value, icon, color, ...rest }: ItemProps,
+  ref: React.ForwardedRef<HTMLDivElement>
+) {
   const Icon = useMemo(() => Icons[icon], [icon]);
   return (
     <div ref={ref} {...rest}>
@@ -19,4 +30,4 @@ function CategorySelectItem({ label, value, icon, color, ...rest }, ref) {
   );
 }
 
-export default forwardRef(CategorySelectItem);
+export default forwardRef<HTMLDivElement, ItemProps>(CategorySelectItem);

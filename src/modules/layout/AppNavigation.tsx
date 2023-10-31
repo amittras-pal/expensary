@@ -5,17 +5,24 @@ import {
   Text,
   ThemeIcon,
   UnstyledButton,
-  createStyles,
 } from "@mantine/core";
+import { HorizontalSectionSharedProps } from "@mantine/core/lib/AppShell/HorizontalSection/HorizontalSection";
 import { useHotkeys } from "@mantine/hooks";
-import { useMemo, useRef } from "react";
+import React, { useMemo, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { primaryColor } from "../../constants/app";
 import { ROUTES } from "../../constants/routes";
 import { useMediaMatch } from "../../hooks/useMediaMatch";
-import { useAppStyles } from "./styles";
+import { useAppStyles, useNavBtnStyle } from "./styles";
 
-export default function AppNavigation(props) {
+type RouteChange = {
+  onChange: React.Dispatch<React.SetStateAction<boolean>>;
+};
+type NavLinkProps = RouteItem & RouteChange;
+type SidebarProps = Omit<HorizontalSectionSharedProps, "children"> &
+  RouteChange;
+
+export default function AppNavigation({ onChange, ...rest }: SidebarProps) {
   const { classes } = useAppStyles();
   return (
     <Navbar
@@ -23,12 +30,12 @@ export default function AppNavigation(props) {
       hiddenBreakpoint="sm"
       className={classes.navigation}
       p="md"
-      {...props}
+      {...rest}
     >
       <Navbar.Section grow>
         <>
           {ROUTES.map((route) => (
-            <NavLink {...route} key={route.label} onChange={props.onChange} />
+            <NavLink {...route} key={route.label} onChange={onChange} />
           ))}
         </>
       </Navbar.Section>
@@ -36,25 +43,9 @@ export default function AppNavigation(props) {
   );
 }
 
-const useNavBtnStyle = createStyles((theme, { active }) => ({
-  navBtn: {
-    display: "block",
-    width: "100%",
-    padding: theme.spacing.xs,
-    borderRadius: theme.radius.sm,
-    marginBottom: theme.spacing.sm,
-    color: theme.colors.dark[0],
-    backgroundColor: active ? theme.colors.dark[5] : "transparent",
-    boxShadow: active ? theme.shadows.md : "none",
-    "&:hover": {
-      backgroundColor: active ? theme.colors.dark[5] : theme.colors.dark[8],
-    },
-  },
-}));
-
-function NavLink({ onChange, ...route }) {
+function NavLink({ onChange, ...route }: NavLinkProps) {
   const { pathname } = useLocation();
-  const ref = useRef();
+  const ref = useRef<HTMLAnchorElement>(null);
   const isMobile = useMediaMatch();
 
   const active = useMemo(() => {
@@ -66,7 +57,7 @@ function NavLink({ onChange, ...route }) {
   const { classes } = useNavBtnStyle({ active });
 
   const navigateViaShortcut = () => {
-    if (!active && !isMobile) ref.current.click();
+    if (!active && !isMobile) ref.current?.click();
   };
   useHotkeys([[route.shortcut, navigateViaShortcut]]);
 
@@ -74,7 +65,7 @@ function NavLink({ onChange, ...route }) {
     <UnstyledButton
       ref={ref}
       component={Link}
-      onClick={onChange}
+      onClick={() => onChange(false)}
       to={route.path}
       className={classes.navBtn}
     >

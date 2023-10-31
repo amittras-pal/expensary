@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   Checkbox,
-  createStyles,
   Group,
   Loader,
   ScrollArea,
@@ -16,27 +15,10 @@ import {
   useState,
 } from "react";
 import { useCategories } from "../../../services/categories";
-
-const useStyles = createStyles((theme) => ({
-  wrapper: {
-    border: `1px solid ${theme.colors.gray[8]}`,
-    borderRadius: theme.radius.md,
-    boxShadow: theme.shadows.md,
-    maxWidth: 310,
-    width: 240,
-    padding: theme.spacing.md,
-    backgroundColor: theme.colors.dark[5],
-    color: theme.colors.gray[2],
-  },
-  selectionGroup: {
-    flexDirection: "column",
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
-  },
-}));
+import { useCategoryFilterStyles } from "../styles";
 
 function Category(props, ref) {
-  const { classes } = useStyles();
+  const { classes } = useCategoryFilterStyles();
   const [selection, setSelection] = useState([]);
 
   const { isLoading, data: catRes } = useCategories();
@@ -128,7 +110,7 @@ function Category(props, ref) {
 
 function SubCategory(props, ref) {
   const [selection, setSelection] = useState([]);
-  const { classes } = useStyles();
+  const { classes } = useCategoryFilterStyles();
 
   const { isLoading, data: catRes } = useCategories();
 
