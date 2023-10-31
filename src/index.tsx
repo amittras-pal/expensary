@@ -15,7 +15,7 @@ const PlanDetails = lazy(() => import("./modules/plans/PlanDetails"));
 const User = lazy(() => import("./modules/user"));
 const DownloadReport = lazy(() => import("./modules/report/DownloadReport"));
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
+const root = ReactDOM.createRoot(document.getElementById("root")!);
 const client = new QueryClient();
 const router = createBrowserRouter([
   {

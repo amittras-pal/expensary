@@ -4,8 +4,9 @@ import {
   IconDashboard,
   IconReport,
 } from "@tabler/icons-react";
+import React from "react";
 
-export const ROUTES = [
+export const ROUTES: RouteItem[] = [
   {
     icon: <IconDashboard size={16} />,
     label: "Dashboard",

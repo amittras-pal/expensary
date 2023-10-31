@@ -13,13 +13,13 @@ import { IconCheck } from "@tabler/icons-react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
-import PinInput from "../../components/pin-input/PinInput";
 import { APP_TITLE, primaryColor } from "../../constants/app";
 import { useErrorHandler } from "../../hooks/useErrorHandler";
 import PublicGuard from "../guards/PublicGuard";
 import { useRegisterUser } from "./services";
 import { useAuthStyles } from "./styles";
 import { registerSchema } from "./utils";
+import PinInput from "../../components/pin-input/PinInput";
 
 export default function Register() {
   const { classes } = useAuthStyles();
@@ -98,7 +98,8 @@ export default function Register() {
           <PinInput
             length={6}
             onChange={(e) => setFieldValue("pin", e)}
-            error={errors?.pin?.message}
+            error={Boolean(errors?.pin?.message)}
+            errorMsg={errors?.pin?.message}
             label="Create a pin"
             required
           />
@@ -106,7 +107,8 @@ export default function Register() {
             secret
             length={6}
             onChange={(e) => setFieldValue("confirmPin", e)}
-            error={errors?.confirmPin?.message}
+            error={Boolean(errors?.confirmPin?.message)}
+            errorMsg={errors?.confirmPin?.message}
             label="Confirm your pin"
             required
           />

@@ -15,7 +15,6 @@ import { IconCheck } from "@tabler/icons-react";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
-import PinInput from "../../components/pin-input/PinInput";
 import { APP_TITLE, primaryColor } from "../../constants/app";
 import { useCurrentUser } from "../../context/user";
 import { useErrorHandler } from "../../hooks/useErrorHandler";
@@ -24,6 +23,7 @@ import PublicGuard from "../guards/PublicGuard";
 import { useLoginUser } from "./services";
 import { useAuthStyles } from "./styles";
 import { loginSchema } from "./utils";
+import PinInput from "../../components/pin-input/PinInput";
 
 export default function Login() {
   const { classes } = useAuthStyles();
@@ -96,7 +96,8 @@ export default function Login() {
                 shouldValidate: true,
               })
             }
-            error={errors?.pin?.message}
+            error={Boolean(errors?.pin?.message)}
+            errorMsg={errors?.pin?.message ?? ""}
             label="Secure Pin"
             secret
             required

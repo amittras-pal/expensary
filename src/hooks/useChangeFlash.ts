@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 
-export default function useChangeFlash(dependency, timeout = 1250) {
+// TODO: not used right now, but maybe useful...
+export default function useChangeFlash(dependency: any, timeout = 1250) {
   const [changed, setChanged] = useState(false);
+
   useEffect(() => {
     setChanged(true);
     const timer = setTimeout(() => {

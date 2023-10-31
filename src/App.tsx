@@ -6,6 +6,7 @@ import Themer from "./components/Themer";
 import UserProvider from "./context/user";
 import BudgetMonitor from "./modules/budgetMonitor/BudgetMonitor";
 import theme from "./theme";
+import React from "react";
 import { ModalsProvider } from "@mantine/modals";
 import ServerConnecting from "./modules/server/ServerConnecting";
 

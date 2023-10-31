@@ -1,7 +1,7 @@
+import { MantineThemeOverride } from "@mantine/core";
 import { primaryColor } from "../constants/app";
 
-/** @type {import("@mantine/core").MantineTheme} */
-const theme = {
+const theme: MantineThemeOverride = {
   colorScheme: "dark",
   primaryColor,
   defaultRadius: "sm",
@@ -43,11 +43,13 @@ const theme = {
       },
     },
     Modal: {
-      centered: true,
-      lockScroll: true,
-      withOverlay: true,
-      overlayProps: {
-        blur: 6,
+      defaultProps: {
+        centered: true,
+        lockScroll: true,
+        withOverlay: true,
+        overlayProps: {
+          blur: 6,
+        },
       },
     },
     Divider: {
