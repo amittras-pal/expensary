@@ -3,13 +3,13 @@ import { Notifications } from "@mantine/notifications";
 import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
 import Themer from "./components/monitors/Themer";
-import BudgetMonitor from "./modules/budgetMonitor/BudgetMonitor";
 import theme from "./theme";
 import React from "react";
 import { ModalsProvider } from "@mantine/modals";
 import ServerConnecting from "./modules/server/ServerConnecting";
 import UserProvider from "./context/user.context";
 import TimezoneMonitor from "./components/monitors/TimezoneMonitor";
+import BudgetMonitor from "./components/monitors/BudgetMonitor";
 
 export default function App() {
   return (

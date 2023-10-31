@@ -32,3 +32,11 @@ interface ICategory {
   icon: string;
   description?: string;
 }
+
+interface IBudget {
+  _id?: string;
+  user: string;
+  month: number;
+  year: number;
+  amount: number;
+}
