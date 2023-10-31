@@ -1,3 +1,5 @@
+// TODO: TS Migration
+
 export function downloadFile(dataBlob, fileName) {
   const href = URL.createObjectURL(dataBlob);
 

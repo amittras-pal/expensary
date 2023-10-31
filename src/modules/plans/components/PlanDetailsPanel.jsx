@@ -1,3 +1,5 @@
+// TODO: TS Migration
+
 import { Badge, Box, Divider, Text } from "@mantine/core";
 import dayjs from "dayjs";
 import React from "react";

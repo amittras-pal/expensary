@@ -1,3 +1,5 @@
+// TODO: TS Migration
+
 import {
   Box,
   Divider,
@@ -8,7 +10,7 @@ import {
 } from "@mantine/core";
 import { MonthPickerInput } from "@mantine/dates";
 import { useDisclosure, useDocumentTitle, useHotkeys } from "@mantine/hooks";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import DeleteExpense from "../../components/DeleteExpense";
@@ -27,12 +29,12 @@ import {
   SubCategoryFilter,
 } from "../../components/ag-grid/plugins/filters";
 import { APP_TITLE } from "../../constants/app";
+import { useCurrentUser } from "../../context/user.context";
 import { useErrorHandler } from "../../hooks/error-handler";
 import { useMediaMatch } from "../../hooks/media-match";
+import { getBudget } from "../../services/budget.service";
 import { dateFormatter, formatCurrency } from "../../utils";
-import { useBudget } from "../budgetMonitor/services";
 import { useExpenseList } from "./services";
-import { useCurrentUser } from "../../context/user.context";
 
 export default function Expenses() {
   useDocumentTitle(`${APP_TITLE} | Transactions`);
@@ -76,9 +78,14 @@ export default function Expenses() {
     onError,
   });
 
-  const { data: budgetRes, isLoading: loadingBudget } = useBudget({
-    month: dayjs(payload.startDate).month(),
-    year: dayjs(payload.startDate).year(),
+  const { data: budgetRes, isLoading: loadingBudget } = useQuery({
+    queryKey: ["budget", payload],
+    queryFn: () =>
+      getBudget({
+        month: dayjs(payload.startDate).month(),
+        year: dayjs(payload.startDate).year(),
+      }),
+    onError,
   });
 
   const handleClose = (refreshData) => {
@@ -254,7 +261,7 @@ export default function Expenses() {
           />
           <Text ta="right" fw="bold" fz="xs" sx={{ flex: 3 }}>
             Total: {filterTotal > 0 ? formatCurrency(filterTotal) : "N.A."} of{" "}
-            {formatCurrency(budgetRes?.data?.response?.amount ?? 0)}
+            {formatCurrency(budgetRes?.response?.amount ?? 0)}
           </Text>
         </Group>
         <Divider my="sm" sx={{ width: "100%" }} />

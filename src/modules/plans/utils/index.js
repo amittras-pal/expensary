@@ -1,3 +1,5 @@
+// TODO: move to schemas.ts
+
 import * as yup from "yup";
 
 export const expensePlanSchema = yup.object().shape({

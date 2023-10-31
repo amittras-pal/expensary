@@ -1,3 +1,5 @@
+// TODO: TS Migration
+
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Alert,
@@ -15,17 +17,19 @@ import {
 import { DateTimePicker } from "@mantine/dates";
 import { notifications } from "@mantine/notifications";
 import { IconCheck, IconCurrencyRupee } from "@tabler/icons-react";
+import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import React, { useMemo } from "react";
 import { useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
+import { time20Min } from "../constants/app";
+import { useCurrentUser } from "../context/user.context";
 import { useErrorHandler } from "../hooks/error-handler";
 import { useCreateExpense, useEditExpense } from "../modules/home/services";
 import { expenseSchema } from "../modules/home/utils";
-import { useCategories } from "../services/categories";
-import CategorySelectItem from "./CategorySelectItem";
 import { useExpensePlans } from "../modules/plans/services";
-import { useParams } from "react-router-dom";
-import { useCurrentUser } from "../context/user.context";
+import { getCategories } from "../services/categories.service";
+import CategorySelectItem from "./CategorySelectItem";
 
 export default function ExpenseForm({ data, onComplete }) {
   const { primaryColor } = useMantineTheme();
@@ -85,7 +89,13 @@ export default function ExpenseForm({ data, onComplete }) {
     reset();
   };
 
-  const { data: categoryRes, isLoading: loadingCategories } = useCategories();
+  const { data: categoryRes, isLoading: loadingCategories } = useQuery({
+    queryKey: ["categories"],
+    queryFn: getCategories,
+    onError,
+    staleTime: time20Min,
+  });
+
   const { data: plansRes, isLoading: loadingPlans } = useExpensePlans(true, {
     enabled: watch("addToPlan"),
     refetchOnMount: false,
@@ -174,7 +184,7 @@ export default function ExpenseForm({ data, onComplete }) {
           onChange={(e) => setFieldValue("categoryId", e)}
           itemComponent={CategorySelectItem}
           data={
-            categoryRes?.data?.response?.map((cat) => ({
+            categoryRes?.response?.map((cat) => ({
               ...cat,
               value: cat._id,
             })) ?? []

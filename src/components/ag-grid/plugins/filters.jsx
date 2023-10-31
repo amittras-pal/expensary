@@ -1,3 +1,5 @@
+// TODO: TS Migration
+
 import {
   Box,
   Button,
@@ -7,21 +9,30 @@ import {
   ScrollArea,
   Text,
 } from "@mantine/core";
+import { useQuery } from "@tanstack/react-query";
 import {
-  forwardRef,
   Fragment,
+  forwardRef,
   useImperativeHandle,
   useMemo,
   useState,
 } from "react";
-import { useCategories } from "../../../services/categories";
+import { time20Min } from "../../../constants/app";
+import { useErrorHandler } from "../../../hooks/error-handler";
+import { getCategories } from "../../../services/categories.service";
 import { useCategoryFilterStyles } from "../styles";
 
 function Category(props, ref) {
   const { classes } = useCategoryFilterStyles();
+  const { onError } = useErrorHandler();
   const [selection, setSelection] = useState([]);
 
-  const { isLoading, data: catRes } = useCategories();
+  const { isLoading, data: catRes } = useQuery({
+    queryKey: ["categories"],
+    queryFn: getCategories,
+    onError,
+    staleTime: time20Min,
+  });
 
   const categoryOptions = useMemo(() => {
     const s = new Set();
@@ -29,11 +40,11 @@ function Category(props, ref) {
     props.api.forEachNode((node) => {
       avCats.add(node.data.category.group);
     });
-    catRes?.data?.response?.forEach((cat) => {
+    catRes?.response?.forEach((cat) => {
       if (avCats.has(cat.group)) s.add(cat.group);
     });
     return Array.from(s);
-  }, [catRes?.data?.response, props.api]);
+  }, [catRes?.response, props.api]);
 
   useImperativeHandle(ref, () => {
     return {
@@ -111,8 +122,14 @@ function Category(props, ref) {
 function SubCategory(props, ref) {
   const [selection, setSelection] = useState([]);
   const { classes } = useCategoryFilterStyles();
+  const { onError } = useErrorHandler();
 
-  const { isLoading, data: catRes } = useCategories();
+  const { isLoading, data: catRes } = useQuery({
+    queryKey: ["categories"],
+    queryFn: getCategories,
+    onError,
+    staleTime: time20Min,
+  });
 
   const categoryOptions = useMemo(() => {
     const instance = props.api.getFilterInstance("category.group");
@@ -123,7 +140,7 @@ function SubCategory(props, ref) {
     props.api.forEachNode((node) => {
       avCats.add(node.data.category._id);
     });
-    const filtered = catRes?.data?.response.filter(
+    const filtered = catRes?.response.filter(
       (cat) => selectedGroups.includes(cat.group) && avCats.has(cat._id)
     );
     return filtered.reduce((grouping, current) => {
@@ -133,7 +150,7 @@ function SubCategory(props, ref) {
 
       return grouping;
     }, []);
-  }, [catRes?.data?.response, props.api]);
+  }, [catRes?.response, props.api]);
 
   useImperativeHandle(ref, () => {
     return {

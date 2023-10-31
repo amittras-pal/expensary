@@ -1,3 +1,5 @@
+// TODO: TS Migration
+
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Box,
@@ -15,15 +17,14 @@ import { IconCheck } from "@tabler/icons-react";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
+import PinInput from "../../components/pin-input/PinInput";
 import { APP_TITLE, primaryColor } from "../../constants/app";
+import { useCurrentUser } from "../../context/user.context";
 import { useErrorHandler } from "../../hooks/error-handler";
-import { useTZChangeDetection } from "../../utils/tzCheck";
 import PublicGuard from "../guards/PublicGuard";
 import { useLoginUser } from "./services";
 import { useAuthStyles } from "./styles";
 import { loginSchema } from "./utils";
-import PinInput from "../../components/pin-input/PinInput";
-import { useCurrentUser } from "../../context/user.context";
 
 export default function Login() {
   const { classes } = useAuthStyles();

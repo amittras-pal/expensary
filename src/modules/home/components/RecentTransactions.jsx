@@ -1,3 +1,5 @@
+// TODO: TS Migration
+
 import { Box, Divider, ScrollArea, Text } from "@mantine/core";
 import React from "react";
 import ExpenseCard from "../../../components/ExpenseCard";
