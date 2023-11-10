@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 // TODO: not used right now, but maybe useful...
+// TODO: fix this usage of any!
 export default function useChangeFlash(dependency: any, timeout = 1250) {
   const [changed, setChanged] = useState(false);
 

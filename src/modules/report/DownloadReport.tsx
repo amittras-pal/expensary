@@ -1,38 +1,40 @@
-// TODO: TS Migration
-
-import {
-  Button,
-  Checkbox,
-  Group,
-  SegmentedControl,
-  createStyles,
-} from "@mantine/core";
-import { DatePicker, MonthPicker } from "@mantine/dates";
+import { Button, Checkbox, Group, SegmentedControl } from "@mantine/core";
+import { DatePicker, MonthPicker, PickerBaseProps } from "@mantine/dates";
 import { useDocumentTitle } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import { IconDownload } from "@tabler/icons-react";
-import dayjs from "dayjs";
+import { useMutation } from "@tanstack/react-query";
+import dayjs, { OpUnitType } from "dayjs";
 import React, { useMemo, useState } from "react";
 import { APP_TITLE, primaryColor } from "../../constants/app";
-import { useErrorHandler } from "../../hooks/error-handler";
-import { useDownloadReport } from "./services";
-import { downloadFile } from "./utils/downloadFile";
 import { useCurrentUser } from "../../context/user.context";
+import { useErrorHandler } from "../../hooks/error-handler";
+import { downloadReport } from "../../services/report.service";
+import { useReportStyles } from "../../theme/report.styles";
+import { downloadFile } from "../../utils";
+
+interface CommonPickerProps extends PickerBaseProps<"range"> {
+  className: string;
+  minDate: Date;
+  maxDate: Date;
+}
 
 export default function DownloadReport() {
   useDocumentTitle(`${APP_TITLE} | Download Report`);
-  const [selection, setSelection] = useState([null, null]);
+  const [selection, setSelection] = useState<[Date | null, Date | null]>([
+    null,
+    null,
+  ]);
   const [includeList, setIncludeList] = useState(false);
-  const [view, setView] = useState("month");
+  const [view, setView] = useState<OpUnitType>("month");
 
-  const { classes } = useStyles();
+  const { classes } = useReportStyles();
   const { userData } = useCurrentUser();
   const { onError } = useErrorHandler();
 
   const pickerProps = useMemo(
-    () => ({
+    (): CommonPickerProps => ({
       className: classes.wrapper,
-      allowDeselect: true,
       type: "range",
       maxDate: dayjs().toDate(),
       minDate: userData
@@ -42,15 +44,17 @@ export default function DownloadReport() {
     [classes.wrapper, userData]
   );
 
-  const { mutate: download, isLoading } = useDownloadReport({
+  const { mutate: download, isLoading } = useMutation({
+    mutationFn: downloadReport,
     onSuccess: (res) => {
       downloadFile(
-        res.data,
-        `Report_${userData.userName.replace(" ", "_")}_${dayjs()
+        res,
+        `Report_${userData?.userName.replace(" ", "_")}_${dayjs()
           .toDate()
           .toISOString()}.pdf`
       );
       notifications.show({
+        message: "",
         title: "Report Downloaded Successfully!",
         color: "green",
         icon: <IconDownload size={16} />,
@@ -75,7 +79,7 @@ export default function DownloadReport() {
           size="sm"
           value={view}
           color={primaryColor}
-          onChange={setView}
+          onChange={(mode: OpUnitType) => setView(mode)}
           sx={{ width: "100%" }}
           data={[
             { label: "Dates Range", value: "day" },
@@ -113,13 +117,3 @@ export default function DownloadReport() {
     </Group>
   );
 }
-
-const useStyles = createStyles((theme) => ({
-  wrapper: {
-    borderRadius: theme.radius.md,
-    boxShadow: theme.shadows.lg,
-    border: "1px solid",
-    borderColor: theme.colors.gray[8],
-    padding: theme.spacing.md,
-  },
-}));

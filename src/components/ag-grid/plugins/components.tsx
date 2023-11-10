@@ -34,6 +34,7 @@ function getNextSortOrder(current: string | null) {
   return null;
 }
 
+// TODO: fix this usage of any!
 export function ColumnHeader(props: any) {
   const [isFilterActive, setIsFilterActive] = useState(false);
   useEffect(() => {
@@ -76,6 +77,7 @@ export function ColumnHeader(props: any) {
   );
 }
 
+// TODO: fix this usage of any!
 export function RowCountHeader({ api }: any) {
   return (
     <Text component="span" mx="auto" color="red" fw="bold">
@@ -107,6 +109,7 @@ export function MetaHeader() {
   );
 }
 
+// TODO: fix this usage of any!
 export function MetaCell({ data, page }: any) {
   if (!data.description && !data.linked && data.amount > 0) return null;
   return (
@@ -167,13 +170,19 @@ export function MetaCell({ data, page }: any) {
   );
 }
 
-export function CategoryCell({ data, value }: any) {
+export function CategoryCell({
+  data,
+  value,
+}: {
+  data: IExpense;
+  value: string;
+}) {
   return (
     <Badge
       size="sm"
       component="div"
       variant="light"
-      color={data.category.color}
+      color={data.category?.color}
     >
       {value}
     </Badge>
@@ -186,7 +195,8 @@ export function RowMenuCell({
   onDeleteExpense,
   rowIndex,
   plan,
-}: any) {
+}: // TODO: fix this usage of any!
+any) {
   const availableActions = useMemo(() => {
     const actions = [];
     if (plan) {
@@ -237,6 +247,7 @@ export function RowMenuCell({
   );
 }
 
+// TODO: fix this usage of any!
 export function AmountCell({ value }: any) {
   return (
     <Text
@@ -249,6 +260,7 @@ export function AmountCell({ value }: any) {
   );
 }
 
+// TODO: fix this usage of any!
 export function NoDataOverlay(props: any) {
   return (
     <Box

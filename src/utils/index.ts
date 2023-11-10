@@ -32,3 +32,16 @@ export function getSeverityColor(
   else if (perc > 70 && perc <= 90) return "orange";
   else return "red";
 }
+
+export function downloadFile(dataBlob: Blob, fileName: string) {
+  const href = URL.createObjectURL(dataBlob);
+
+  const link = document.createElement("a");
+  link.href = href;
+  link.setAttribute("download", fileName);
+  document.body.appendChild(link);
+  link.click();
+
+  document.body.removeChild(link);
+  URL.revokeObjectURL(href);
+}
