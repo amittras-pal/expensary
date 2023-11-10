@@ -28,9 +28,10 @@ export function getRecentTransactions(): Promise<ResponseBody<IExpense[]>> {
 }
 
 export function getExpenseList(payload: {
-  startDate: Date;
-  endDate: Date;
+  startDate?: Date;
+  endDate?: Date;
   sort: { date: number };
+  plan?: string;
 }): Promise<ResponseBody<IExpense[]>> {
   return axios.post(ENDPOINTS.list, payload).then((res) => res.data);
 }

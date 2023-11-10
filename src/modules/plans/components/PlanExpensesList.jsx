@@ -11,6 +11,7 @@ import {
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { IconCheck, IconCopy, IconX } from "@tabler/icons-react";
+import { useQuery } from "@tanstack/react-query";
 import React, { useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import AgGridMod from "../../../components/ag-grid/AgGridMod";
@@ -28,9 +29,9 @@ import {
 } from "../../../components/ag-grid/plugins/filters";
 import { useErrorHandler } from "../../../hooks/error-handler";
 import { useMediaMatch } from "../../../hooks/media-match";
+import { getExpenseList } from "../../../services/expense.service";
 import { usePlanExpensesStyles } from "../../../theme/plan.styles";
 import { dateFormatter } from "../../../utils";
-import { useExpenseList } from "../../expenses/services";
 import { useCopyToBudget } from "../services";
 
 export default function PlanExpensesList({ onExpenseAction, plan }) {
@@ -59,7 +60,9 @@ export default function PlanExpensesList({ onExpenseAction, plan }) {
     data: listRes,
     isLoading: loadingList,
     refetch,
-  } = useExpenseList(payload, {
+  } = useQuery({
+    queryKey: ["list", payload],
+    queryFn: () => getExpenseList(payload),
     refetchOnWindowFocus: false,
     onSuccess: () => {
       grid?.api.destroyFilter("category.group");
@@ -188,7 +191,7 @@ export default function PlanExpensesList({ onExpenseAction, plan }) {
           columnDefs={columns}
           popupParent={document.body}
           height={ref.current?.clientHeight ?? 0}
-          rowData={listRes?.data?.response ?? []}
+          rowData={listRes?.response ?? []}
           onGridReady={setGrid}
           rowSelection="multiple"
           isRowSelectable={(e) => !e.data?.linked}
