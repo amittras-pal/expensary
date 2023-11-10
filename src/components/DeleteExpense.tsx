@@ -1,5 +1,3 @@
-// TODO: TS Migration
-
 import {
   Alert,
   Box,
@@ -11,20 +9,30 @@ import {
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
+import { useMutation } from "@tanstack/react-query";
 import React from "react";
 import { useErrorHandler } from "../hooks/error-handler";
-import { useDeleteExpense } from "../modules/home/services";
+import { deleteExpense } from "../services/expense.service";
 import ExpenseCard from "./ExpenseCard";
 
-export default function DeleteExpense({ data, onComplete }) {
+interface IDeleteExpenseProps {
+  data: IExpense | null;
+  onComplete: (refresh: boolean | IExpense) => void;
+}
+
+export default function DeleteExpense({
+  data,
+  onComplete,
+}: IDeleteExpenseProps) {
   const { primaryColor } = useMantineTheme();
   const { onError } = useErrorHandler();
 
-  const { mutate: deleteExpense, isLoading: deleting } = useDeleteExpense({
+  const { mutate: deleteItem, isLoading: deleting } = useMutation({
+    mutationFn: deleteExpense,
     onSuccess: (res) => {
       onComplete(true);
       notifications.show({
-        message: res.data?.message,
+        message: res?.message,
         color: "green",
         icon: <IconCheck />,
       });
@@ -38,8 +46,8 @@ export default function DeleteExpense({ data, onComplete }) {
         Are you sure you want to delete the following expense?
       </Text>
       <Divider my="sm" />
-      <ExpenseCard hideMenu data={data} />
-      {data.linked && (
+      {data && <ExpenseCard hideMenu data={data} />}
+      {data?.linked && (
         <Alert title="Linked Expense" color="red" mb="md">
           This expense is linked to another expense, deleting it will also
           delete the other one.
@@ -51,12 +59,12 @@ export default function DeleteExpense({ data, onComplete }) {
       <Group grow mt="lg">
         <Button
           variant="outline"
-          onClick={() => onComplete(null)}
+          onClick={() => onComplete(false)}
           disabled={deleting}
         >
           Cancel
         </Button>
-        <Button onClick={() => deleteExpense(data._id)} loading={deleting}>
+        <Button onClick={() => deleteItem(data?._id ?? "")} loading={deleting}>
           Delete
         </Button>
       </Group>

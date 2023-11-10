@@ -11,22 +11,28 @@ import {
   SimpleGrid,
   Text,
 } from "@mantine/core";
-import React, { useMemo } from "react";
-import ExpensePlan from "./components/ExpensePlan";
-import { useExpensePlans, useUpdatePlan } from "./services";
-import { IconCheck, IconChecklist, IconPlus, IconX } from "@tabler/icons-react";
-import { APP_TITLE, primaryColor } from "../../constants/app";
 import { useDisclosure, useDocumentTitle, useHotkeys } from "@mantine/hooks";
-import ExpensePlanForm from "./components/ExpensePlanForm";
-import DeletePlan from "./components/DeletePlan";
-import { useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
+import { IconCheck, IconChecklist, IconPlus, IconX } from "@tabler/icons-react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import React, { useMemo, useState } from "react";
+import { APP_TITLE, primaryColor } from "../../constants/app";
 import { useErrorHandler } from "../../hooks/error-handler";
+import { getPlans } from "../../services/plans.service";
+import DeletePlan from "./components/DeletePlan";
+import ExpensePlan from "./components/ExpensePlan";
+import ExpensePlanForm from "./components/ExpensePlanForm";
+import { useUpdatePlan } from "./services";
 
 export default function Plans() {
-  const { data, isLoading } = useExpensePlans(true);
+  const { onError } = useErrorHandler();
+  const { data, isLoading } = useQuery({
+    queryKey: ["plans-list", false],
+    queryFn: getPlans,
+    refetchOnMount: false,
+    onError,
+  });
 
   const plansList = useMemo(() => {
     const groups = { active: [], closed: [] };
@@ -39,7 +45,6 @@ export default function Plans() {
   }, [data]);
 
   useDocumentTitle(`${APP_TITLE} | Expense Plans`);
-  const { onError } = useErrorHandler();
 
   const [showForm, formModal] = useDisclosure(false);
   const [confirm, deleteModal] = useDisclosure(false);
@@ -54,7 +59,7 @@ export default function Plans() {
     if (confirm) deleteModal.close();
 
     if (refreshData)
-      client.invalidateQueries({ queryKey: ["plans-list", true] });
+      client.invalidateQueries({ queryKey: ["plans-list", false] });
 
     setTimeout(() => {
       setTargetPlan(null);

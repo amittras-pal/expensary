@@ -1,5 +1,3 @@
-// TODO: TS Migration
-
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Alert,
@@ -17,34 +15,40 @@ import {
 import { DateTimePicker } from "@mantine/dates";
 import { notifications } from "@mantine/notifications";
 import { IconCheck, IconCurrencyRupee } from "@tabler/icons-react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import React, { useMemo } from "react";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { time20Min } from "../constants/app";
 import { useCurrentUser } from "../context/user.context";
 import { useErrorHandler } from "../hooks/error-handler";
-import { useCreateExpense, useEditExpense } from "../modules/home/services";
-import { expenseSchema } from "../modules/home/utils";
-import { useExpensePlans } from "../modules/plans/services";
+import { ExpenseForm as FormSchema, expenseSchema } from "../schemas/schemas";
 import { getCategories } from "../services/categories.service";
+import { createExpense, editExpense } from "../services/expense.service";
+import { getPlans } from "../services/plans.service";
+import { ResponseBody } from "../services/response.type";
 import CategorySelectItem from "./CategorySelectItem";
 
-export default function ExpenseForm({ data, onComplete }) {
+interface IExpenseFormProps {
+  data: IExpense | null;
+  onComplete: (refresh: boolean | IExpense) => void;
+}
+
+export default function ExpenseForm({ data, onComplete }: IExpenseFormProps) {
   const { primaryColor } = useMantineTheme();
   const { userData } = useCurrentUser();
   const { onError } = useErrorHandler();
   const params = useParams();
 
   const minDate = useMemo(() => {
-    const userDate = dayjs(userData.createdAt).toDate().getTime();
+    const userDate = dayjs(userData?.createdAt).toDate().getTime();
     const oldestAllowed = dayjs().subtract(6, "days").toDate().getTime();
     return dayjs(Math.max(userDate, oldestAllowed)).toDate();
   }, [userData]);
 
   const handleClose = () => {
-    onComplete(null);
+    onComplete(false);
     reset();
   };
 
@@ -55,7 +59,7 @@ export default function ExpenseForm({ data, onComplete }) {
     setValue,
     watch,
     formState: { errors, isValid },
-  } = useForm({
+  } = useForm<FormSchema>({
     mode: "onChange",
     shouldFocusError: true,
     defaultValues: {
@@ -66,12 +70,12 @@ export default function ExpenseForm({ data, onComplete }) {
       date: data ? dayjs(data.date).toDate() : dayjs().toDate(),
       addToPlan: data ? Boolean(data.plan) : false,
       plan: data?.plan ?? "",
-      linked: data?.linked ?? null,
+      linked: data?.linked ?? "",
     },
     resolver: yupResolver(expenseSchema()),
   });
 
-  const setFieldValue = (name, value) => {
+  const setFieldValue = (name: keyof FormSchema, value: string | Date) => {
     setValue(name, value, {
       shouldTouch: true,
       shouldDirty: true,
@@ -79,13 +83,13 @@ export default function ExpenseForm({ data, onComplete }) {
     });
   };
 
-  const handleSuccess = (res) => {
+  const handleSuccess = (res?: ResponseBody<IExpense | undefined>) => {
     notifications.show({
-      message: res.data?.message,
+      message: res?.message,
       color: "green",
       icon: <IconCheck />,
     });
-    onComplete(res.data?.response ?? true);
+    onComplete(res?.response ?? true);
     reset();
   };
 
@@ -96,27 +100,44 @@ export default function ExpenseForm({ data, onComplete }) {
     staleTime: time20Min,
   });
 
-  const { data: plansRes, isLoading: loadingPlans } = useExpensePlans(true, {
+  const { data: plansRes, isLoading: loadingPlans } = useQuery({
+    queryKey: ["plans-list", true],
+    queryFn: () => getPlans(true),
     enabled: watch("addToPlan"),
     refetchOnMount: false,
     onError,
   });
 
-  const { mutate: createExpense, isLoading: creating } = useCreateExpense({
+  const { mutate: create, isLoading: creating } = useMutation({
+    mutationFn: createExpense,
     onSuccess: handleSuccess,
     onError,
   });
 
-  const { mutate: editExpense, isLoading: editing } = useEditExpense({
+  const { mutate: update, isLoading: editing } = useMutation({
+    mutationFn: editExpense,
     onSuccess: handleSuccess,
     onError,
   });
 
-  const handleSave = (values) => {
-    const payload = Object.assign({}, values);
+  const handleSave: SubmitHandler<FormSchema> = (values) => {
+    // TODO: check why the types for amount & description are incompatible.
+    const payload: Partial<IExpense> = Object.assign(
+      {},
+      {
+        ...values,
+        amount: values.amount ?? 0,
+        description: values.description ?? "",
+      }
+    );
+    // Additiona cleanup.
     if (!values.plan || !values.addToPlan) payload.plan = null;
-    if (data?._id) editExpense({ ...payload, _id: data._id });
-    else createExpense(payload);
+    if (!values.linked) payload.linked = null;
+
+    if (data?._id) payload._id = data?._id;
+
+    if (data?._id) update(payload);
+    else create(payload);
   };
 
   return (
@@ -166,7 +187,7 @@ export default function ExpenseForm({ data, onComplete }) {
               });
           }}
           description={`${
-            !parseInt(watch("amount"))
+            !parseInt(watch("amount")?.toString() ?? "0")
               ? "Keeping 0 as amount will indicate a record type expense."
               : ""
           }`}
@@ -181,12 +202,12 @@ export default function ExpenseForm({ data, onComplete }) {
           disabled={loadingCategories}
           value={watch("categoryId")}
           error={errors.categoryId?.message}
-          onChange={(e) => setFieldValue("categoryId", e)}
+          onChange={(e) => setFieldValue("categoryId", e ?? "")}
           itemComponent={CategorySelectItem}
           data={
             categoryRes?.response?.map((cat) => ({
               ...cat,
-              value: cat._id,
+              value: cat._id ?? "",
             })) ?? []
           }
         />
@@ -194,9 +215,9 @@ export default function ExpenseForm({ data, onComplete }) {
           label="Expense Date"
           placeholder="Select Date"
           minDate={minDate}
-          maxDate={dayjs().add(5, "min").toDate()}
+          maxDate={dayjs().add(5, "minutes").toDate()}
           value={watch("date")}
-          onChange={(e) => setFieldValue("date", e)}
+          onChange={(e) => setFieldValue("date", e ?? "")}
           error={errors.date?.message}
           required
         />
@@ -209,7 +230,7 @@ export default function ExpenseForm({ data, onComplete }) {
               : ""
           }
           mb="md"
-          disabled={!!params.id || data?.linked}
+          disabled={Boolean(!!params.id || data?.linked)}
         />
         {watch("addToPlan") && (
           <Select
@@ -219,11 +240,12 @@ export default function ExpenseForm({ data, onComplete }) {
             disabled={loadingPlans || !!params.id}
             value={watch("plan")}
             error={errors.plan?.message}
-            onChange={(e) => setFieldValue("plan", e)}
+            nothingFound={"No Open Plans..."}
+            onChange={(e) => setFieldValue("plan", e ?? "")}
             data={
-              plansRes?.data?.response?.map((plan) => ({
+              plansRes?.response?.map((plan) => ({
                 label: plan.name,
-                value: plan._id,
+                value: plan._id ?? "",
               })) ?? []
             }
           />

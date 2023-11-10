@@ -1,5 +1,3 @@
-// TODO: TS Migration
-
 import {
   ActionIcon,
   Badge,
@@ -10,6 +8,7 @@ import {
   ThemeIcon,
   Tooltip,
 } from "@mantine/core";
+import React from "react";
 import {
   IconBookmark,
   IconCalendarCode,
@@ -18,6 +17,7 @@ import {
   IconDotsVertical,
   IconEdit,
   IconTrash,
+  IconX,
 } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -26,15 +26,23 @@ import { primaryColor } from "../constants/app";
 import { Icons } from "../constants/categories";
 import { formatCurrency } from "../utils";
 import ExpenseDescription from "./ExpenseDescription";
-import { useExpenseStyles } from "./styles/expenseCard";
+import { useExpenseStyles } from "../theme/expenseCard.styles";
 dayjs.extend(relativeTime);
+
+interface IExpenseCardProps {
+  data: IExpense;
+  // TODO: Make these conditionally required.
+  onEditExpense?: (e: IExpense) => void;
+  onDeleteExpense?: (e: IExpense) => void;
+  hideMenu?: boolean;
+}
 
 function ExpenseCard({
   data,
   onEditExpense,
   onDeleteExpense,
   hideMenu = false,
-}) {
+}: IExpenseCardProps) {
   const { classes } = useExpenseStyles();
 
   const isEditable = useMemo(
@@ -42,7 +50,10 @@ function ExpenseCard({
     [data.date]
   );
 
-  const Icon = useMemo(() => Icons[data.category.icon], [data.category]);
+  const Icon = useMemo(
+    () => (data.category ? Icons[data.category.icon] : IconX),
+    [data.category]
+  );
 
   return (
     <Box className={classes.wrapper}>
@@ -73,19 +84,19 @@ function ExpenseCard({
           <Badge
             variant="light"
             size="sm"
-            color={data.category.color}
+            color={data.category?.color}
             leftSection={<Icon size={12} style={{ marginBottom: -2 }} />}
             mt={4}
           >
-            {data.category.group}{" "}
+            {data.category?.group}{" "}
             <IconChevronRight size={12} style={{ marginBottom: -2 }} />{" "}
-            {data.category.label}
+            {data.category?.label}
           </Badge>
           <Group position="apart" align="center" mt={4}>
             <Tooltip
               position="top"
               disabled={hideMenu}
-              events={{ touch: true }}
+              events={{ touch: true, hover: true, focus: false }}
               label={
                 <Text fz="xs">
                   {dayjs(data.date).format("DD MMM 'YY hh:mm a")}
@@ -116,8 +127,8 @@ function ExpenseCard({
                 {isEditable && (
                   <Menu.Item
                     icon={<IconEdit size={14} />}
-                    onClick={() => onEditExpense(data)}
-                    disabled={data.linked}
+                    onClick={() => onEditExpense?.(data)}
+                    disabled={Boolean(data.linked)}
                   >
                     {data.linked ? "Linked Expense" : "Edit"}
                   </Menu.Item>
@@ -126,7 +137,7 @@ function ExpenseCard({
                   <Menu.Item
                     color="red"
                     icon={<IconTrash size={14} />}
-                    onClick={() => onDeleteExpense(data)}
+                    onClick={() => onDeleteExpense?.(data)}
                   >
                     Delete
                   </Menu.Item>
@@ -137,7 +148,7 @@ function ExpenseCard({
           {dayjs(data.date).month() !== dayjs().month() && (
             <Tooltip
               position="left"
-              events={{ touch: true }}
+              events={{ touch: true, hover: true, focus: false }}
               label={
                 <Text component="span" fw="normal" size="sm">
                   From {dayjs().subtract(1, "month").format("MMMM")}.
@@ -152,7 +163,7 @@ function ExpenseCard({
           {data.linked && (
             <Tooltip
               position="left"
-              events={{ touch: true }}
+              events={{ touch: true, hover: true, focus: false }}
               label={
                 <Text component="span" fw="normal" size="sm">
                   Created in a plan.
@@ -172,7 +183,7 @@ function ExpenseCard({
           {!data.amount && (
             <Tooltip
               position="left"
-              events={{ touch: true }}
+              events={{ touch: true, hover: true, focus: false }}
               label={
                 <Text component="span" fw="normal" size="sm">
                   Created to keep record; no money spent.

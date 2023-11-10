@@ -1,17 +1,15 @@
-// TODO: TS Migration
-
 import { Drawer, Modal, SimpleGrid } from "@mantine/core";
 import { useDisclosure, useDocumentTitle } from "@mantine/hooks";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import DeleteExpense from "../../components/DeleteExpense";
 import ExpenseForm from "../../components/ExpenseForm";
 import { APP_TITLE } from "../../constants/app";
 import { useErrorHandler } from "../../hooks/error-handler";
 import { useMediaMatch } from "../../hooks/media-match";
-import BudgetBreakdown from "./components/BudgetBreakdown";
-import RecentTransactions from "./components/RecentTransactions";
-import { useRecentTransactions } from "./services";
+import { getRecentTransactions } from "../../services/expense.service";
+import BudgetBreakdown from "./BudgetBreakdown";
+import RecentTransactions from "./RecentTransactions";
 
 export default function Home() {
   const isMobile = useMediaMatch();
@@ -23,14 +21,16 @@ export default function Home() {
   const [showForm, formModal] = useDisclosure(false);
   const [confirm, deleteModal] = useDisclosure(false);
   const [drawer, listDrawer] = useDisclosure(false);
-  const [targetExpense, setTargetExpense] = useState(null);
+  const [targetExpense, setTargetExpense] = useState<IExpense | null>(null);
 
-  const { isLoading, data: list } = useRecentTransactions({
+  const { isLoading, data: list } = useQuery({
+    queryKey: ["recent-transactions"],
+    queryFn: getRecentTransactions,
     refetchOnWindowFocus: false,
     onError,
   });
 
-  const handleClose = (refreshData) => {
+  const handleClose = (refreshData: IExpense | boolean) => {
     if (showForm) formModal.close();
     if (confirm) deleteModal.close();
     if (refreshData) {
@@ -42,12 +42,12 @@ export default function Home() {
     }, 1000);
   };
 
-  const editExpense = (target) => {
+  const editExpense = (target: IExpense) => {
     setTargetExpense(target);
     formModal.open();
   };
 
-  const deleteExpense = (target) => {
+  const deleteExpense = (target: IExpense) => {
     setTargetExpense(target);
     deleteModal.open();
   };
@@ -58,14 +58,14 @@ export default function Home() {
         <BudgetBreakdown
           showForm={formModal.open}
           showRecent={listDrawer.open}
-          recents={list?.data?.response?.length ?? 0}
-          loadingRecents={isLoading}
+          recents={list?.response?.length ?? 0}
+          // loadingRecents={isLoading}
         />
         {!isMobile && (
           <RecentTransactions
             onEditExpense={editExpense}
             onDeleteExpense={deleteExpense}
-            list={list}
+            list={list?.response ?? []}
             loadingList={isLoading}
           />
         )}
@@ -74,8 +74,7 @@ export default function Home() {
         centered
         opened={showForm || confirm}
         withCloseButton={false}
-        onClose={handleClose}
-        withOverlay
+        onClose={() => handleClose(false)}
       >
         {showForm && (
           <ExpenseForm data={targetExpense} onComplete={handleClose} />
@@ -91,12 +90,12 @@ export default function Home() {
           opened={drawer}
           onClose={listDrawer.close}
           zIndex={199}
-          title={`Recent Transactions (${list?.data?.response?.length ?? 0})`}
+          title={`Recent Transactions (${list?.response?.length ?? 0})`}
         >
           <RecentTransactions
             onEditExpense={editExpense}
             onDeleteExpense={deleteExpense}
-            list={list}
+            list={list?.response ?? []}
             loadingList={isLoading}
           />
         </Drawer>

@@ -10,7 +10,7 @@ const formatter = new Intl.NumberFormat("en-IN", {
   currency: "INR",
 });
 
-export function formatCurrency(amount: number) {
+export function formatCurrency(amount: number = 0) {
   return formatter.format(amount);
 }
 
@@ -18,11 +18,14 @@ export function dateFormatter({ value }: { value: string }) {
   return dayjs(value).format("DD MMM, hh:mm a");
 }
 
-export function getPercentage(amount: number, total: number): number {
+export function getPercentage(amount: number = 0, total: number = 0): number {
   return parseInt(((amount / total) * 100).toFixed(0));
 }
 
-export function getSeverityColor(amount: number, total: number): MantineColor {
+export function getSeverityColor(
+  amount: number = 0,
+  total: number = 0
+): MantineColor {
   const perc = getPercentage(amount, total);
   if (perc <= 45) return "green";
   else if (perc > 45 && perc <= 70) return "yellow";

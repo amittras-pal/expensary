@@ -10,26 +10,35 @@ import {
   ThemeIcon,
 } from "@mantine/core";
 import { IconListCheck } from "@tabler/icons-react";
+import { useQuery } from "@tanstack/react-query";
 import React, { useMemo } from "react";
 import { useParams } from "react-router-dom";
 import BudgetItem from "../../../components/BudgetItem";
 import { primaryColor } from "../../../constants/app";
 import { useErrorHandler } from "../../../hooks/error-handler";
-import { useSummary } from "../../home/services";
+import { getSummary } from "../../../services/expense.service";
 import { formatCurrency } from "../../../utils";
 
 function PlanSummary() {
   const { onError } = useErrorHandler();
   const params = useParams();
 
-  const { data: summary, isLoading: loadingSummary } = useSummary(params.id, {
+  // const { data: summary, isLoading: loadingSummary } = useSummary(params.id, {
+  //   refetchOnWindowFocus: false,
+  //   staleTime: 5 * 60 * 1000,
+  //   onError,
+  // });
+
+  const { data: summary, isLoading: loadingSummary } = useQuery({
+    queryKey: ["summary", params.id],
+    queryFn: () => getSummary(params.id),
     refetchOnWindowFocus: false,
     staleTime: 5 * 60 * 1000,
     onError,
   });
 
   const summaryData = useMemo(() => {
-    return summary ? Object.entries(summary?.data?.response.summary ?? {}) : [];
+    return summary ? Object.entries(summary?.response.summary ?? {}) : [];
   }, [summary]);
 
   if (loadingSummary)
@@ -85,19 +94,14 @@ function PlanSummary() {
               </Text>
             </Box>
           )}
-          {summaryData?.map(([category, data]) => (
-            <BudgetItem
-              category={category}
-              subCategories={data.subCategories}
-              total={data.total}
-              key={category}
-            />
+          {summaryData?.map((data) => (
+            <BudgetItem data={data} total={data.total} key={data[0]} />
           ))}
         </SimpleGrid>
       </ScrollArea>
       <Divider my={8} />
       <Text fw="bold" fz="lg" px={4}>
-        Total: {formatCurrency(summary?.data?.response?.total)}
+        Total: {formatCurrency(summary?.response?.total)}
       </Text>
     </Box>
   );

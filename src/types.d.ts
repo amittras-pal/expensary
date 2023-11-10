@@ -22,6 +22,8 @@ interface IUser {
   email: string;
   pin?: string;
   timeZone: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface ICategory {
@@ -39,4 +41,42 @@ interface IBudget {
   month: number;
   year: number;
   amount: number;
+}
+
+interface IExpense {
+  _id?: string;
+  title: string;
+  description: string;
+  date: Date | string;
+  categoryId: string;
+  category?: ICategory;
+  user: string;
+  plan?: string | null;
+  amount: number;
+  reverted: boolean;
+  linked: string | null;
+}
+
+interface IExpensePlan {
+  _id?: string;
+  name: string;
+  description: string;
+  user: string;
+  open: boolean;
+  lastAction:
+    | "Created"
+    | "Updated"
+    | "Expense Added"
+    | "Expense Updated"
+    | "Expense Removed"
+    | "Closed";
+}
+
+interface SummaryCategory extends ICategory {
+  value: number;
+}
+
+interface SummaryItem {
+  subCategories: SummaryCategory[];
+  total: number;
 }

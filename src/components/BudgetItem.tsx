@@ -1,5 +1,3 @@
-// TODO: TS Migration
-
 import {
   Badge,
   Box,
@@ -11,24 +9,31 @@ import {
 } from "@mantine/core";
 import React, { useMemo } from "react";
 import { Icons } from "../constants/categories";
-import { useStyles } from "../modules/home/styles";
+import { useBudgetItemStyles } from "../theme/budgetItem.styles";
 import { formatCurrency } from "../utils";
 
+interface IBudgetItemProps {
+  showSelection: boolean;
+  selection: string[];
+  onSelectionChange: React.ChangeEventHandler<HTMLInputElement>;
+  data: [string, SummaryItem];
+}
+
 function BudgetItem({
-  category,
-  subCategories,
-  total,
   showSelection,
   selection,
   onSelectionChange,
-}) {
-  const { classes } = useStyles();
+  data,
+}: IBudgetItemProps) {
+  const [category, { subCategories, total }] = data;
+
+  const { classes } = useBudgetItemStyles();
   const subItems = useMemo(() => {
-    return subCategories.map((item) => ({
+    return data[1].subCategories.map((item) => ({
       ...item,
       Icon: Icons[item.icon],
     }));
-  }, [subCategories]);
+  }, [data]);
 
   return (
     <Box className={classes.item}>
@@ -53,7 +58,7 @@ function BudgetItem({
               label={`${label}: ${formatCurrency(value)}`}
               withArrow
               key={label}
-              events={{ hover: true, touch: true }}
+              events={{ hover: true, touch: true, focus: true }}
               position="right"
             >
               <ThemeIcon size="sm" variant="light" color={color}>
