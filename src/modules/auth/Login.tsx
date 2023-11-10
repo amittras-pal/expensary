@@ -1,5 +1,3 @@
-// TODO: TS Migration
-
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Box,
@@ -14,17 +12,18 @@ import {
 import { useDocumentTitle } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
+import { useMutation } from "@tanstack/react-query";
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import PinInput from "../../components/pin-input/PinInput";
 import { APP_TITLE, primaryColor } from "../../constants/app";
 import { useCurrentUser } from "../../context/user.context";
 import { useErrorHandler } from "../../hooks/error-handler";
+import { LoginForm, loginSchema } from "../../schemas/schemas";
+import { loginUser } from "../../services/user.service";
+import { useAuthStyles } from "../../theme/auth.styles";
 import PublicGuard from "../guards/PublicGuard";
-import { useLoginUser } from "./services";
-import { useAuthStyles } from "./styles";
-import { loginSchema } from "./utils";
 
 export default function Login() {
   const { classes } = useAuthStyles();
@@ -39,23 +38,24 @@ export default function Login() {
     handleSubmit,
     setValue,
     formState: { errors, isValid },
-  } = useForm({
+  } = useForm<LoginForm>({
     mode: "onBlur",
     shouldFocusError: true,
     defaultValues: {
       email: "",
-      pin: "",
+      pin: 0,
     },
     resolver: yupResolver(loginSchema),
   });
 
-  const { mutate: login, isLoading: loggingIn } = useLoginUser({
+  const { mutate: login, isLoading: loggingIn } = useMutation({
+    mutationFn: loginUser,
     onSuccess: (res) => {
-      localStorage.setItem("authToken", res.data?.response?.token);
-      setUserData(res.data?.response?.user);
+      localStorage.setItem("authToken", res.response?.token);
+      setUserData(res?.response?.user);
       notifications.show({
-        title: res.data?.message,
-        message: `Welcome, ${res.data?.response?.user.userName}`,
+        title: res.message,
+        message: `Welcome, ${res.response?.user.userName}`,
         color: "green",
         icon: <IconCheck />,
       });
@@ -64,14 +64,16 @@ export default function Login() {
     onError,
   });
 
+  const handleLogin: SubmitHandler<LoginForm> = (values) => {
+    login({ email: values.email, pin: values.pin.toString() });
+  };
+
   return (
     <PublicGuard>
       <Box
         component="form"
-        onSubmit={handleSubmit(login)}
+        onSubmit={handleSubmit(handleLogin)}
         className={classes.wrapper}
-        align="center"
-        justify="center"
       >
         <Container size="lg" className={classes.paper}>
           <Text fz="lg" fw="bold" mb="sm">
@@ -88,8 +90,9 @@ export default function Login() {
           />
           <PinInput
             length={6}
+            mask
             onChange={(e) =>
-              setValue("pin", e, {
+              setValue("pin", parseInt(e), {
                 shouldTouch: true,
                 shouldDirty: true,
                 shouldValidate: true,
@@ -103,11 +106,7 @@ export default function Login() {
           <Text fw="bold" mb="sm">
             Login To:{" "}
           </Text>
-          <Chip.Group
-            onChange={setTarget}
-            value={target}
-            className={classes.chipGroup}
-          >
+          <Chip.Group onChange={(e: string) => setTarget(e)} value={target}>
             <Group position="center" spacing="xs" mb="md">
               <Chip variant="filled" value="/">
                 Home

@@ -13,11 +13,11 @@ import {
 } from "@mantine/core";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { expensePlanSchema } from "../utils";
 import { useCreatePlan, useUpdatePlan } from "../services";
 import { useErrorHandler } from "../../../hooks/error-handler";
 import { notifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
+import { expensePlanSchema } from "../../../schemas/schemas";
 
 export default function ExpensePlanForm({ data, onComplete }) {
   const { primaryColor } = useMantineTheme();

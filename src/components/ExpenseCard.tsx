@@ -29,20 +29,27 @@ import ExpenseDescription from "./ExpenseDescription";
 import { useExpenseStyles } from "../theme/expenseCard.styles";
 dayjs.extend(relativeTime);
 
-interface IExpenseCardProps {
+type ExpenseAction = (e: IExpense) => void;
+interface ReadOnlyCard {
   data: IExpense;
-  // TODO: Make these conditionally required.
-  onEditExpense?: (e: IExpense) => void;
-  onDeleteExpense?: (e: IExpense) => void;
-  hideMenu?: boolean;
+  hideMenu: true;
+  onEditExpense?: ExpenseAction;
+  onDeleteExpense?: ExpenseAction;
+}
+
+interface ActionableCard {
+  data: IExpense;
+  hideMenu: false;
+  onEditExpense: ExpenseAction;
+  onDeleteExpense: ExpenseAction;
 }
 
 function ExpenseCard({
   data,
   onEditExpense,
   onDeleteExpense,
-  hideMenu = false,
-}: IExpenseCardProps) {
+  hideMenu,
+}: ActionableCard | ReadOnlyCard) {
   const { classes } = useExpenseStyles();
 
   const isEditable = useMemo(

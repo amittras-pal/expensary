@@ -7,37 +7,21 @@ import {
   Text,
   ThemeIcon,
   Tooltip,
-  createStyles,
 } from "@mantine/core";
 import { IconHelp, IconRefresh } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import { blinkColors, time20Min } from "../../constants/app";
 import { pingServer } from "../../services/server.service";
+import { useConnectorStyles } from "../../theme/connector.styles";
 import Artwork from "./Artwork";
-
-const useStyles = createStyles((theme) => ({
-  wrapper: {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    width: "100vw",
-    height: "100vh",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: theme.spacing.sm,
-    textAlign: "center",
-  },
-}));
 
 type PingerProps = {
   children: JSX.Element;
 };
 
 export default function ServerConnecting({ children }: PingerProps) {
-  const { classes } = useStyles();
+  const { classes } = useConnectorStyles();
 
   const { isLoading, isError } = useQuery({
     queryKey: ["wake-server"],

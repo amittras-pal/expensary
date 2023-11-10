@@ -3,13 +3,18 @@ import React from "react";
 import { PinInput as MPinInput } from "@mantine/core";
 import "./PinInput.scss";
 
+interface EnhancedPinProps extends PinInputProps {
+  label: string;
+  errorMsg: string;
+}
+
 export default function PinInput({
   label,
   error,
   required,
   errorMsg,
   ...props
-}: PinInputProps & { label: string; errorMsg: string }) {
+}: EnhancedPinProps) {
   return (
     <Box mb="md" className={`pi-mod ${error ? "invalid" : ""}`}>
       <Text fz="sm" fw={500} mb={2}>

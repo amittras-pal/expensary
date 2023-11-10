@@ -20,7 +20,4 @@ export const useAuthStyles = createStyles((theme) => ({
     borderColor: theme.colors.gray[8],
     borderRadius: theme.radius.md,
   },
-  chipGroup: {
-    gap: theme.spacing.xs,
-  },
 }));

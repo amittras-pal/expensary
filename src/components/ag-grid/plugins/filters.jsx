@@ -20,7 +20,7 @@ import {
 import { time20Min } from "../../../constants/app";
 import { useErrorHandler } from "../../../hooks/error-handler";
 import { getCategories } from "../../../services/categories.service";
-import { useCategoryFilterStyles } from "../styles";
+import { useCategoryFilterStyles } from "../../../theme/grid.styles";
 
 function Category(props, ref) {
   const { classes } = useCategoryFilterStyles();

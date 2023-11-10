@@ -25,7 +25,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { APP_TITLE, primaryColor } from "../../constants/app";
 import { useMediaMatch } from "../../hooks/media-match";
 import ShortcutsList from "./ShortcutsList";
-import { useAppStyles } from "./styles";
+import { useAppStyles } from "../../theme/layout.styles";
 import logoPath from "../../resources/app-logo.svg";
 
 interface IAppHeaderProps {

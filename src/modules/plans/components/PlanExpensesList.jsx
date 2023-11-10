@@ -8,7 +8,6 @@ import {
   Notification,
   Portal,
   Text,
-  createStyles,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { IconCheck, IconCopy, IconX } from "@tabler/icons-react";
@@ -29,13 +28,14 @@ import {
 } from "../../../components/ag-grid/plugins/filters";
 import { useErrorHandler } from "../../../hooks/error-handler";
 import { useMediaMatch } from "../../../hooks/media-match";
+import { usePlanExpensesStyles } from "../../../theme/plan.styles";
+import { dateFormatter } from "../../../utils";
 import { useExpenseList } from "../../expenses/services";
 import { useCopyToBudget } from "../services";
-import { dateFormatter } from "../../../utils";
 
 export default function PlanExpensesList({ onExpenseAction, plan }) {
   const { onError } = useErrorHandler();
-  const { classes } = useStyles();
+  const { classes } = usePlanExpensesStyles();
   const [selection, setSelection] = useState([]);
   const params = useParams();
   const ref = useRef();
@@ -252,15 +252,3 @@ export default function PlanExpensesList({ onExpenseAction, plan }) {
     </>
   );
 }
-
-const useStyles = createStyles((theme) => ({
-  wrapper: {
-    position: "fixed",
-    width: "100%",
-    maxWidth: "100%",
-    top: "10px",
-    display: "flex",
-    justifyContent: "center",
-    zIndex: 1000,
-  },
-}));

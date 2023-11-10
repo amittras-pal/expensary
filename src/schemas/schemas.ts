@@ -50,7 +50,48 @@ export const expenseSchema = () =>
     linked: yup.string(),
   });
 
+export const loginSchema = yup.object().shape({
+  email: yup.string().email("Invalid Email.").required("Email is required."),
+  pin: yup
+    .number()
+    .typeError("Pin should be numeric.")
+    .required("Pin is required.")
+    .min(100000, "Invalid Pin.")
+    .max(999999, "Invalid Pin."),
+});
+
+export const registerSchema = yup.object().shape({
+  userName: yup.string().required("Name is required"),
+  email: yup.string().email("Invalid Email.").required("Email is required."),
+  pin: yup
+    .number()
+    .typeError("Pin should be numeric.")
+    .required("Pin is required.")
+    .min(100000, "Invalid Pin.")
+    .max(999999, "Invalid Pin."),
+  confirmPin: yup
+    .number()
+    .oneOf([yup.ref("pin"), 0], "Pins do not match")
+    .required("Please enter pin again"),
+  timeZone: yup.string(),
+});
+
+export const expensePlanSchema = yup.object().shape({
+  name: yup
+    .string()
+    .required("Plan name is required.")
+    .max(40, "Plan name can't exceed 40 characters."),
+  description: yup
+    .string()
+    .required("Plan description is required.")
+    .max(400, "Plan description can't exceed 400 characters.")
+    .min(20, "Plan description should be 20 characters or longer"),
+});
+
 const expenseSchemaObject = expenseSchema();
 
+export type LoginForm = yup.InferType<typeof loginSchema>;
+export type RegisterForm = yup.InferType<typeof registerSchema>;
 export type BudgetForm = yup.InferType<typeof budgetFormSchema>;
 export type ExpenseForm = yup.InferType<typeof expenseSchemaObject>;
+export type ExpensePlanForm = yup.InferType<typeof expensePlanSchema>;

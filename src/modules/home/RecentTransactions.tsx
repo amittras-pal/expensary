@@ -54,6 +54,7 @@ function ItemList({
       {list?.length > 0
         ? list.map((exp) => (
             <ExpenseCard
+              hideMenu={false}
               key={exp._id}
               data={exp}
               onEditExpense={onEditExpense}

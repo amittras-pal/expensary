@@ -13,7 +13,7 @@ import { Link, useLocation } from "react-router-dom";
 import { primaryColor } from "../../constants/app";
 import { ROUTES } from "../../constants/routes";
 import { useMediaMatch } from "../../hooks/media-match";
-import { useAppStyles, useNavBtnStyle } from "./styles";
+import { useAppStyles, useNavBtnStyle } from "../../theme/layout.styles";
 
 type RouteChange = {
   onChange: React.Dispatch<React.SetStateAction<boolean>>;

@@ -1,5 +1,3 @@
-// TODO: TS Migration
-
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Box,
@@ -12,16 +10,17 @@ import {
 import { useDocumentTitle } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
+import { useMutation } from "@tanstack/react-query";
 import React from "react";
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
+import PinInput from "../../components/pin-input/PinInput";
 import { APP_TITLE, primaryColor } from "../../constants/app";
 import { useErrorHandler } from "../../hooks/error-handler";
+import { registerUser } from "../../services/user.service";
+import { useAuthStyles } from "../../theme/auth.styles";
 import PublicGuard from "../guards/PublicGuard";
-import { useRegisterUser } from "./services";
-import { useAuthStyles } from "./styles";
-import { registerSchema } from "./utils";
-import PinInput from "../../components/pin-input/PinInput";
+import { RegisterForm, registerSchema } from "../../schemas/schemas";
 
 export default function Register() {
   const { classes } = useAuthStyles();
@@ -35,23 +34,24 @@ export default function Register() {
     setValue,
     watch,
     formState: { errors, isValid },
-  } = useForm({
+  } = useForm<RegisterForm>({
     mode: "onBlur",
     shouldFocusError: true,
     defaultValues: {
       userName: "",
       email: "",
-      pin: "",
-      confirmPin: "",
+      pin: 0,
+      confirmPin: 0,
       timeZone: new Intl.DateTimeFormat().resolvedOptions().timeZone,
     },
     resolver: yupResolver(registerSchema),
   });
 
-  const { mutate: registerUser, isLoading: registering } = useRegisterUser({
+  const { mutate: createUser, isLoading: registering } = useMutation({
+    mutationFn: registerUser,
     onSuccess: (res) => {
       notifications.show({
-        message: res.data?.message,
+        message: res.message,
         color: "green",
         icon: <IconCheck />,
       });
@@ -60,7 +60,7 @@ export default function Register() {
     onError,
   });
 
-  const setFieldValue = (name, value) => {
+  const setFieldValue = (name: keyof RegisterForm, value: string) => {
     setValue(name, value, {
       shouldTouch: true,
       shouldDirty: true,
@@ -68,14 +68,21 @@ export default function Register() {
     });
   };
 
+  const handleCreate: SubmitHandler<RegisterForm> = (values) => {
+    createUser({
+      userName: values.userName,
+      email: values.email,
+      pin: values.pin.toString(),
+      timeZone: values.timeZone,
+    });
+  };
+
   return (
     <PublicGuard>
       <Box
         component="form"
-        onSubmit={handleSubmit(registerUser)}
+        onSubmit={handleSubmit(handleCreate)}
         className={classes.wrapper}
-        align="center"
-        justify="center"
       >
         <Container size="lg" className={classes.paper}>
           <Text fz="lg" fw="bold" mb="sm">
@@ -101,15 +108,16 @@ export default function Register() {
             length={6}
             onChange={(e) => setFieldValue("pin", e)}
             error={Boolean(errors?.pin?.message)}
-            errorMsg={errors?.pin?.message}
+            errorMsg={errors?.pin?.message ?? ""}
             label="Create a pin"
             required
           />
           <PinInput
+            mask
             length={6}
             onChange={(e) => setFieldValue("confirmPin", e)}
             error={Boolean(errors?.confirmPin?.message)}
-            errorMsg={errors?.confirmPin?.message}
+            errorMsg={errors?.confirmPin?.message ?? ""}
             label="Confirm your pin"
             required
           />

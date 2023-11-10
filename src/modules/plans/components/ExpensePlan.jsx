@@ -1,13 +1,6 @@
 // TODO: TS Migration
 
-import {
-  ActionIcon,
-  Box,
-  Divider,
-  Menu,
-  Text,
-  createStyles,
-} from "@mantine/core";
+import { ActionIcon, Box, Divider, Menu, Text } from "@mantine/core";
 import {
   IconDotsVertical,
   IconEdit,
@@ -17,6 +10,7 @@ import {
 import dayjs from "dayjs";
 import React from "react";
 import { Link } from "react-router-dom";
+import { usePlanStyles } from "../../../theme/plan.styles";
 
 export default function ExpensePlan({ data, onPlanAction, hideMenu }) {
   const { classes } = usePlanStyles();
@@ -111,20 +105,3 @@ export default function ExpensePlan({ data, onPlanAction, hideMenu }) {
     </Box>
   );
 }
-
-const usePlanStyles = createStyles((theme) => ({
-  wrapper: {
-    height: "100%",
-    display: "flex",
-    flexDirection: "column",
-    borderRadius: theme.radius.sm,
-    padding: theme.spacing.xs,
-    backgroundColor: theme.colors.dark[6],
-  },
-  details: {
-    display: "flex",
-    gap: theme.spacing.xs,
-    justifyContent: "space-between",
-    marginBottom: theme.spacing.sm,
-  },
-}));
