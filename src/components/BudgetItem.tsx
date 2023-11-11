@@ -13,9 +13,9 @@ import { useBudgetItemStyles } from "../theme/budgetItem.styles";
 import { formatCurrency } from "../utils";
 
 interface IBudgetItemProps {
-  showSelection: boolean;
-  selection: string[];
-  onSelectionChange: React.ChangeEventHandler<HTMLInputElement>;
+  showSelection?: boolean;
+  selection?: string[];
+  onSelectionChange?: React.ChangeEventHandler<HTMLInputElement>;
   data: [string, SummaryItem];
 }
 
@@ -41,7 +41,7 @@ function BudgetItem({
         <Checkbox
           size="sm"
           value={category}
-          checked={selection.includes(category)}
+          checked={selection?.includes(category)}
           onChange={onSelectionChange}
         />
       )}

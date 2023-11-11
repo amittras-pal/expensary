@@ -10,7 +10,9 @@ import {
   Text,
 } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
-import {
+import { IFilterParams } from "ag-grid-community";
+import { IFilterReactComp } from "ag-grid-react";
+import React, {
   Fragment,
   forwardRef,
   useImperativeHandle,
@@ -21,11 +23,12 @@ import { time20Min } from "../../../constants/app";
 import { useErrorHandler } from "../../../hooks/error-handler";
 import { getCategories } from "../../../services/categories.service";
 import { useCategoryFilterStyles } from "../../../theme/grid.styles";
+import { SubCategoryOption } from "../interfaces";
 
-function Category(props, ref) {
+function Category(props: IFilterParams<IExpense>, ref: any) {
   const { classes } = useCategoryFilterStyles();
   const { onError } = useErrorHandler();
-  const [selection, setSelection] = useState([]);
+  const [selection, setSelection] = useState<string[]>([]);
 
   const { isLoading, data: catRes } = useQuery({
     queryKey: ["categories"],
@@ -35,10 +38,10 @@ function Category(props, ref) {
   });
 
   const categoryOptions = useMemo(() => {
-    const s = new Set();
-    const avCats = new Set();
+    const s = new Set<string>();
+    const avCats = new Set<string>();
     props.api.forEachNode((node) => {
-      avCats.add(node.data.category.group);
+      avCats.add(node.data?.category?.group ?? "");
     });
     catRes?.response?.forEach((cat) => {
       if (avCats.has(cat.group)) s.add(cat.group);
@@ -46,7 +49,7 @@ function Category(props, ref) {
     return Array.from(s);
   }, [catRes?.response, props.api]);
 
-  useImperativeHandle(ref, () => {
+  useImperativeHandle(ref, (): IFilterReactComp => {
     return {
       doesFilterPass(params) {
         return selection.length
@@ -62,7 +65,7 @@ function Category(props, ref) {
         return selection;
       },
 
-      setModel(model) {},
+      setModel(_model) {},
     };
   });
 
@@ -119,8 +122,8 @@ function Category(props, ref) {
   );
 }
 
-function SubCategory(props, ref) {
-  const [selection, setSelection] = useState([]);
+function SubCategory(props: IFilterParams<IExpense>, ref: any) {
+  const [selection, setSelection] = useState<string[]>([]);
   const { classes } = useCategoryFilterStyles();
   const { onError } = useErrorHandler();
 
@@ -131,28 +134,33 @@ function SubCategory(props, ref) {
     staleTime: time20Min,
   });
 
-  const categoryOptions = useMemo(() => {
-    const instance = props.api.getFilterInstance("category.group");
-    if (!instance || !instance?.isFilterActive()) return [];
+  const categoryOptions: SubCategoryOption[] = useMemo(() => {
+    const categoryInst = props.api.getFilterInstance("category.group");
+    if (!categoryInst || !categoryInst.isFilterActive()) return [];
 
-    const selectedGroups = instance?.getModel();
-    const avCats = new Set();
+    const selectedGroups = categoryInst.getModel() as string[];
+    const avCats = new Set<string>();
+
     props.api.forEachNode((node) => {
-      avCats.add(node.data.category._id);
+      if (node.data) avCats.add(node.data.category?._id ?? "");
     });
-    const filtered = catRes?.response.filter(
-      (cat) => selectedGroups.includes(cat.group) && avCats.has(cat._id)
-    );
-    return filtered.reduce((grouping, current) => {
-      const groupIndex = grouping.findIndex((g) => g.label === current.group);
-      if (groupIndex > -1) grouping[groupIndex].children.push(current);
-      else grouping.push({ label: current.group, children: [current] });
 
-      return grouping;
-    }, []);
+    const filtered = catRes?.response.filter(
+      (cat) => selectedGroups.includes(cat.group) && avCats.has(cat._id ?? "")
+    );
+
+    return (
+      filtered?.reduce((grouping: SubCategoryOption[], current) => {
+        const gI = grouping.findIndex((g) => g.group === current.group);
+        if (gI > -1) grouping[gI].children.push(current);
+        else grouping.push({ group: current.group, children: [current] });
+
+        return grouping;
+      }, []) ?? []
+    );
   }, [catRes?.response, props.api]);
 
-  useImperativeHandle(ref, () => {
+  useImperativeHandle(ref, (): IFilterReactComp => {
     return {
       doesFilterPass(params) {
         return selection.length
@@ -168,7 +176,7 @@ function SubCategory(props, ref) {
         return selection;
       },
 
-      setModel(model) {},
+      setModel(_model) {},
     };
   });
 
@@ -195,13 +203,14 @@ function SubCategory(props, ref) {
                 <Loader size={32} />
               ) : (
                 categoryOptions.map((opt) => (
-                  <Fragment key={opt.label}>
-                    <Text fz="xs">{opt.label}</Text>
+                  <Fragment key={opt.group}>
+                    <Text fz="xs">{opt.group}</Text>
                     {opt.children.map((child) => (
                       <Checkbox
                         key={child._id}
                         label={child.label}
                         value={child._id}
+                        ml="sm"
                         sx={{ cursor: "pointer" }}
                       />
                     ))}
@@ -236,5 +245,9 @@ function SubCategory(props, ref) {
   );
 }
 
-export const CategoryFilter = forwardRef(Category);
-export const SubCategoryFilter = forwardRef(SubCategory);
+export const CategoryFilter = forwardRef<IFilterParams<IExpense>, any>(
+  Category
+);
+export const SubCategoryFilter = forwardRef<IFilterParams<IExpense>, any>(
+  SubCategory
+);

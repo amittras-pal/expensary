@@ -19,10 +19,8 @@ import {
   AmountCell,
   CategoryCell,
   MetaCell,
-  MetaHeader,
-  RowCountHeader,
   RowMenuCell,
-} from "../../components/ag-grid/plugins/components";
+} from "../../components/ag-grid/plugins/cells";
 import {
   CategoryFilter,
   SubCategoryFilter,
@@ -34,6 +32,10 @@ import { useMediaMatch } from "../../hooks/media-match";
 import { getBudget } from "../../services/budget.service";
 import { getExpenseList } from "../../services/expense.service";
 import { dateFormatter, formatCurrency } from "../../utils";
+import {
+  MetaHeader,
+  RowCountHeader,
+} from "../../components/ag-grid/plugins/headers";
 
 interface ExpenseAtRow extends IExpense {
   index: number;
@@ -118,7 +120,6 @@ export default function Expenses() {
           },
           []
         );
-        console.log(flashCols);
 
         node.setData(update);
         grid?.flashCells({ rowNodes: [node], columns: flashCols });
@@ -174,6 +175,7 @@ export default function Expenses() {
         field: "description",
         maxWidth: 50,
         cellRenderer: MetaCell,
+        // cellRendererParams: { page: "budget" },
         cellRendererParams: { page: "budget" },
         headerComponent: MetaHeader,
         headerClass: "no-pad",
