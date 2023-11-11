@@ -11,15 +11,28 @@ import {
   Textarea,
   useMantineTheme,
 } from "@mantine/core";
-import React from "react";
-import { useForm } from "react-hook-form";
-import { useCreatePlan, useUpdatePlan } from "../services";
-import { useErrorHandler } from "../../../hooks/error-handler";
 import { notifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
-import { expensePlanSchema } from "../../../schemas/schemas";
+import { useMutation } from "@tanstack/react-query";
+import React from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { useErrorHandler } from "../../../hooks/error-handler";
+import {
+  ExpensePlanForm as FormSchema,
+  expensePlanSchema,
+} from "../../../schemas/schemas";
+import { createPlan, updatePlan } from "../../../services/plans.service";
+import { ResponseBody } from "../../../services/response.type";
 
-export default function ExpensePlanForm({ data, onComplete }) {
+interface IExpensePlanFormProps {
+  data?: IExpensePlan | null;
+  onComplete: (e: IExpensePlan | boolean) => void;
+}
+
+export default function ExpensePlanForm({
+  data,
+  onComplete,
+}: IExpensePlanFormProps) {
   const { primaryColor } = useMantineTheme();
   const { onError } = useErrorHandler();
 
@@ -29,7 +42,7 @@ export default function ExpensePlanForm({ data, onComplete }) {
     reset,
     watch,
     formState: { errors, isValid },
-  } = useForm({
+  } = useForm<FormSchema>({
     mode: "onBlur",
     shouldFocusError: true,
     defaultValues: {
@@ -39,35 +52,37 @@ export default function ExpensePlanForm({ data, onComplete }) {
     resolver: yupResolver(expensePlanSchema),
   });
 
-  const handleSuccess = (res) => {
+  const handleSuccess = (res: ResponseBody<IExpensePlan | undefined>) => {
     notifications.show({
-      message: res.data?.message,
+      message: res.message,
       color: "green",
       icon: <IconCheck />,
     });
-    onComplete(res.data?.response ?? true);
+    onComplete(res.response ?? true);
     reset();
   };
 
-  const { mutate: createPlan, isLoading: creating } = useCreatePlan({
+  const { mutate: create, isLoading: creating } = useMutation({
+    mutationFn: createPlan,
     onSuccess: handleSuccess,
     onError,
   });
 
-  const { mutate: updatePlan, isLoading: updating } = useUpdatePlan({
+  const { mutate: update, isLoading: updating } = useMutation({
+    mutationFn: updatePlan,
     onSuccess: handleSuccess,
     onError,
   });
 
   const handleClose = () => {
-    onComplete(null);
+    onComplete(false);
     reset();
   };
 
-  const handleSave = (values) => {
+  const handleSave: SubmitHandler<FormSchema> = (values) => {
     const payload = Object.assign({}, values);
-    if (data) updatePlan({ ...payload, _id: data._id, open: true });
-    else createPlan(payload);
+    if (data) update({ ...payload, _id: data._id, open: true });
+    else create(payload);
   };
 
   return (

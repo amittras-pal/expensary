@@ -11,7 +11,7 @@ import {
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { IconCheck, IconCopy, IconX } from "@tabler/icons-react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import React, { useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import AgGridMod from "../../../components/ag-grid/AgGridMod";
@@ -19,10 +19,8 @@ import {
   AmountCell,
   CategoryCell,
   MetaCell,
-  MetaHeader,
-  RowCountHeader,
   RowMenuCell,
-} from "../../../components/ag-grid/plugins/components";
+} from "../../../components/ag-grid/plugins/cells";
 import {
   CategoryFilter,
   SubCategoryFilter,
@@ -30,18 +28,33 @@ import {
 import { useErrorHandler } from "../../../hooks/error-handler";
 import { useMediaMatch } from "../../../hooks/media-match";
 import { getExpenseList } from "../../../services/expense.service";
+import { copyExpensesToBudget } from "../../../services/plans.service";
 import { usePlanExpensesStyles } from "../../../theme/plan.styles";
 import { dateFormatter } from "../../../utils";
-import { useCopyToBudget } from "../services";
+import { ColDef, GridApi } from "ag-grid-community";
+import {
+  MetaHeader,
+  RowCountHeader,
+} from "../../../components/ag-grid/plugins/headers";
 
-export default function PlanExpensesList({ onExpenseAction, plan }) {
+interface IPlanExpensesListProps {
+  plan: IExpensePlan;
+  onExpenseAction: (data: IExpense, mode: "edit" | "delete") => void;
+}
+
+export default function PlanExpensesList({
+  onExpenseAction,
+  plan,
+}: IPlanExpensesListProps) {
   const { onError } = useErrorHandler();
   const { classes } = usePlanExpensesStyles();
-  const [selection, setSelection] = useState([]);
+
+  const [selection, setSelection] = useState<string[]>([]);
+  const [grid, setGrid] = useState<GridApi<IExpense> | null>(null);
+
   const params = useParams();
-  const ref = useRef();
+  const ref = useRef<HTMLDivElement>(null);
   const isMobile = useMediaMatch();
-  const [grid, setGrid] = useState(null);
 
   const payload = useMemo(
     () => ({
@@ -53,7 +66,7 @@ export default function PlanExpensesList({ onExpenseAction, plan }) {
 
   const clearSelection = () => {
     setSelection([]);
-    grid.api.deselectAll();
+    grid?.deselectAll();
   };
 
   const {
@@ -65,13 +78,14 @@ export default function PlanExpensesList({ onExpenseAction, plan }) {
     queryFn: () => getExpenseList(payload),
     refetchOnWindowFocus: false,
     onSuccess: () => {
-      grid?.api.destroyFilter("category.group");
-      grid?.api.destroyFilter("category._id");
+      grid?.destroyFilter("category.group");
+      grid?.destroyFilter("category._id");
     },
     onError,
   });
 
-  const { mutate: copy, isLoading: copying } = useCopyToBudget({
+  const { mutate: copy, isLoading: copying } = useMutation({
+    mutationFn: copyExpensesToBudget,
     onError,
     onSuccess: (res) => {
       notifications.show({
@@ -84,104 +98,100 @@ export default function PlanExpensesList({ onExpenseAction, plan }) {
     },
   });
 
-  const columns = useMemo(
-    /** @returns {Array<import("ag-grid-community").ColDef>} */
-    () => {
-      return [
-        {
-          headerName: "",
-          field: "_id",
-          maxWidth: 50,
-          hide: plan.open,
-          pinned: "left",
-          headerClass: "no-pad",
-          cellStyle: {
-            paddingLeft: 0,
-            paddingRight: 0,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          },
-          checkboxSelection: true,
-          headerCheckboxSelection: true,
+  const columns = useMemo((): ColDef[] => {
+    return [
+      {
+        headerName: "",
+        field: "_id",
+        maxWidth: 50,
+        hide: plan.open,
+        pinned: "left",
+        headerClass: "no-pad",
+        cellStyle: {
+          paddingLeft: 0,
+          paddingRight: 0,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         },
-        {
-          headerName: "",
-          headerComponent: RowCountHeader,
-          cellRenderer: RowMenuCell,
-          hide: !plan.open,
-          cellRendererParams: {
-            onEditExpense: (data) => onExpenseAction(data, "edit"),
-            onDeleteExpense: (data) => onExpenseAction(data, "delete"),
-            plan: plan,
-          },
-          field: "_id",
-          pinned: "left",
-          maxWidth: 50,
-          headerClass: "no-pad",
-          cellStyle: {
-            paddingLeft: 0,
-            paddingRight: 0,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          },
+        checkboxSelection: true,
+        headerCheckboxSelection: true,
+      },
+      {
+        headerName: "",
+        headerComponent: RowCountHeader,
+        cellRenderer: RowMenuCell,
+        hide: !plan.open,
+        cellRendererParams: {
+          onEditExpense: (data: IExpense) => onExpenseAction(data, "edit"),
+          onDeleteExpense: (data: IExpense) => onExpenseAction(data, "delete"),
+          plan: plan,
         },
-        {
-          headerName: "Description",
-          field: "description",
-          maxWidth: 50,
-          cellRenderer: MetaCell,
-          cellRendererParams: { page: "plan" },
-          headerComponent: MetaHeader,
-          headerClass: "no-pad",
-          cellStyle: {
-            paddingLeft: 0,
-            paddingRight: 0,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          },
+        field: "_id",
+        pinned: "left",
+        maxWidth: 50,
+        headerClass: "no-pad",
+        cellStyle: {
+          paddingLeft: 0,
+          paddingRight: 0,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         },
-        {
-          headerName: "Title",
-          field: "title",
-          minWidth: isMobile ? 240 : 320,
+      },
+      {
+        headerName: "Description",
+        field: "description",
+        maxWidth: 50,
+        cellRenderer: MetaCell,
+        cellRendererParams: { page: "plan" },
+        headerComponent: MetaHeader,
+        headerClass: "no-pad",
+        cellStyle: {
+          paddingLeft: 0,
+          paddingRight: 0,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         },
-        {
-          headerName: "Category",
-          field: "category.group",
-          minWidth: 240,
-          cellRenderer: CategoryCell,
-          filter: CategoryFilter,
-        },
-        {
-          headerName: "Sub Category",
-          colId: "category._id",
-          field: "category.label",
-          minWidth: 240,
-          cellRenderer: CategoryCell,
-          filter: SubCategoryFilter,
-        },
-        {
-          headerName: "Amount",
-          field: "amount",
-          minWidth: 140,
-          sortable: true,
-          cellRenderer: AmountCell,
-        },
-        {
-          headerName: "Date",
-          field: "date",
-          sortable: true,
-          minWidth: 160,
-          initialSort: "desc",
-          valueFormatter: dateFormatter,
-        },
-      ];
-    },
-    [isMobile, onExpenseAction, plan]
-  );
+      },
+      {
+        headerName: "Title",
+        field: "title",
+        minWidth: isMobile ? 240 : 320,
+      },
+      {
+        headerName: "Category",
+        field: "category.group",
+        minWidth: 240,
+        cellRenderer: CategoryCell,
+        filter: CategoryFilter,
+      },
+      {
+        headerName: "Sub Category",
+        colId: "category._id",
+        field: "category.label",
+        minWidth: 240,
+        cellRenderer: CategoryCell,
+        filter: SubCategoryFilter,
+      },
+      {
+        headerName: "Amount",
+        field: "amount",
+        minWidth: 140,
+        sortable: true,
+        cellRenderer: AmountCell,
+      },
+      {
+        headerName: "Date",
+        field: "date",
+        sortable: true,
+        minWidth: 160,
+        initialSort: "desc",
+        valueFormatter: dateFormatter,
+      },
+    ];
+  }, [isMobile, onExpenseAction, plan]);
 
   return (
     <>
@@ -192,7 +202,7 @@ export default function PlanExpensesList({ onExpenseAction, plan }) {
           popupParent={document.body}
           height={ref.current?.clientHeight ?? 0}
           rowData={listRes?.response ?? []}
-          onGridReady={setGrid}
+          onGridReady={({ api }) => setGrid(api)}
           rowSelection="multiple"
           isRowSelectable={(e) => !e.data?.linked}
           onRowSelected={({ api }) => {
@@ -242,7 +252,7 @@ export default function PlanExpensesList({ onExpenseAction, plan }) {
                   radius="sm"
                   onClick={() => {
                     setSelection([]);
-                    grid.api.deselectAll();
+                    grid?.deselectAll();
                   }}
                 >
                   <IconX size={14} />

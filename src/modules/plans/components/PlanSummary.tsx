@@ -1,5 +1,3 @@
-// TODO: TS Migration
-
 import {
   Box,
   Divider,
@@ -23,15 +21,9 @@ function PlanSummary() {
   const { onError } = useErrorHandler();
   const params = useParams();
 
-  // const { data: summary, isLoading: loadingSummary } = useSummary(params.id, {
-  //   refetchOnWindowFocus: false,
-  //   staleTime: 5 * 60 * 1000,
-  //   onError,
-  // });
-
   const { data: summary, isLoading: loadingSummary } = useQuery({
     queryKey: ["summary", params.id],
-    queryFn: () => getSummary(params.id),
+    queryFn: () => getSummary(params.id ?? ""),
     refetchOnWindowFocus: false,
     staleTime: 5 * 60 * 1000,
     onError,
@@ -95,7 +87,7 @@ function PlanSummary() {
             </Box>
           )}
           {summaryData?.map((data) => (
-            <BudgetItem data={data} total={data.total} key={data[0]} />
+            <BudgetItem data={data} key={data[0]} />
           ))}
         </SimpleGrid>
       </ScrollArea>

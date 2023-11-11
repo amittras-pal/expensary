@@ -1,6 +1,4 @@
-// TODO: TS Migration
-
-import { ActionIcon, Box, Divider, Menu, Text } from "@mantine/core";
+import { ActionIcon, Box, Divider, Menu, Text, TextProps } from "@mantine/core";
 import {
   IconDotsVertical,
   IconEdit,
@@ -8,28 +6,59 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import dayjs from "dayjs";
-import React from "react";
+import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { usePlanStyles } from "../../../theme/plan.styles";
 
-export default function ExpensePlan({ data, onPlanAction, hideMenu }) {
+type PlanAction = (
+  data: IExpensePlan,
+  mode: "edit" | "delete" | "close"
+) => void;
+
+interface ReadOnlyCard {
+  data: IExpensePlan;
+  hideMenu: true;
+  onPlanAction?: PlanAction;
+}
+
+interface ActionableCard {
+  data: IExpensePlan;
+  hideMenu: false;
+  onPlanAction: PlanAction;
+}
+
+export default function ExpensePlan({
+  data,
+  onPlanAction,
+  hideMenu,
+}: ActionableCard | ReadOnlyCard) {
   const { classes } = usePlanStyles();
+
+  const textProps = useMemo(
+    (): Partial<TextProps> => ({
+      fz: "md",
+      fw: "bold",
+      m: 0,
+      td: !data.open ? "line-through" : "",
+      c: !data.open ? "dimmed" : "",
+    }),
+    [data.open]
+  );
 
   return (
     <Box className={classes.wrapper}>
       <Box className={classes.details}>
         <Box>
-          <Text
-            size="md"
-            fw="bold"
-            m={0}
-            td={!data.open ? "line-through" : ""}
-            color={!data.open ? "dimmed" : ""}
-            component={hideMenu ? "p" : Link}
-            to={`/plans/${data._id}`}
-          >
-            {data.name}
-          </Text>
+          {hideMenu ? (
+            <Text {...textProps} component={"p"}>
+              {data.name}
+            </Text>
+          ) : (
+            <Text {...textProps} component={Link} to={`/plans/${data._id}`}>
+              {data.name}
+            </Text>
+          )}
+
           <Text size="xs" color="dimmed" sx={{ whiteSpace: "pre-wrap" }}>
             {data.description}
           </Text>

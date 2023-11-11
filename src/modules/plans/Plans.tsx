@@ -1,5 +1,3 @@
-// TODO: TS Migration
-
 import {
   ActionIcon,
   Alert,
@@ -15,46 +13,51 @@ import { useDisclosure, useDocumentTitle, useHotkeys } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import { IconCheck, IconChecklist, IconPlus, IconX } from "@tabler/icons-react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useMemo, useState } from "react";
 import { APP_TITLE, primaryColor } from "../../constants/app";
 import { useErrorHandler } from "../../hooks/error-handler";
-import { getPlans } from "../../services/plans.service";
+import { getPlans, updatePlan } from "../../services/plans.service";
 import DeletePlan from "./components/DeletePlan";
 import ExpensePlan from "./components/ExpensePlan";
 import ExpensePlanForm from "./components/ExpensePlanForm";
-import { useUpdatePlan } from "./services";
+// import { useUpdatePlan } from "./services";
+
+interface PlanSegregation {
+  active: IExpensePlan[];
+  closed: IExpensePlan[];
+}
 
 export default function Plans() {
+  useDocumentTitle(`${APP_TITLE} | Expense Plans`);
   const { onError } = useErrorHandler();
   const { data, isLoading } = useQuery({
     queryKey: ["plans-list", false],
-    queryFn: getPlans,
+    queryFn: () => getPlans("false"),
     refetchOnMount: false,
     onError,
   });
 
-  const plansList = useMemo(() => {
-    const groups = { active: [], closed: [] };
-    if (!data) return groups;
-    data?.data?.response?.forEach((plan) => {
+  const plansList: PlanSegregation = useMemo(() => {
+    if (!data) return { active: [], closed: [] };
+    const groups: PlanSegregation = { active: [], closed: [] };
+
+    data?.response?.forEach((plan) => {
       if (plan.open) groups.active.push(plan);
       else groups.closed.push(plan);
     });
     return groups;
   }, [data]);
 
-  useDocumentTitle(`${APP_TITLE} | Expense Plans`);
-
   const [showForm, formModal] = useDisclosure(false);
   const [confirm, deleteModal] = useDisclosure(false);
   useHotkeys([["N", formModal.open]]);
 
-  const [targetPlan, setTargetPlan] = useState(null);
+  const [targetPlan, setTargetPlan] = useState<IExpensePlan | null>(null);
 
   const client = useQueryClient();
 
-  const handleModalClose = (refreshData) => {
+  const handleModalClose = (refreshData: IExpensePlan | boolean) => {
     if (showForm) formModal.close();
     if (confirm) deleteModal.close();
 
@@ -66,10 +69,11 @@ export default function Plans() {
     }, 1000);
   };
 
-  const { mutate: updatePlan } = useUpdatePlan({
+  const { mutate: update } = useMutation({
+    mutationFn: updatePlan,
     onSuccess: (res) => {
       notifications.show({
-        message: res.data?.message,
+        message: res.message,
         color: "green",
         icon: <IconCheck />,
       });
@@ -78,7 +82,10 @@ export default function Plans() {
     onError,
   });
 
-  const handlePlanAction = (data, mode) => {
+  const handlePlanAction = (
+    data: IExpensePlan,
+    mode: "edit" | "delete" | "close"
+  ) => {
     setTargetPlan(data);
     switch (mode) {
       case "edit":
@@ -114,7 +121,7 @@ export default function Plans() {
             leftIcon: <IconX />,
           },
           onConfirm: () => {
-            updatePlan({ ...data, open: false });
+            update({ ...data, open: false });
           },
         });
         break;
@@ -163,10 +170,7 @@ export default function Plans() {
             size="sm"
             mt="sm"
             leftIcon={<IconPlus size={16} />}
-            onClick={() => {
-              console.log("This is executed");
-              formModal.open();
-            }}
+            onClick={formModal.open}
           >
             Create a plan
           </Button>
@@ -176,7 +180,7 @@ export default function Plans() {
           withOverlay
           opened={showForm || confirm}
           withCloseButton={false}
-          onClose={handleModalClose}
+          onClose={() => handleModalClose(false)}
         >
           {showForm && (
             <ExpensePlanForm data={targetPlan} onComplete={handleModalClose} />
@@ -210,6 +214,7 @@ export default function Plans() {
           >
             {plansList.active?.map((plan) => (
               <ExpensePlan
+                hideMenu={false}
                 data={plan}
                 key={plan._id}
                 onPlanAction={handlePlanAction}
@@ -238,6 +243,7 @@ export default function Plans() {
           >
             {plansList.closed?.map((plan) => (
               <ExpensePlan
+                hideMenu={false}
                 data={plan}
                 key={plan._id}
                 onPlanAction={handlePlanAction}
@@ -261,7 +267,7 @@ export default function Plans() {
         withOverlay
         opened={showForm || confirm}
         withCloseButton={false}
-        onClose={handleModalClose}
+        onClose={() => handleModalClose(false)}
       >
         {showForm && (
           <ExpensePlanForm data={targetPlan} onComplete={handleModalClose} />

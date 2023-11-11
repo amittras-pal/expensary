@@ -1,19 +1,19 @@
 // TODO: TS Migration
 
-import { ActionIcon, Modal, Tabs } from "@mantine/core";
+import { ActionIcon, LoadingOverlay, Modal, Tabs } from "@mantine/core";
 import { useDisclosure, useDocumentTitle, useHotkeys } from "@mantine/hooks";
 import { IconInfoCircle, IconPlus } from "@tabler/icons-react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import DeleteExpense from "../../components/DeleteExpense";
 import ExpenseForm from "../../components/ExpenseForm";
 import { APP_TITLE, primaryColor } from "../../constants/app";
 import { useErrorHandler } from "../../hooks/error-handler";
+import { getPlanDetails } from "../../services/plans.service";
 import PlanDetailsPanel from "./components/PlanDetailsPanel";
 import PlanExpensesList from "./components/PlanExpensesList";
 import PlanSummary from "./components/PlanSummary";
-import { usePlanDetails } from "./services";
 
 export default function PlanDetails() {
   const params = useParams();
@@ -21,7 +21,7 @@ export default function PlanDetails() {
   const [showForm, formModal] = useDisclosure(false);
   const [confirm, deleteModal] = useDisclosure(false);
 
-  const [targetExpense, setTargetExpense] = useState(null);
+  const [targetExpense, setTargetExpense] = useState<IExpense | null>(null);
   const client = useQueryClient();
   const { onError } = useErrorHandler();
   const payload = useMemo(
@@ -32,12 +32,17 @@ export default function PlanDetails() {
     [params]
   );
 
-  const { data: detailsRes } = usePlanDetails(params.id, { onError });
+  const { data: detailsRes, isLoading } = useQuery({
+    queryKey: ["plan-details", params.id],
+    queryFn: () => getPlanDetails(params.id ?? ""),
+    onError,
+  });
+
   useDocumentTitle(
-    `${APP_TITLE} | Plan: ${detailsRes?.data?.response?.name ?? "Loading..."}`
+    `${APP_TITLE} | Plan: ${detailsRes?.response?.name ?? "Loading..."}`
   );
 
-  const handleClose = (refreshData) => {
+  const handleClose = (refreshData: IExpense | boolean) => {
     if (showForm) formModal.close();
     if (confirm) deleteModal.close();
 
@@ -52,7 +57,7 @@ export default function PlanDetails() {
     }, 500);
   };
 
-  const handleExpenseAction = (data, mode) => {
+  const handleExpenseAction = (data: IExpense, mode: "edit" | "delete") => {
     setTargetExpense(data);
     switch (mode) {
       case "edit":
@@ -66,12 +71,9 @@ export default function PlanDetails() {
     }
   };
 
-  const openCreateForm = () => {
-    setTargetExpense({ plan: params.id });
-    formModal.open();
-  };
+  useHotkeys([["N", formModal.open]]);
 
-  useHotkeys([["N", openCreateForm]]);
+  if (isLoading || !detailsRes) return <LoadingOverlay visible />;
 
   return (
     <>
@@ -96,20 +98,20 @@ export default function PlanDetails() {
         <Tabs.Panel value="list" pt="xs" sx={{ height: "100%" }}>
           <PlanExpensesList
             onExpenseAction={handleExpenseAction}
-            plan={detailsRes?.data?.response}
+            plan={detailsRes?.response}
           />
         </Tabs.Panel>
         <Tabs.Panel value="info" pt="xs" sx={{ height: "100%" }}>
-          <PlanDetailsPanel data={detailsRes?.data?.response ?? {}} />
+          <PlanDetailsPanel data={detailsRes?.response} />
         </Tabs.Panel>
       </Tabs>
-      {detailsRes?.data?.response?.open && (
+      {detailsRes?.response?.open && (
         <ActionIcon
           size="xl"
           radius="xl"
           variant="filled"
           color={primaryColor}
-          onClick={openCreateForm}
+          onClick={formModal.open}
           sx={{ position: "fixed", bottom: "1rem", right: "1rem" }}
         >
           <IconPlus size={24} />
@@ -119,7 +121,7 @@ export default function PlanDetails() {
         centered
         opened={showForm || confirm}
         withCloseButton={false}
-        onClose={handleClose}
+        onClose={() => handleClose(false)}
         withOverlay
       >
         {showForm && (

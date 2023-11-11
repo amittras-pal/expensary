@@ -1,10 +1,12 @@
-// TODO: TS Migration
-
 import { Badge, Box, Divider, Text } from "@mantine/core";
 import dayjs from "dayjs";
 import React from "react";
 
-export default function PlanDetailsPanel({ data }) {
+interface IPlanDetailsPanelProps {
+  data: IExpensePlan;
+}
+
+export default function PlanDetailsPanel({ data }: IPlanDetailsPanelProps) {
   return (
     <Box
       sx={(theme) => ({

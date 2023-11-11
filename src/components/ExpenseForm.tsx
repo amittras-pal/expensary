@@ -52,6 +52,21 @@ export default function ExpenseForm({ data, onComplete }: IExpenseFormProps) {
     reset();
   };
 
+  const { addToPlan, plan } = useMemo(() => {
+    const object = { addToPlan: false, plan: "" };
+    if (!!data && data.plan) {
+      object.addToPlan = true;
+      object.plan = data.plan;
+    }
+
+    if (!!params.id) {
+      object.addToPlan = true;
+      object.plan = params.id;
+    }
+
+    return object;
+  }, [data, params.id]);
+
   const {
     register,
     handleSubmit,
@@ -68,8 +83,8 @@ export default function ExpenseForm({ data, onComplete }: IExpenseFormProps) {
       amount: data?.amount ?? 0,
       categoryId: data?.categoryId ?? "",
       date: data ? dayjs(data.date).toDate() : dayjs().toDate(),
-      addToPlan: data ? Boolean(data.plan) : false,
-      plan: data?.plan ?? "",
+      addToPlan: addToPlan,
+      plan: plan,
       linked: data?.linked ?? "",
     },
     resolver: yupResolver(expenseSchema()),
@@ -102,7 +117,7 @@ export default function ExpenseForm({ data, onComplete }: IExpenseFormProps) {
 
   const { data: plansRes, isLoading: loadingPlans } = useQuery({
     queryKey: ["plans-list", true],
-    queryFn: () => getPlans(true),
+    queryFn: () => getPlans("true"),
     enabled: watch("addToPlan"),
     refetchOnMount: false,
     onError,

@@ -4,7 +4,7 @@ import { ENDPOINTS } from "../constants/endpoints";
 import { ResponseBody, SummaryResponse } from "./response.type";
 
 export function getSummary(
-  plan: boolean | null
+  plan: boolean | string | null
 ): Promise<ResponseBody<SummaryResponse>> {
   return axios
     .get(ENDPOINTS.summary, {

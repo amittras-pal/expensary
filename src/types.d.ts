@@ -58,11 +58,13 @@ interface IExpense {
 }
 
 interface IExpensePlan {
-  _id?: string;
+  _id: string;
   name: string;
   description: string;
   user: string;
   open: boolean;
+  createdAt: string;
+  updatedAt: string;
   lastAction:
     | "Created"
     | "Updated"

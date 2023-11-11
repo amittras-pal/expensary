@@ -8,22 +8,29 @@ import {
   Text,
   useMantineTheme,
 } from "@mantine/core";
-import React from "react";
-import { useErrorHandler } from "../../../hooks/error-handler";
-import { useDeletePlan } from "../services";
 import { notifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
+import { useMutation } from "@tanstack/react-query";
+import React from "react";
+import { useErrorHandler } from "../../../hooks/error-handler";
+import { deletePlan } from "../../../services/plans.service";
 import ExpensePlan from "./ExpensePlan";
 
-export default function DeletePlan({ data, onComplete }) {
+interface IDeletePlanProps {
+  data?: IExpensePlan | null;
+  onComplete: (e: boolean) => void;
+}
+
+export default function DeletePlan({ data, onComplete }: IDeletePlanProps) {
   const { primaryColor } = useMantineTheme();
   const { onError } = useErrorHandler();
 
-  const { mutate: deletePlan, isLoading: deleting } = useDeletePlan({
+  const { mutate, isLoading: deleting } = useMutation({
+    mutationFn: deletePlan,
     onSuccess: (res) => {
       onComplete(true);
       notifications.show({
-        message: res.data?.message,
+        message: res.message,
         color: "green",
         icon: <IconCheck />,
       });
@@ -37,7 +44,7 @@ export default function DeletePlan({ data, onComplete }) {
         Are you sure you want to delete the following expense plan?
       </Text>
       <Divider my="md" />
-      <ExpensePlan data={data} hideMenu />
+      {data && <ExpensePlan data={data} hideMenu />}
       <Divider my="md" />
       <Text color="red">
         This action will delete all expenses added to this plan.
@@ -48,12 +55,12 @@ export default function DeletePlan({ data, onComplete }) {
       <Group grow mt="md">
         <Button
           variant="outline"
-          onClick={() => onComplete(null)}
+          onClick={() => onComplete(false)}
           disabled={deleting}
         >
           Cancel
         </Button>
-        <Button onClick={() => deletePlan(data._id)} loading={deleting}>
+        <Button onClick={() => mutate(data?._id ?? "")} loading={deleting}>
           Delete
         </Button>
       </Group>
