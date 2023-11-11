@@ -13,7 +13,7 @@ import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import { blinkColors, time20Min } from "../../constants/app";
 import { pingServer } from "../../services/server.service";
-import { useConnectorStyles } from "../../theme/connector.styles";
+import { useConnectorStyles } from "../../theme/modules/connector.styles";
 import Artwork from "./Artwork";
 
 type PingerProps = {

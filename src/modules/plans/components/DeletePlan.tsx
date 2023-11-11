@@ -1,4 +1,3 @@
-// TODO: TS Migration
 
 import {
   Box,

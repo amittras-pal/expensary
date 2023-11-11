@@ -1,5 +1,3 @@
-// TODO: TS Migration
-
 import { ActionIcon, LoadingOverlay, Modal, Tabs } from "@mantine/core";
 import { useDisclosure, useDocumentTitle, useHotkeys } from "@mantine/hooks";
 import { IconInfoCircle, IconPlus } from "@tabler/icons-react";

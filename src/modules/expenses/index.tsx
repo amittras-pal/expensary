@@ -9,7 +9,7 @@ import {
 import { MonthPickerInput } from "@mantine/dates";
 import { useDisclosure, useDocumentTitle, useHotkeys } from "@mantine/hooks";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { ColDef, GridApi } from "ag-grid-community";
+import { ColDef, FilterChangedEvent, GridApi } from "ag-grid-community";
 import dayjs from "dayjs";
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import DeleteExpense from "../../components/DeleteExpense";
@@ -225,11 +225,10 @@ export default function Expenses() {
     ];
   }, [isMobile, deleteExpense, editExpense]);
 
-  // TODO: fix this usage of any!
-  const updateFilterTotal = (grid: any) => {
+  const updateFilterTotal = (grid: FilterChangedEvent<IExpense>) => {
     let total = 0;
-    grid.api.forEachNodeAfterFilter((node: { data: IExpense }) => {
-      total += node.data.amount;
+    grid.api.forEachNodeAfterFilter((node) => {
+      total += node.data?.amount ?? 0;
     });
     setFilterTotal(total);
   };

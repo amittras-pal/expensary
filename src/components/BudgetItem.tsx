@@ -9,7 +9,7 @@ import {
 } from "@mantine/core";
 import React, { useMemo } from "react";
 import { Icons } from "../constants/categories";
-import { useBudgetItemStyles } from "../theme/budgetItem.styles";
+import { useBudgetItemStyles } from "../theme/modules/budgetItem.styles";
 import { formatCurrency } from "../utils";
 
 interface IBudgetItemProps {

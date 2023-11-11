@@ -26,7 +26,7 @@ import { primaryColor } from "../constants/app";
 import { Icons } from "../constants/categories";
 import { formatCurrency } from "../utils";
 import ExpenseDescription from "./ExpenseDescription";
-import { useExpenseStyles } from "../theme/expenseCard.styles";
+import { useExpenseStyles } from "../theme/modules/expenseCard.styles";
 dayjs.extend(relativeTime);
 
 type ExpenseAction = (e: IExpense) => void;

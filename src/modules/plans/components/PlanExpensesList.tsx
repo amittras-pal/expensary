@@ -1,5 +1,3 @@
-// TODO: TS Migration
-
 import {
   ActionIcon,
   Box,
@@ -29,7 +27,7 @@ import { useErrorHandler } from "../../../hooks/error-handler";
 import { useMediaMatch } from "../../../hooks/media-match";
 import { getExpenseList } from "../../../services/expense.service";
 import { copyExpensesToBudget } from "../../../services/plans.service";
-import { usePlanExpensesStyles } from "../../../theme/plan.styles";
+import { usePlanExpensesStyles } from "../../../theme/modules/plan.styles";
 import { dateFormatter } from "../../../utils";
 import { ColDef, GridApi } from "ag-grid-community";
 import {

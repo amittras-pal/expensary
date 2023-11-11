@@ -18,7 +18,7 @@ import PinInput from "../../components/pin-input/PinInput";
 import { APP_TITLE, primaryColor } from "../../constants/app";
 import { useErrorHandler } from "../../hooks/error-handler";
 import { registerUser } from "../../services/user.service";
-import { useAuthStyles } from "../../theme/auth.styles";
+import { useAuthStyles } from "../../theme/modules/auth.styles";
 import PublicGuard from "../guards/PublicGuard";
 import { RegisterForm, registerSchema } from "../../schemas/schemas";
 

@@ -10,7 +10,7 @@ import { APP_TITLE, primaryColor } from "../../constants/app";
 import { useCurrentUser } from "../../context/user.context";
 import { useErrorHandler } from "../../hooks/error-handler";
 import { downloadReport } from "../../services/report.service";
-import { useReportStyles } from "../../theme/report.styles";
+import { useReportStyles } from "../../theme/modules/report.styles";
 import { downloadFile } from "../../utils";
 
 interface CommonPickerProps extends PickerBaseProps<"range"> {

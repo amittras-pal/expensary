@@ -3,7 +3,7 @@ import React from "react";
 import ExpenseCard from "../../components/ExpenseCard";
 import ExpenseListSkeleton from "../../components/ExpenseListSkeleton";
 import { useMediaMatch } from "../../hooks/media-match";
-import { useDashboardStyles } from "../../theme/dashboard.styles";
+import { useDashboardStyles } from "../../theme/modules/dashboard.styles";
 
 interface IRecentTransactionsProps {
   list: IExpense[];

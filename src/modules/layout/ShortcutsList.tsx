@@ -3,7 +3,7 @@ import { IconMapPinFilled } from "@tabler/icons-react";
 import React from "react";
 import { useLocation } from "react-router-dom";
 import { planDetailsPath, primaryColor } from "../../constants/app";
-import { useShortcutBlockStyles } from "../../theme/layout.styles";
+import { useShortcutBlockStyles } from "../../theme/modules/layout.styles";
 
 export default function ShortcutsList() {
   const { pathname } = useLocation();

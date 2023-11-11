@@ -1,5 +1,3 @@
-// TODO: TS Migration
-
 import {
   Box,
   Button,
@@ -22,7 +20,7 @@ import React, {
 import { time20Min } from "../../../constants/app";
 import { useErrorHandler } from "../../../hooks/error-handler";
 import { getCategories } from "../../../services/categories.service";
-import { useCategoryFilterStyles } from "../../../theme/grid.styles";
+import { useCategoryFilterStyles } from "../../../theme/modules/grid.styles";
 import { SubCategoryOption } from "../interfaces";
 
 function Category(props: IFilterParams<IExpense>, ref: any) {

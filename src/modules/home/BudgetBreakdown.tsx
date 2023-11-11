@@ -30,7 +30,7 @@ import { useCurrentUser } from "../../context/user.context";
 import { useErrorHandler } from "../../hooks/error-handler";
 import { useMediaMatch } from "../../hooks/media-match";
 import { getSummary } from "../../services/expense.service";
-import { useDashboardStyles } from "../../theme/dashboard.styles";
+import { useDashboardStyles } from "../../theme/modules/dashboard.styles";
 import { formatCurrency, getPercentage, getSeverityColor } from "../../utils";
 
 interface IBudgetBreakdownProps {
@@ -65,7 +65,6 @@ export default function BudgetBreakdown({
     ],
   ]);
 
-  // FIXME: There are 3 different calls for this.
   const {
     data: summary,
     isLoading,
@@ -74,6 +73,7 @@ export default function BudgetBreakdown({
     queryKey: ["summary", null],
     queryFn: () => getSummary(null),
     refetchOnWindowFocus: false,
+    staleTime: 120 * 1000,
     onError,
   });
 

@@ -22,7 +22,7 @@ import { useCurrentUser } from "../../context/user.context";
 import { useErrorHandler } from "../../hooks/error-handler";
 import { LoginForm, loginSchema } from "../../schemas/schemas";
 import { loginUser } from "../../services/user.service";
-import { useAuthStyles } from "../../theme/auth.styles";
+import { useAuthStyles } from "../../theme/modules/auth.styles";
 import PublicGuard from "../guards/PublicGuard";
 
 export default function Login() {
