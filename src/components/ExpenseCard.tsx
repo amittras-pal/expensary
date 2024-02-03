@@ -52,6 +52,7 @@ function ExpenseCard({
 }: ActionableCard | ReadOnlyCard) {
   const { classes } = useExpenseStyles();
   const { userData } = useCurrentUser();
+  // const isMobile = useMediaMatch();
 
   const isEditable = useMemo(
     () =>
@@ -92,8 +93,14 @@ function ExpenseCard({
           )}
           <Badge
             variant="light"
-            size="sm"
+            size="xs"
             color={data.category?.color}
+            // sx={{
+            //   maxWidth: isMobile ? "295px" : "100%",
+            //   textOverflow: "ellipsis",
+            //   overflow: "hidden",
+            //   whiteSpace: "nowrap",
+            // }}
             leftSection={<Icon size={12} style={{ marginBottom: -2 }} />}
             mt={4}
           >

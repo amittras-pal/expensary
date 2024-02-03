@@ -24,9 +24,9 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { APP_TITLE, primaryColor } from "../../constants/app";
 import { useMediaMatch } from "../../hooks/media-match";
-import ShortcutsList from "./ShortcutsList";
-import { useAppStyles } from "../../theme/modules/layout.styles";
 import logoPath from "../../resources/app-logo.svg";
+import { useAppStyles } from "../../theme/modules/layout.styles";
+import ShortcutsList from "./ShortcutsList";
 
 interface IAppHeaderProps {
   open: boolean;
@@ -38,7 +38,7 @@ export default function AppHeader({ open, setOpen }: IAppHeaderProps) {
   const theme = useMantineTheme();
   const client = useQueryClient();
   const navigate = useNavigate();
-  const [title, setTitle] = useState([APP_TITLE, ""]);
+  const [title, setTitle] = useState([APP_TITLE, "Dashboard"]);
   const isMobile = useMediaMatch();
   const [showShortcuts, shortcuts] = useDisclosure(false);
   useHotkeys([["i", shortcuts.open]]);
@@ -62,7 +62,6 @@ export default function AppHeader({ open, setOpen }: IAppHeaderProps) {
 
   const confirmLogout = () =>
     modals.openConfirmModal({
-      centered: true,
       title: "Confirm Logout",
       children: <Text color="red">Are you sure you want to logout?</Text>,
       withCloseButton: false,
@@ -161,7 +160,6 @@ export default function AppHeader({ open, setOpen }: IAppHeaderProps) {
         </Tooltip>
       </Header>
       <Modal
-        centered
         size="lg"
         title="Keyboard Shortcuts"
         opened={showShortcuts}

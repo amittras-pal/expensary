@@ -288,12 +288,10 @@ export default function Expenses() {
         </Box>
       </Group>
       <Modal
-        centered
         opened={showForm || confirm}
         withCloseButton={false}
         zIndex={1000}
         onClose={() => handleClose(false)}
-        withOverlay
       >
         {showForm && (
           <ExpenseForm data={targetExpense} onComplete={handleClose} />

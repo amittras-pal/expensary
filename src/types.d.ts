@@ -3,6 +3,8 @@ declare module "*.svg" {
   export default content;
 }
 
+declare module "*.ttf";
+
 interface RouteItem {
   icon: JSX.Element;
   label: string;

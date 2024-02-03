@@ -116,11 +116,9 @@ export default function PlanDetails() {
         </ActionIcon>
       )}
       <Modal
-        centered
         opened={showForm || confirm}
         withCloseButton={false}
         onClose={() => handleClose(false)}
-        withOverlay
         zIndex={1000}
       >
         {showForm && (

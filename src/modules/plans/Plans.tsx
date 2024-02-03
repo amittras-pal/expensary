@@ -98,7 +98,6 @@ export default function Plans() {
         modals.openConfirmModal({
           title: "Are you sure you want to close this expense plan?",
           closeOnCancel: true,
-          centered: true,
           withCloseButton: false,
           children: (
             <>
@@ -176,8 +175,6 @@ export default function Plans() {
           </Button>
         </Box>
         <Modal
-          centered
-          withOverlay
           opened={showForm || confirm}
           withCloseButton={false}
           onClose={() => handleModalClose(false)}
@@ -263,8 +260,6 @@ export default function Plans() {
         <IconPlus size={24} />
       </ActionIcon>
       <Modal
-        centered
-        withOverlay
         opened={showForm || confirm}
         withCloseButton={false}
         onClose={() => handleModalClose(false)}

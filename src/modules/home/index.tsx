@@ -74,7 +74,6 @@ export default function Home() {
         )}
       </SimpleGrid>
       <Modal
-        centered
         opened={showForm || confirm}
         withCloseButton={false}
         onClose={() => handleClose(false)}
@@ -103,7 +102,7 @@ export default function Home() {
                 width: "100%",
               }}
             >
-              <Text fw="bold">
+              <Text fw="bold" fz="sm">
                 {list?.response?.length ?? 0} Recent Transactions
               </Text>
               <Text color="dimmed" fz="xs" fs="italic" ml="md">
