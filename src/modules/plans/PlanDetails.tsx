@@ -121,6 +121,7 @@ export default function PlanDetails() {
         withCloseButton={false}
         onClose={() => handleClose(false)}
         withOverlay
+        zIndex={1000}
       >
         {showForm && (
           <ExpenseForm data={targetExpense} onComplete={handleClose} />

@@ -1,7 +1,9 @@
 import { Box, Divider, ScrollArea, Text } from "@mantine/core";
+import dayjs from "dayjs";
 import React from "react";
 import ExpenseCard from "../../components/ExpenseCard";
 import ExpenseListSkeleton from "../../components/ExpenseListSkeleton";
+import { useCurrentUser } from "../../context/user.context";
 import { useMediaMatch } from "../../hooks/media-match";
 import { useDashboardStyles } from "../../theme/modules/dashboard.styles";
 
@@ -20,6 +22,7 @@ export default function RecentTransactions({
 }: IRecentTransactionsProps) {
   const isMobile = useMediaMatch();
   const { classes } = useDashboardStyles();
+  const { userData } = useCurrentUser();
 
   if (loadingList) return <ExpenseListSkeleton />;
 
@@ -31,7 +34,22 @@ export default function RecentTransactions({
     />
   ) : (
     <Box className={classes.listWrapper}>
-      <Text fw="bold">Recent Transactions ({list?.length})</Text>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Text fw="bold">{list?.length ?? 0} Recent Transactions</Text>
+        <Text color="dimmed" fz="xs" fs="italic">
+          Since{" "}
+          {dayjs()
+            .subtract(userData?.editWindow ?? 7, "days")
+            .format("DD MMM")}{" "}
+          ({userData?.editWindow ?? 7} days)
+        </Text>
+      </Box>
       <Divider my="xs" />
       <ScrollArea h="calc(100vh - 162px)">
         <ItemList

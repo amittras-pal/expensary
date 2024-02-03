@@ -25,6 +25,10 @@ import {
   CategoryFilter,
   SubCategoryFilter,
 } from "../../components/ag-grid/plugins/filters";
+import {
+  MetaHeader,
+  RowCountHeader,
+} from "../../components/ag-grid/plugins/headers";
 import { APP_TITLE } from "../../constants/app";
 import { useCurrentUser } from "../../context/user.context";
 import { useErrorHandler } from "../../hooks/error-handler";
@@ -32,10 +36,6 @@ import { useMediaMatch } from "../../hooks/media-match";
 import { getBudget } from "../../services/budget.service";
 import { getExpenseList } from "../../services/expense.service";
 import { dateFormatter, formatCurrency } from "../../utils";
-import {
-  MetaHeader,
-  RowCountHeader,
-} from "../../components/ag-grid/plugins/headers";
 
 interface ExpenseAtRow extends IExpense {
   index: number;
@@ -291,6 +291,7 @@ export default function Expenses() {
         centered
         opened={showForm || confirm}
         withCloseButton={false}
+        zIndex={1000}
         onClose={() => handleClose(false)}
         withOverlay
       >

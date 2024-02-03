@@ -24,6 +24,7 @@ interface IUser {
   timeZone: string;
   createdAt: string;
   updatedAt: string;
+  editWindow: number;
 }
 
 interface ICategory {

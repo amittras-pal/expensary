@@ -8,7 +8,6 @@ import {
   ThemeIcon,
   Tooltip,
 } from "@mantine/core";
-import React from "react";
 import {
   IconBookmark,
   IconCalendarCode,
@@ -21,12 +20,13 @@ import {
 } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { memo, useMemo } from "react";
+import React, { memo, useMemo } from "react";
 import { primaryColor } from "../constants/app";
 import { Icons } from "../constants/categories";
+import { useCurrentUser } from "../context/user.context";
+import { useExpenseStyles } from "../theme/modules/expenseCard.styles";
 import { formatCurrency } from "../utils";
 import ExpenseDescription from "./ExpenseDescription";
-import { useExpenseStyles } from "../theme/modules/expenseCard.styles";
 dayjs.extend(relativeTime);
 
 type ExpenseAction = (e: IExpense) => void;
@@ -51,10 +51,12 @@ function ExpenseCard({
   hideMenu,
 }: ActionableCard | ReadOnlyCard) {
   const { classes } = useExpenseStyles();
+  const { userData } = useCurrentUser();
 
   const isEditable = useMemo(
-    () => dayjs(data.date) >= dayjs().subtract(7, "days"),
-    [data.date]
+    () =>
+      dayjs(data.date) >= dayjs().subtract(userData?.editWindow ?? 7, "days"),
+    [data.date, userData?.editWindow]
   );
 
   const Icon = useMemo(

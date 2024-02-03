@@ -17,10 +17,12 @@ export function getSummary(
     .then((res) => res.data);
 }
 
-export function getRecentTransactions(): Promise<ResponseBody<IExpense[]>> {
+export function getRecentTransactions(
+  expenseWindow: number
+): Promise<ResponseBody<IExpense[]>> {
   return axios
     .post(ENDPOINTS.list, {
-      startDate: dayjs().subtract(7, "days").toDate(),
+      startDate: dayjs().subtract(expenseWindow, "days").toDate(),
       endDate: dayjs().toDate(),
       sort: { date: -1 },
     })

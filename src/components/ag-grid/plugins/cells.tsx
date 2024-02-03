@@ -22,6 +22,7 @@ import { primaryColor } from "../../../constants/app";
 import { formatCurrency } from "../../../utils";
 import ExpenseDescription from "../../ExpenseDescription";
 import { MenuCellProps, MetaCellProps } from "../interfaces";
+import { useCurrentUser } from "../../../context/user.context";
 
 export function MetaCell({ data, page }: MetaCellProps) {
   if (!data?.description && !data?.linked && (data?.amount ?? 0) > 0)
@@ -108,16 +109,22 @@ export function RowMenuCell({
   rowIndex,
   plan,
 }: MenuCellProps) {
+  const { userData } = useCurrentUser();
   const availableActions = useMemo(() => {
     const actions = [];
     if (plan) {
-      if (plan.open && dayjs(data?.date) >= dayjs().subtract(7, "days"))
+      if (
+        plan.open &&
+        dayjs(data?.date) >= dayjs().subtract(userData?.editWindow ?? 7, "days")
+      )
         actions.push("edit", "delete");
-    } else if (dayjs(data?.date) >= dayjs().subtract(7, "days"))
+    } else if (
+      dayjs(data?.date) >= dayjs().subtract(userData?.editWindow ?? 7, "days")
+    )
       actions.push("edit", "delete");
 
     return actions;
-  }, [data?.date, plan]);
+  }, [data?.date, plan, userData?.editWindow]);
 
   if (!availableActions.length) return null;
 

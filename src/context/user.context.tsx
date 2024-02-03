@@ -1,10 +1,10 @@
+import { LoadingOverlay } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import React, { PropsWithChildren, useEffect, useState } from "react";
+import { time20Min } from "../constants/app";
 import { useErrorHandler } from "../hooks/error-handler";
 import { getUserData } from "../services/user.service";
 import { getAuthToken } from "../utils";
-import { LoadingOverlay } from "@mantine/core";
-import { time20Min } from "../constants/app";
 
 type UserCtx = {
   userData: IUser | null;
@@ -37,7 +37,7 @@ export default function UserProvider({ children }: PropsWithChildren) {
     return () => window.removeEventListener("storage", listener);
   }, []);
 
-  const { isFetching: loadingUser } = useQuery({
+  const { isLoading: loadingUser } = useQuery({
     queryKey: ["user-info"],
     enabled: loggedIn,
     staleTime: time20Min,
