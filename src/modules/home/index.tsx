@@ -62,7 +62,6 @@ export default function Home() {
           showForm={formModal.open}
           showRecent={listDrawer.open}
           recents={list?.response?.length ?? 0}
-          // loadingRecents={isLoading}
         />
         {!isMobile && (
           <RecentTransactions

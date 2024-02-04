@@ -52,7 +52,6 @@ function ExpenseCard({
 }: ActionableCard | ReadOnlyCard) {
   const { classes } = useExpenseStyles();
   const { userData } = useCurrentUser();
-  // const isMobile = useMediaMatch();
 
   const isEditable = useMemo(
     () =>
@@ -95,12 +94,6 @@ function ExpenseCard({
             variant="light"
             size="xs"
             color={data.category?.color}
-            // sx={{
-            //   maxWidth: isMobile ? "295px" : "100%",
-            //   textOverflow: "ellipsis",
-            //   overflow: "hidden",
-            //   whiteSpace: "nowrap",
-            // }}
             leftSection={<Icon size={12} style={{ marginBottom: -2 }} />}
             mt={4}
           >
@@ -112,7 +105,6 @@ function ExpenseCard({
             <Tooltip
               position="top"
               disabled={hideMenu}
-              events={{ touch: true, hover: true, focus: false }}
               label={
                 <Text fz="xs">
                   {dayjs(data.date).format("DD MMM 'YY hh:mm a")}
@@ -164,7 +156,6 @@ function ExpenseCard({
           {dayjs(data.date).month() !== dayjs().month() && (
             <Tooltip
               position="left"
-              events={{ touch: true, hover: true, focus: false }}
               label={
                 <Text component="span" fw="normal" size="sm">
                   From {dayjs().subtract(1, "month").format("MMMM")}.
@@ -179,7 +170,6 @@ function ExpenseCard({
           {data.linked && (
             <Tooltip
               position="left"
-              events={{ touch: true, hover: true, focus: false }}
               label={
                 <Text component="span" fw="normal" size="sm">
                   Created in a plan.
@@ -199,7 +189,6 @@ function ExpenseCard({
           {!data.amount && (
             <Tooltip
               position="left"
-              events={{ touch: true, hover: true, focus: false }}
               label={
                 <Text component="span" fw="normal" size="sm">
                   Created to keep record; no money spent.

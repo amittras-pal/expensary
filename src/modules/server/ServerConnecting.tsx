@@ -72,7 +72,6 @@ export default function ServerConnecting({ children }: PingerProps) {
             position="top"
             w={350}
             multiline
-            events={{ hover: true, focus: true, touch: true }}
             label={
               <Text fz="xs" color="dimmed" align="left">
                 The API server is hosted on a free-tier NodeJS hosting platform

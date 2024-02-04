@@ -96,9 +96,32 @@ export const expenseWindowSchema = yup.object().shape({
     .max(25, "Edit window can be between 7-25 days."),
 });
 
+export const pwdChangeSchema = yup.object().shape({
+  email: yup.string(),
+  currentPin: yup
+    .number()
+    .typeError("Pin should be numeric.")
+    .required("Pin is required.")
+    .min(100000, "Invalid Pin.")
+    .max(999999, "Invalid Pin."),
+  newPin: yup
+    .number()
+    .typeError("Pin should be numeric.")
+    .notOneOf([yup.ref("currentPin")], "Old and new pin cannot be same.")
+    .required("Pin is required.")
+    .min(100000, "Invalid Pin.")
+    .max(999999, "Invalid Pin."),
+  confirmNewPin: yup
+    .number()
+    .typeError("Pin should be numeric.")
+    .oneOf([yup.ref("newPin"), 0], "Pins do not match")
+    .required("Please enter pin again"),
+});
+
 export type LoginForm = yup.InferType<typeof loginSchema>;
 export type RegisterForm = yup.InferType<typeof registerSchema>;
 export type BudgetForm = yup.InferType<typeof budgetFormSchema>;
 export type ExpenseForm = yup.InferType<ReturnType<typeof expenseSchema>>;
 export type ExpensePlanForm = yup.InferType<typeof expensePlanSchema>;
 export type ExpenseWindowForm = yup.InferType<typeof expenseWindowSchema>;
+export type PwdChangeForm = yup.InferType<typeof pwdChangeSchema>;

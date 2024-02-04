@@ -24,3 +24,14 @@ export function updateUserDetails(
 ): Promise<ResponseBody<IUser>> {
   return axios.put(ENDPOINTS.updateUser, payload).then((res) => res.data);
 }
+
+export function changeUserPassword(payload: {
+  email: string;
+  currentPin: number;
+  newPin: number;
+  confirmNewPin: number;
+}) {
+  return axios
+    .post<ResponseBody<undefined>>(ENDPOINTS.changePassword, payload)
+    .then((res) => res.data);
+}

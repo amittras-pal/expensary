@@ -1,6 +1,6 @@
 import { LoadingOverlay } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
-import React, { PropsWithChildren, useEffect, useState } from "react";
+import React, { PropsWithChildren, useEffect, useMemo, useState } from "react";
 import { time20Min } from "../constants/app";
 import { useErrorHandler } from "../hooks/error-handler";
 import { getUserData } from "../services/user.service";
@@ -37,23 +37,27 @@ export default function UserProvider({ children }: PropsWithChildren) {
     return () => window.removeEventListener("storage", listener);
   }, []);
 
-  const { isLoading: loadingUser } = useQuery({
+  const { isFetching: loadingUser } = useQuery({
     queryKey: ["user-info"],
     enabled: loggedIn,
     staleTime: time20Min,
     refetchOnWindowFocus: false,
     queryFn: getUserData,
     onError: onError,
+    retry: 0,
     onSuccess: (res) => {
       setUserData(res.response);
     },
   });
 
-  if (loadingUser) return <LoadingOverlay visible overlayBlur={5} />;
+  const ctx: UserCtx = useMemo(
+    () => ({ userData, budget, setUserData, setBudget }),
+    [budget, userData]
+  );
 
   return (
-    <UserContext.Provider value={{ userData, setUserData, budget, setBudget }}>
-      {children}
+    <UserContext.Provider value={ctx}>
+      {loadingUser ? <LoadingOverlay visible overlayBlur={5} /> : children}
     </UserContext.Provider>
   );
 }

@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { ActionIcon, Loader, Text, TextInput } from "@mantine/core";
+import { ActionIcon, Text, TextInput, Tooltip } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { IconCheck, IconExclamationMark } from "@tabler/icons-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -13,7 +13,7 @@ export default function ExpenseWindow() {
   const { userData } = useCurrentUser();
 
   const {
-    formState: { errors, isValid },
+    formState: { errors, isValid, isDirty },
     register,
     handleSubmit,
     setValue,
@@ -63,15 +63,18 @@ export default function ExpenseWindow() {
         type="number"
         inputMode="numeric"
         description="Value is in days..."
+        min={7}
+        max={25}
+        step={1}
+        error={errors?.value?.message}
         rightSection={
-          isLoading ? (
-            <Loader size={18} />
-          ) : (
+          <Tooltip label="Save" color="dark" withArrow position="bottom">
             <ActionIcon
               type="submit"
-              color={isValid ? "green" : "red"}
+              color="indigo"
               variant="light"
-              // disabled={!isValid}
+              disabled={!isDirty}
+              loading={isLoading}
             >
               {isValid ? (
                 <IconCheck size={16} />
@@ -79,12 +82,8 @@ export default function ExpenseWindow() {
                 <IconExclamationMark size={16} />
               )}
             </ActionIcon>
-          )
+          </Tooltip>
         }
-        min={7}
-        max={25}
-        step={1}
-        error={errors?.value?.message}
       />
     </form>
   );

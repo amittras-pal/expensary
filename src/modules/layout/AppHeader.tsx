@@ -114,12 +114,7 @@ export default function AppHeader({ open, setOpen }: IAppHeaderProps) {
         >
           {title[0]} <IconChevronRight size={14} />
         </Text>
-        <Tooltip
-          label={title[1]}
-          disabled={!isMobile}
-          color="dark"
-          events={{ touch: true, hover: true, focus: false }}
-        >
+        <Tooltip label={title[1]} disabled={!isMobile} color="dark">
           <Text fz="sm" fw={400} color="dimmed" mr="auto" lineClamp={1}>
             {title[1]}
           </Text>

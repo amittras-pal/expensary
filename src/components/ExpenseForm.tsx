@@ -139,7 +139,6 @@ export default function ExpenseForm({ data, onComplete }: IExpenseFormProps) {
   });
 
   const handleSave: SubmitHandler<FormSchema> = (values) => {
-    // TODO: check why the types for amount & description are incompatible.
     const payload: Partial<IExpense> = Object.assign(
       {},
       {
@@ -148,7 +147,6 @@ export default function ExpenseForm({ data, onComplete }: IExpenseFormProps) {
         description: values.description ?? "",
       }
     );
-    // Additiona cleanup.
     if (!values.plan || !values.addToPlan) payload.plan = null;
     if (!values.linked) payload.linked = null;
 

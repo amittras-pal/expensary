@@ -58,7 +58,6 @@ function BudgetItem({
               label={`${label}: ${formatCurrency(value)}`}
               withArrow
               key={label}
-              events={{ hover: true, touch: true, focus: true }}
               position="right"
             >
               <ThemeIcon size="sm" variant="light" color={color}>

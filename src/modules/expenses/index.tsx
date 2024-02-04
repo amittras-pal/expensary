@@ -175,7 +175,6 @@ export default function Expenses() {
         field: "description",
         maxWidth: 50,
         cellRenderer: MetaCell,
-        // cellRendererParams: { page: "budget" },
         cellRendererParams: { page: "budget" },
         headerComponent: MetaHeader,
         headerClass: "no-pad",

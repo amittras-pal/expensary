@@ -16,6 +16,9 @@ const theme: MantineThemeOverride = {
     Button: { defaultProps: { loaderPosition: "right" } },
     Divider: { defaultProps: { variant: "dashed" } },
     ScrollArea: { defaultProps: { scrollbarSize: 6 } },
+    Tooltip: {
+      defaultProps: { events: { hover: true, touch: true, focus: true } },
+    },
     Modal: {
       defaultProps: {
         centered: true,

@@ -21,7 +21,6 @@ import { getPlans, updatePlan } from "../../services/plans.service";
 import DeletePlan from "./components/DeletePlan";
 import ExpensePlan from "./components/ExpensePlan";
 import ExpensePlanForm from "./components/ExpensePlanForm";
-// import { useUpdatePlan } from "./services";
 
 interface PlanSegregation {
   active: IExpensePlan[];

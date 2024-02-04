@@ -17,7 +17,7 @@ interface GuardProps {
   children: JSX.Element;
 }
 
-// ========================ENTITIES========================
+/** ========================ENTITIES========================  */
 interface IUser {
   _id?: string;
   userName: string;

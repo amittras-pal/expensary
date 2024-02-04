@@ -1,5 +1,3 @@
-// TODO: Implementation here!!
-
 import { Accordion, Divider, Group, Text } from "@mantine/core";
 import { useDocumentTitle } from "@mantine/hooks";
 import dayjs from "dayjs";
@@ -28,7 +26,7 @@ export default function User() {
                 Member Since:{" "}
               </Text>
               <Text component="span" fw="bold">
-                {dayjs(userData?.createdAt).format("DD MMM' YY")}
+                {dayjs(userData?.createdAt).format("DD MMM 'YY")}
               </Text>
             </Text>
             {userData?.createdAt !== userData?.updatedAt && (
@@ -57,7 +55,6 @@ export default function User() {
           <ChangePassword />
         </Accordion.Panel>
       </Accordion.Item>
-
       <Accordion.Item value="expense-window">
         <Accordion.Control>Expense Edit Window</Accordion.Control>
         <Accordion.Panel>
