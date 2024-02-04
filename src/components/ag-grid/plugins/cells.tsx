@@ -6,6 +6,7 @@ import {
   Popover,
   Text,
   ThemeIcon,
+  useMantineTheme,
 } from "@mantine/core";
 import {
   IconBookmark,
@@ -18,13 +19,13 @@ import {
 import { ICellRendererParams } from "ag-grid-community";
 import dayjs from "dayjs";
 import React, { useMemo } from "react";
-import { primaryColor } from "../../../constants/app";
+import { useCurrentUser } from "../../../context/user.context";
 import { formatCurrency } from "../../../utils";
 import ExpenseDescription from "../../ExpenseDescription";
 import { MenuCellProps, MetaCellProps } from "../interfaces";
-import { useCurrentUser } from "../../../context/user.context";
 
 export function MetaCell({ data, page }: MetaCellProps) {
+  const { primaryColor } = useMantineTheme();
   if (!data?.description && !data?.linked && (data?.amount ?? 0) > 0)
     return null;
 

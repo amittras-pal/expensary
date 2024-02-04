@@ -7,6 +7,7 @@ import {
   Text,
   ThemeIcon,
   Tooltip,
+  useMantineTheme,
 } from "@mantine/core";
 import {
   IconBookmark,
@@ -21,7 +22,6 @@ import {
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import React, { memo, useMemo } from "react";
-import { primaryColor } from "../constants/app";
 import { Icons } from "../constants/categories";
 import { useCurrentUser } from "../context/user.context";
 import { useExpenseStyles } from "../theme/modules/expenseCard.styles";
@@ -52,6 +52,7 @@ function ExpenseCard({
 }: ActionableCard | ReadOnlyCard) {
   const { classes } = useExpenseStyles();
   const { userData } = useCurrentUser();
+  const { primaryColor } = useMantineTheme();
 
   const isEditable = useMemo(
     () =>

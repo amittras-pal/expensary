@@ -8,6 +8,7 @@ import {
   Modal,
   SimpleGrid,
   Text,
+  useMantineTheme,
 } from "@mantine/core";
 import { useDisclosure, useDocumentTitle, useHotkeys } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
@@ -15,7 +16,7 @@ import { notifications } from "@mantine/notifications";
 import { IconCheck, IconChecklist, IconPlus, IconX } from "@tabler/icons-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useMemo, useState } from "react";
-import { APP_TITLE, primaryColor } from "../../constants/app";
+import { APP_TITLE } from "../../constants/app";
 import { useErrorHandler } from "../../hooks/error-handler";
 import { getPlans, updatePlan } from "../../services/plans.service";
 import DeletePlan from "./components/DeletePlan";
@@ -29,6 +30,7 @@ interface PlanSegregation {
 
 export default function Plans() {
   useDocumentTitle(`${APP_TITLE} | Expense Plans`);
+  const { primaryColor } = useMantineTheme();
   const { onError } = useErrorHandler();
   const { data, isLoading } = useQuery({
     queryKey: ["plans-list", false],

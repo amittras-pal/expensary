@@ -1,4 +1,5 @@
 import { Global, LoadingOverlay, MantineProvider } from "@mantine/core";
+import { useLocalStorage } from "@mantine/hooks";
 import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
 import React, { Suspense } from "react";
@@ -6,6 +7,7 @@ import { Outlet } from "react-router-dom";
 import BudgetMonitor from "./components/monitors/BudgetMonitor";
 import Themer from "./components/monitors/Themer";
 import TimezoneMonitor from "./components/monitors/TimezoneMonitor";
+import { primaryColor } from "./constants/app";
 import UserProvider from "./context/user.context";
 import ServerConnecting from "./modules/server/ServerConnecting";
 import montserratItalic from "./resources/fonts/Montserrat-Italic-VariableFont_wght.ttf";
@@ -38,12 +40,17 @@ const GlobalStyles = () => {
 };
 
 export default function App() {
+  const [color] = useLocalStorage({
+    key: "primary-color",
+    defaultValue: primaryColor,
+  });
+
   return (
     <MantineProvider
       withGlobalStyles
       withNormalizeCSS
       withCSSVariables
-      theme={theme}
+      theme={{ ...theme, primaryColor: color }}
     >
       <GlobalStyles />
       <ServerConnecting>

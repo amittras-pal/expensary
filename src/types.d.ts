@@ -27,6 +27,7 @@ interface IUser {
   createdAt: string;
   updatedAt: string;
   editWindow: number;
+  color: string;
 }
 
 interface ICategory {

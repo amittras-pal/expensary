@@ -19,10 +19,10 @@ import {
   IconLogout,
   IconPower,
 } from "@tabler/icons-react";
-import { useQueryClient } from "@tanstack/react-query";
 import React, { useCallback, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { APP_TITLE, primaryColor } from "../../constants/app";
+import { Link } from "react-router-dom";
+import { APP_TITLE } from "../../constants/app";
+import { useLogoutHandler } from "../../hooks/logout";
 import { useMediaMatch } from "../../hooks/media-match";
 import logoPath from "../../resources/app-logo.svg";
 import { useAppStyles } from "../../theme/modules/layout.styles";
@@ -36,12 +36,11 @@ interface IAppHeaderProps {
 export default function AppHeader({ open, setOpen }: IAppHeaderProps) {
   const { classes } = useAppStyles();
   const theme = useMantineTheme();
-  const client = useQueryClient();
-  const navigate = useNavigate();
   const [title, setTitle] = useState([APP_TITLE, "Dashboard"]);
   const isMobile = useMediaMatch();
   const [showShortcuts, shortcuts] = useDisclosure(false);
   useHotkeys([["i", shortcuts.open]]);
+  const { logoutUser } = useLogoutHandler();
 
   const titleHandler = useCallback((entries: MutationRecord[]) => {
     const nodeVal = entries.at(0)?.addedNodes.item(0)?.nodeValue ?? "";
@@ -75,12 +74,7 @@ export default function AppHeader({ open, setOpen }: IAppHeaderProps) {
         color: "red",
         leftIcon: <IconLogout />,
       },
-      onConfirm: () => {
-        localStorage.clear();
-        client.clear();
-        window.dispatchEvent(new Event("storage"));
-        navigate("/login");
-      },
+      onConfirm: logoutUser,
     });
 
   return (
@@ -135,7 +129,7 @@ export default function AppHeader({ open, setOpen }: IAppHeaderProps) {
               size="md"
               variant="default"
               radius="lg"
-              color={primaryColor}
+              color={theme.primaryColor}
               onClick={shortcuts.open}
             >
               <IconExclamationMark size={18} />

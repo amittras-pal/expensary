@@ -1,19 +1,17 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Divider, Group, Text } from "@mantine/core";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import PinInput from "../../components/pin-input/PinInput";
 import { useCurrentUser } from "../../context/user.context";
+import { useErrorHandler } from "../../hooks/error-handler";
+import { useLogoutHandler } from "../../hooks/logout";
 import { PwdChangeForm, pwdChangeSchema } from "../../schemas/schemas";
 import { changeUserPassword } from "../../services/user.service";
-import { useErrorHandler } from "../../hooks/error-handler";
 
 export default function ChangePassword() {
   const { userData } = useCurrentUser();
-  const client = useQueryClient();
-  const navigate = useNavigate();
   const { onError } = useErrorHandler();
   const {
     handleSubmit,
@@ -39,15 +37,11 @@ export default function ChangePassword() {
     });
   };
 
+  const { logoutUser } = useLogoutHandler();
   const { mutate: updatePwd, isLoading } = useMutation({
     mutationFn: changeUserPassword,
     onError,
-    onSuccess: () => {
-      localStorage.clear();
-      client.clear();
-      window.dispatchEvent(new Event("storage"));
-      navigate("/login");
-    },
+    onSuccess: logoutUser,
   });
 
   const submit: SubmitHandler<PwdChangeForm> = (values) => {

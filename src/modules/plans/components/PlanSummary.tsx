@@ -6,19 +6,20 @@ import {
   SimpleGrid,
   Text,
   ThemeIcon,
+  useMantineTheme,
 } from "@mantine/core";
 import { IconListCheck } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
 import React, { useMemo } from "react";
 import { useParams } from "react-router-dom";
 import BudgetItem from "../../../components/BudgetItem";
-import { primaryColor } from "../../../constants/app";
 import { useErrorHandler } from "../../../hooks/error-handler";
 import { getSummary } from "../../../services/expense.service";
 import { formatCurrency } from "../../../utils";
 
 function PlanSummary() {
   const { onError } = useErrorHandler();
+  const { primaryColor } = useMantineTheme();
   const params = useParams();
 
   const { data: summary, isLoading: loadingSummary } = useQuery({

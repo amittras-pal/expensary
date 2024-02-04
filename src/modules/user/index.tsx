@@ -5,7 +5,7 @@ import React from "react";
 import { APP_TITLE } from "../../constants/app";
 import { useCurrentUser } from "../../context/user.context";
 import ChangePassword from "./ChangePassword";
-import ExpenseWindow from "./ExpenseWindow";
+import Preferences from "./Preferences";
 
 export default function User() {
   useDocumentTitle(`${APP_TITLE} | My Account`);
@@ -34,7 +34,7 @@ export default function User() {
                 <Divider
                   orientation="vertical"
                   variant="solid"
-                  color="indigo"
+                  color={userData?.color}
                 />
                 <Text component="p" m={0} fz="xs">
                   <Text component="span" color="dimmed">
@@ -55,10 +55,10 @@ export default function User() {
           <ChangePassword />
         </Accordion.Panel>
       </Accordion.Item>
-      <Accordion.Item value="expense-window">
-        <Accordion.Control>Expense Edit Window</Accordion.Control>
+      <Accordion.Item value="preferences">
+        <Accordion.Control>Preferences</Accordion.Control>
         <Accordion.Panel>
-          <ExpenseWindow />
+          <Preferences />
         </Accordion.Panel>
       </Accordion.Item>
     </Accordion>

@@ -1,4 +1,10 @@
-import { Button, Checkbox, Group, SegmentedControl } from "@mantine/core";
+import {
+  Button,
+  Checkbox,
+  Group,
+  SegmentedControl,
+  useMantineTheme,
+} from "@mantine/core";
 import { DatePicker, MonthPicker, PickerBaseProps } from "@mantine/dates";
 import { useDocumentTitle } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
@@ -6,7 +12,7 @@ import { IconDownload } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
 import dayjs, { OpUnitType } from "dayjs";
 import React, { useMemo, useState } from "react";
-import { APP_TITLE, primaryColor } from "../../constants/app";
+import { APP_TITLE } from "../../constants/app";
 import { useCurrentUser } from "../../context/user.context";
 import { useErrorHandler } from "../../hooks/error-handler";
 import { downloadReport } from "../../services/report.service";
@@ -21,6 +27,7 @@ interface CommonPickerProps extends PickerBaseProps<"range"> {
 
 export default function DownloadReport() {
   useDocumentTitle(`${APP_TITLE} | Download Report`);
+  const { primaryColor } = useMantineTheme();
   const [selection, setSelection] = useState<[Date | null, Date | null]>([
     null,
     null,

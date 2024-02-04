@@ -1,4 +1,5 @@
 import { LoadingOverlay } from "@mantine/core";
+import { useLocalStorage } from "@mantine/hooks";
 import { useQuery } from "@tanstack/react-query";
 import React, { PropsWithChildren, useEffect, useMemo, useState } from "react";
 import { time20Min } from "../constants/app";
@@ -28,6 +29,8 @@ export default function UserProvider({ children }: PropsWithChildren) {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const { onError } = useErrorHandler();
 
+  const [, setPrimaryColor] = useLocalStorage({ key: "primary-color" });
+
   useEffect(() => {
     const listener = () => {
       setLoggedIn(Boolean(getAuthToken()));
@@ -47,6 +50,7 @@ export default function UserProvider({ children }: PropsWithChildren) {
     retry: 0,
     onSuccess: (res) => {
       setUserData(res.response);
+      setPrimaryColor(res.response.color);
     },
   });
 

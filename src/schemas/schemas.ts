@@ -88,12 +88,14 @@ export const expensePlanSchema = yup.object().shape({
     .min(20, "Plan description should be 20 characters or longer"),
 });
 
-export const expenseWindowSchema = yup.object().shape({
-  value: yup
+export const preferencesSchema = yup.object().shape({
+  editWindow: yup
     .number()
+    .typeError("Edit window can be between 7-25 days.")
     .required()
     .min(7, "Edit window can be between 7-25 days.")
     .max(25, "Edit window can be between 7-25 days."),
+  color: yup.string().required("Please Select a theme color."),
 });
 
 export const pwdChangeSchema = yup.object().shape({
@@ -123,5 +125,5 @@ export type RegisterForm = yup.InferType<typeof registerSchema>;
 export type BudgetForm = yup.InferType<typeof budgetFormSchema>;
 export type ExpenseForm = yup.InferType<ReturnType<typeof expenseSchema>>;
 export type ExpensePlanForm = yup.InferType<typeof expensePlanSchema>;
-export type ExpenseWindowForm = yup.InferType<typeof expenseWindowSchema>;
+export type PreferenceForm = yup.InferType<typeof preferencesSchema>;
 export type PwdChangeForm = yup.InferType<typeof pwdChangeSchema>;
