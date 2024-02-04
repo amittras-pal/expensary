@@ -19,14 +19,14 @@ import {
   IconLogout,
   IconPower,
 } from "@tabler/icons-react";
-import { useQueryClient } from "@tanstack/react-query";
 import React, { useCallback, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { APP_TITLE, primaryColor } from "../../constants/app";
+import { Link } from "react-router-dom";
+import { APP_TITLE } from "../../constants/app";
+import { useLogoutHandler } from "../../hooks/logout";
 import { useMediaMatch } from "../../hooks/media-match";
-import ShortcutsList from "./ShortcutsList";
-import { useAppStyles } from "../../theme/modules/layout.styles";
 import logoPath from "../../resources/app-logo.svg";
+import { useAppStyles } from "../../theme/modules/layout.styles";
+import ShortcutsList from "./ShortcutsList";
 
 interface IAppHeaderProps {
   open: boolean;
@@ -36,12 +36,11 @@ interface IAppHeaderProps {
 export default function AppHeader({ open, setOpen }: IAppHeaderProps) {
   const { classes } = useAppStyles();
   const theme = useMantineTheme();
-  const client = useQueryClient();
-  const navigate = useNavigate();
-  const [title, setTitle] = useState([APP_TITLE, ""]);
+  const [title, setTitle] = useState([APP_TITLE, "Dashboard"]);
   const isMobile = useMediaMatch();
   const [showShortcuts, shortcuts] = useDisclosure(false);
   useHotkeys([["i", shortcuts.open]]);
+  const { logoutUser } = useLogoutHandler();
 
   const titleHandler = useCallback((entries: MutationRecord[]) => {
     const nodeVal = entries.at(0)?.addedNodes.item(0)?.nodeValue ?? "";
@@ -62,7 +61,6 @@ export default function AppHeader({ open, setOpen }: IAppHeaderProps) {
 
   const confirmLogout = () =>
     modals.openConfirmModal({
-      centered: true,
       title: "Confirm Logout",
       children: <Text color="red">Are you sure you want to logout?</Text>,
       withCloseButton: false,
@@ -76,12 +74,7 @@ export default function AppHeader({ open, setOpen }: IAppHeaderProps) {
         color: "red",
         leftIcon: <IconLogout />,
       },
-      onConfirm: () => {
-        localStorage.clear();
-        client.clear();
-        window.dispatchEvent(new Event("storage"));
-        navigate("/login");
-      },
+      onConfirm: logoutUser,
     });
 
   return (
@@ -115,12 +108,7 @@ export default function AppHeader({ open, setOpen }: IAppHeaderProps) {
         >
           {title[0]} <IconChevronRight size={14} />
         </Text>
-        <Tooltip
-          label={title[1]}
-          disabled={!isMobile}
-          color="dark"
-          events={{ touch: true, hover: true, focus: false }}
-        >
+        <Tooltip label={title[1]} disabled={!isMobile} color="dark">
           <Text fz="sm" fw={400} color="dimmed" mr="auto" lineClamp={1}>
             {title[1]}
           </Text>
@@ -141,7 +129,7 @@ export default function AppHeader({ open, setOpen }: IAppHeaderProps) {
               size="md"
               variant="default"
               radius="lg"
-              color={primaryColor}
+              color={theme.primaryColor}
               onClick={shortcuts.open}
             >
               <IconExclamationMark size={18} />
@@ -161,7 +149,6 @@ export default function AppHeader({ open, setOpen }: IAppHeaderProps) {
         </Tooltip>
       </Header>
       <Modal
-        centered
         size="lg"
         title="Keyboard Shortcuts"
         opened={showShortcuts}

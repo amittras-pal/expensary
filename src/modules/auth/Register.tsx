@@ -6,27 +6,29 @@ import {
   Divider,
   Text,
   TextInput,
+  useMantineTheme,
 } from "@mantine/core";
 import { useDocumentTitle } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
 import React from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import PinInput from "../../components/pin-input/PinInput";
-import { APP_TITLE, primaryColor } from "../../constants/app";
+import { APP_TITLE } from "../../constants/app";
 import { useErrorHandler } from "../../hooks/error-handler";
+import { RegisterForm, registerSchema } from "../../schemas/schemas";
 import { registerUser } from "../../services/user.service";
 import { useAuthStyles } from "../../theme/modules/auth.styles";
 import PublicGuard from "../guards/PublicGuard";
-import { RegisterForm, registerSchema } from "../../schemas/schemas";
 
 export default function Register() {
   const { classes } = useAuthStyles();
   const navigate = useNavigate();
   useDocumentTitle(`${APP_TITLE} | Register`);
   const { onError } = useErrorHandler();
+  const { primaryColor } = useMantineTheme();
 
   const {
     register,

@@ -23,7 +23,7 @@ import { useParams } from "react-router-dom";
 import { time20Min } from "../constants/app";
 import { useCurrentUser } from "../context/user.context";
 import { useErrorHandler } from "../hooks/error-handler";
-import { ExpenseForm as FormSchema, expenseSchema } from "../schemas/schemas";
+import { expenseSchema, ExpenseForm as FormSchema } from "../schemas/schemas";
 import { getCategories } from "../services/categories.service";
 import { createExpense, editExpense } from "../services/expense.service";
 import { getPlans } from "../services/plans.service";
@@ -43,7 +43,10 @@ export default function ExpenseForm({ data, onComplete }: IExpenseFormProps) {
 
   const minDate = useMemo(() => {
     const userDate = dayjs(userData?.createdAt).toDate().getTime();
-    const oldestAllowed = dayjs().subtract(6, "days").toDate().getTime();
+    const oldestAllowed = dayjs()
+      .subtract(userData?.editWindow ? userData.editWindow - 1 : 6, "days")
+      .toDate()
+      .getTime();
     return dayjs(Math.max(userDate, oldestAllowed)).toDate();
   }, [userData]);
 
@@ -87,7 +90,7 @@ export default function ExpenseForm({ data, onComplete }: IExpenseFormProps) {
       plan: plan,
       linked: data?.linked ?? "",
     },
-    resolver: yupResolver(expenseSchema()),
+    resolver: yupResolver(expenseSchema(userData?.editWindow ?? 7)),
   });
 
   const setFieldValue = (name: keyof FormSchema, value: string | Date) => {
@@ -136,7 +139,6 @@ export default function ExpenseForm({ data, onComplete }: IExpenseFormProps) {
   });
 
   const handleSave: SubmitHandler<FormSchema> = (values) => {
-    // TODO: check why the types for amount & description are incompatible.
     const payload: Partial<IExpense> = Object.assign(
       {},
       {
@@ -145,7 +147,6 @@ export default function ExpenseForm({ data, onComplete }: IExpenseFormProps) {
         description: values.description ?? "",
       }
     );
-    // Additiona cleanup.
     if (!values.plan || !values.addToPlan) payload.plan = null;
     if (!values.linked) payload.linked = null;
 

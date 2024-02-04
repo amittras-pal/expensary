@@ -3,6 +3,8 @@ declare module "*.svg" {
   export default content;
 }
 
+declare module "*.ttf";
+
 interface RouteItem {
   icon: JSX.Element;
   label: string;
@@ -15,7 +17,7 @@ interface GuardProps {
   children: JSX.Element;
 }
 
-// ========================ENTITIES========================
+/** ========================ENTITIES========================  */
 interface IUser {
   _id?: string;
   userName: string;
@@ -24,6 +26,8 @@ interface IUser {
   timeZone: string;
   createdAt: string;
   updatedAt: string;
+  editWindow: number;
+  color: string;
 }
 
 interface ICategory {

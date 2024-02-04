@@ -7,8 +7,8 @@ import {
   Text,
   ThemeIcon,
   Tooltip,
+  useMantineTheme,
 } from "@mantine/core";
-import React from "react";
 import {
   IconBookmark,
   IconCalendarCode,
@@ -21,12 +21,12 @@ import {
 } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { memo, useMemo } from "react";
-import { primaryColor } from "../constants/app";
+import React, { memo, useMemo } from "react";
 import { Icons } from "../constants/categories";
+import { useCurrentUser } from "../context/user.context";
+import { useExpenseStyles } from "../theme/modules/expenseCard.styles";
 import { formatCurrency } from "../utils";
 import ExpenseDescription from "./ExpenseDescription";
-import { useExpenseStyles } from "../theme/modules/expenseCard.styles";
 dayjs.extend(relativeTime);
 
 type ExpenseAction = (e: IExpense) => void;
@@ -51,10 +51,13 @@ function ExpenseCard({
   hideMenu,
 }: ActionableCard | ReadOnlyCard) {
   const { classes } = useExpenseStyles();
+  const { userData } = useCurrentUser();
+  const { primaryColor } = useMantineTheme();
 
   const isEditable = useMemo(
-    () => dayjs(data.date) >= dayjs().subtract(7, "days"),
-    [data.date]
+    () =>
+      dayjs(data.date) >= dayjs().subtract(userData?.editWindow ?? 7, "days"),
+    [data.date, userData?.editWindow]
   );
 
   const Icon = useMemo(
@@ -90,7 +93,7 @@ function ExpenseCard({
           )}
           <Badge
             variant="light"
-            size="sm"
+            size="xs"
             color={data.category?.color}
             leftSection={<Icon size={12} style={{ marginBottom: -2 }} />}
             mt={4}
@@ -103,7 +106,6 @@ function ExpenseCard({
             <Tooltip
               position="top"
               disabled={hideMenu}
-              events={{ touch: true, hover: true, focus: false }}
               label={
                 <Text fz="xs">
                   {dayjs(data.date).format("DD MMM 'YY hh:mm a")}
@@ -155,7 +157,6 @@ function ExpenseCard({
           {dayjs(data.date).month() !== dayjs().month() && (
             <Tooltip
               position="left"
-              events={{ touch: true, hover: true, focus: false }}
               label={
                 <Text component="span" fw="normal" size="sm">
                   From {dayjs().subtract(1, "month").format("MMMM")}.
@@ -170,7 +171,6 @@ function ExpenseCard({
           {data.linked && (
             <Tooltip
               position="left"
-              events={{ touch: true, hover: true, focus: false }}
               label={
                 <Text component="span" fw="normal" size="sm">
                   Created in a plan.
@@ -190,7 +190,6 @@ function ExpenseCard({
           {!data.amount && (
             <Tooltip
               position="left"
-              events={{ touch: true, hover: true, focus: false }}
               label={
                 <Text component="span" fw="normal" size="sm">
                   Created to keep record; no money spent.

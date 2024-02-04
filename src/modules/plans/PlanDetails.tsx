@@ -1,4 +1,10 @@
-import { ActionIcon, LoadingOverlay, Modal, Tabs } from "@mantine/core";
+import {
+  ActionIcon,
+  LoadingOverlay,
+  Modal,
+  Tabs,
+  useMantineTheme,
+} from "@mantine/core";
 import { useDisclosure, useDocumentTitle, useHotkeys } from "@mantine/hooks";
 import { IconInfoCircle, IconPlus } from "@tabler/icons-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -6,7 +12,7 @@ import React, { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import DeleteExpense from "../../components/DeleteExpense";
 import ExpenseForm from "../../components/ExpenseForm";
-import { APP_TITLE, primaryColor } from "../../constants/app";
+import { APP_TITLE } from "../../constants/app";
 import { useErrorHandler } from "../../hooks/error-handler";
 import { getPlanDetails } from "../../services/plans.service";
 import PlanDetailsPanel from "./components/PlanDetailsPanel";
@@ -15,6 +21,7 @@ import PlanSummary from "./components/PlanSummary";
 
 export default function PlanDetails() {
   const params = useParams();
+  const { primaryColor } = useMantineTheme();
 
   const [showForm, formModal] = useDisclosure(false);
   const [confirm, deleteModal] = useDisclosure(false);
@@ -116,11 +123,10 @@ export default function PlanDetails() {
         </ActionIcon>
       )}
       <Modal
-        centered
         opened={showForm || confirm}
         withCloseButton={false}
         onClose={() => handleClose(false)}
-        withOverlay
+        zIndex={1000}
       >
         {showForm && (
           <ExpenseForm data={targetExpense} onComplete={handleClose} />

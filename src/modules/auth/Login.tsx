@@ -8,8 +8,9 @@ import {
   Group,
   Text,
   TextInput,
+  useMantineTheme,
 } from "@mantine/core";
-import { useDocumentTitle } from "@mantine/hooks";
+import { useDocumentTitle, useLocalStorage } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
@@ -17,7 +18,7 @@ import React, { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import PinInput from "../../components/pin-input/PinInput";
-import { APP_TITLE, primaryColor } from "../../constants/app";
+import { APP_TITLE } from "../../constants/app";
 import { useCurrentUser } from "../../context/user.context";
 import { useErrorHandler } from "../../hooks/error-handler";
 import { LoginForm, loginSchema } from "../../schemas/schemas";
@@ -32,6 +33,8 @@ export default function Login() {
   const [target, setTarget] = useState("/");
   useDocumentTitle(`${APP_TITLE} | Login`);
   const { onError } = useErrorHandler();
+  const { primaryColor } = useMantineTheme();
+  const [, setPrimaryColor] = useLocalStorage({ key: "primary-color" });
 
   const {
     register,
@@ -52,6 +55,7 @@ export default function Login() {
     mutationFn: loginUser,
     onSuccess: (res) => {
       localStorage.setItem("authToken", res.response?.token);
+      setPrimaryColor(res.response.user.color);
       setUserData(res?.response?.user);
       notifications.show({
         title: res.message,

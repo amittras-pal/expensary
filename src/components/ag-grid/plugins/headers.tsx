@@ -1,12 +1,20 @@
-import { ActionIcon, Group, Popover, Text } from "@mantine/core";
+import {
+  ActionIcon,
+  Group,
+  Popover,
+  Text,
+  useMantineTheme,
+} from "@mantine/core";
+import {
+  IconArrowsSort,
+  IconFilter,
+  IconInfoCircle,
+  IconSortAscending,
+  IconSortDescending,
+} from "@tabler/icons-react";
 import { IHeaderParams } from "ag-grid-community";
 import React from "react";
-import { primaryColor } from "../../../constants/app";
-import { IconFilter, IconSortDescending } from "@tabler/icons-react";
 import { getNextSortOrder } from "./utils";
-import { IconArrowsSort } from "@tabler/icons-react";
-import { IconSortAscending } from "@tabler/icons-react";
-import { IconInfoCircle } from "@tabler/icons-react";
 
 export function ColumnHeader({
   api,
@@ -17,6 +25,7 @@ export function ColumnHeader({
   showColumnMenu,
   setSort,
 }: IHeaderParams<IExpense>) {
+  const { primaryColor } = useMantineTheme();
   return (
     <Group position="left" sx={{ width: "100%" }} spacing="xs">
       <Text fw="bold" mr="auto">

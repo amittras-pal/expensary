@@ -1,10 +1,11 @@
+import { LoadingOverlay } from "@mantine/core";
+import { useLocalStorage } from "@mantine/hooks";
 import { useQuery } from "@tanstack/react-query";
-import React, { PropsWithChildren, useEffect, useState } from "react";
+import React, { PropsWithChildren, useEffect, useMemo, useState } from "react";
+import { time20Min } from "../constants/app";
 import { useErrorHandler } from "../hooks/error-handler";
 import { getUserData } from "../services/user.service";
 import { getAuthToken } from "../utils";
-import { LoadingOverlay } from "@mantine/core";
-import { time20Min } from "../constants/app";
 
 type UserCtx = {
   userData: IUser | null;
@@ -28,6 +29,8 @@ export default function UserProvider({ children }: PropsWithChildren) {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const { onError } = useErrorHandler();
 
+  const [, setPrimaryColor] = useLocalStorage({ key: "primary-color" });
+
   useEffect(() => {
     const listener = () => {
       setLoggedIn(Boolean(getAuthToken()));
@@ -44,16 +47,21 @@ export default function UserProvider({ children }: PropsWithChildren) {
     refetchOnWindowFocus: false,
     queryFn: getUserData,
     onError: onError,
+    retry: 0,
     onSuccess: (res) => {
       setUserData(res.response);
+      setPrimaryColor(res.response.color);
     },
   });
 
-  if (loadingUser) return <LoadingOverlay visible overlayBlur={5} />;
+  const ctx: UserCtx = useMemo(
+    () => ({ userData, budget, setUserData, setBudget }),
+    [budget, userData]
+  );
 
   return (
-    <UserContext.Provider value={{ userData, setUserData, budget, setBudget }}>
-      {children}
+    <UserContext.Provider value={ctx}>
+      {loadingUser ? <LoadingOverlay visible overlayBlur={5} /> : children}
     </UserContext.Provider>
   );
 }

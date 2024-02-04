@@ -11,7 +11,7 @@ export const budgetFormSchema = yup.object().shape({
   year: yup.number(),
 });
 
-export const expenseSchema = () =>
+export const expenseSchema = (expenseWindow: number) =>
   yup.object().shape({
     title: yup
       .string()
@@ -25,8 +25,8 @@ export const expenseSchema = () =>
     date: yup
       .date()
       .min(
-        dayjs().subtract(7, "days").toDate(),
-        "Expense can't be older than 7 days."
+        dayjs().subtract(expenseWindow, "days").toDate(),
+        `Expense can't be older than ${expenseWindow} days.`
       )
       .max(
         dayjs().add(5, "minutes").toDate(),
@@ -88,10 +88,42 @@ export const expensePlanSchema = yup.object().shape({
     .min(20, "Plan description should be 20 characters or longer"),
 });
 
-const expenseSchemaObject = expenseSchema();
+export const preferencesSchema = yup.object().shape({
+  editWindow: yup
+    .number()
+    .typeError("Edit window can be between 7-25 days.")
+    .required()
+    .min(7, "Edit window can be between 7-25 days.")
+    .max(25, "Edit window can be between 7-25 days."),
+  color: yup.string().required("Please Select a theme color."),
+});
+
+export const pwdChangeSchema = yup.object().shape({
+  email: yup.string(),
+  currentPin: yup
+    .number()
+    .typeError("Pin should be numeric.")
+    .required("Pin is required.")
+    .min(100000, "Invalid Pin.")
+    .max(999999, "Invalid Pin."),
+  newPin: yup
+    .number()
+    .typeError("Pin should be numeric.")
+    .notOneOf([yup.ref("currentPin")], "Old and new pin cannot be same.")
+    .required("Pin is required.")
+    .min(100000, "Invalid Pin.")
+    .max(999999, "Invalid Pin."),
+  confirmNewPin: yup
+    .number()
+    .typeError("Pin should be numeric.")
+    .oneOf([yup.ref("newPin"), 0], "Pins do not match")
+    .required("Please enter pin again"),
+});
 
 export type LoginForm = yup.InferType<typeof loginSchema>;
 export type RegisterForm = yup.InferType<typeof registerSchema>;
 export type BudgetForm = yup.InferType<typeof budgetFormSchema>;
-export type ExpenseForm = yup.InferType<typeof expenseSchemaObject>;
+export type ExpenseForm = yup.InferType<ReturnType<typeof expenseSchema>>;
 export type ExpensePlanForm = yup.InferType<typeof expensePlanSchema>;
+export type PreferenceForm = yup.InferType<typeof preferencesSchema>;
+export type PwdChangeForm = yup.InferType<typeof pwdChangeSchema>;

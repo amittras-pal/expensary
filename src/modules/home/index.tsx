@@ -1,10 +1,12 @@
-import { Drawer, Modal, SimpleGrid } from "@mantine/core";
+import { Box, Drawer, Modal, SimpleGrid, Text } from "@mantine/core";
 import { useDisclosure, useDocumentTitle } from "@mantine/hooks";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import dayjs from "dayjs";
 import React, { useState } from "react";
 import DeleteExpense from "../../components/DeleteExpense";
 import ExpenseForm from "../../components/ExpenseForm";
 import { APP_TITLE } from "../../constants/app";
+import { useCurrentUser } from "../../context/user.context";
 import { useErrorHandler } from "../../hooks/error-handler";
 import { useMediaMatch } from "../../hooks/media-match";
 import { getRecentTransactions } from "../../services/expense.service";
@@ -17,6 +19,7 @@ export default function Home() {
   const { onError } = useErrorHandler();
 
   const client = useQueryClient();
+  const { userData } = useCurrentUser();
 
   const [showForm, formModal] = useDisclosure(false);
   const [confirm, deleteModal] = useDisclosure(false);
@@ -24,8 +27,8 @@ export default function Home() {
   const [targetExpense, setTargetExpense] = useState<IExpense | null>(null);
 
   const { isLoading, data: list } = useQuery({
-    queryKey: ["recent-transactions"],
-    queryFn: getRecentTransactions,
+    queryKey: ["recent-transactions", userData?.editWindow ?? 7],
+    queryFn: () => getRecentTransactions(userData?.editWindow ?? 7),
     refetchOnWindowFocus: false,
     onError,
   });
@@ -59,7 +62,6 @@ export default function Home() {
           showForm={formModal.open}
           showRecent={listDrawer.open}
           recents={list?.response?.length ?? 0}
-          // loadingRecents={isLoading}
         />
         {!isMobile && (
           <RecentTransactions
@@ -71,10 +73,10 @@ export default function Home() {
         )}
       </SimpleGrid>
       <Modal
-        centered
         opened={showForm || confirm}
         withCloseButton={false}
         onClose={() => handleClose(false)}
+        zIndex={1000}
       >
         {showForm && (
           <ExpenseForm data={targetExpense} onComplete={handleClose} />
@@ -90,7 +92,27 @@ export default function Home() {
           opened={drawer}
           onClose={listDrawer.close}
           zIndex={199}
-          title={`Recent Transactions (${list?.response?.length ?? 0})`}
+          title={
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "flex-end",
+                width: "100%",
+              }}
+            >
+              <Text fw="bold" fz="sm">
+                {list?.response?.length ?? 0} Recent Transactions
+              </Text>
+              <Text color="dimmed" fz="xs" fs="italic" ml="md">
+                Since{" "}
+                {dayjs()
+                  .subtract(userData?.editWindow ?? 7, "days")
+                  .format("DD MMM")}{" "}
+                ({userData?.editWindow ?? 7} days)
+              </Text>
+            </Box>
+          }
         >
           <RecentTransactions
             onEditExpense={editExpense}

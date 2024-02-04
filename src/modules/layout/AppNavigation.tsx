@@ -10,7 +10,6 @@ import { HorizontalSectionSharedProps } from "@mantine/core/lib/AppShell/Horizon
 import { useHotkeys } from "@mantine/hooks";
 import React, { useMemo, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { primaryColor } from "../../constants/app";
 import { ROUTES } from "../../constants/routes";
 import { useMediaMatch } from "../../hooks/media-match";
 import {
@@ -73,7 +72,7 @@ function NavLink({ onChange, ...route }: NavLinkProps) {
       className={classes.navBtn}
     >
       <Group>
-        <ThemeIcon color={primaryColor} variant={active ? "filled" : "light"}>
+        <ThemeIcon variant={active ? "filled" : "light"}>
           {route.icon}
         </ThemeIcon>
         <Text size="sm">{route.label}</Text>

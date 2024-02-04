@@ -144,7 +144,6 @@ export default function BudgetBreakdown({
             }
             color="dark"
             position="bottom"
-            events={{ touch: true, hover: true, focus: false }}
           >
             <ThemeIcon radius="lg" size="sm" color="red">
               <IconExclamationMark size={14} />

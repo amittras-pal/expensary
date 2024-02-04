@@ -3,6 +3,7 @@ import {
   IconCalendarDown,
   IconDashboard,
   IconReport,
+  IconUserCog,
 } from "@tabler/icons-react";
 import React from "react";
 
@@ -35,12 +36,11 @@ export const ROUTES: RouteItem[] = [
     exactMatch: false,
     shortcut: "R",
   },
-  // {
-  //   icon: <IconCalendarDown size={16} />,
-  //   label: "User Account",
-  //   path: "/report",
-  //   exactMatch: false,
-  //   shortcut: "U",
-  //   disabled: true,
-  // },
+  {
+    icon: <IconUserCog size={16} />,
+    label: "User Account",
+    path: "/account",
+    exactMatch: false,
+    shortcut: "U",
+  },
 ];

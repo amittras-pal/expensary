@@ -19,8 +19,6 @@ export const useShortcutBlockStyles = createStyles((theme) => ({
   },
   highlight: {
     backgroundColor: theme.colors.dark[8],
-    border: "1px solid",
-    borderColor: theme.colors.indigo[5],
   },
 }));
 
