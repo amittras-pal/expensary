@@ -12,17 +12,14 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useDisclosure, useHotkeys } from "@mantine/hooks";
-import { modals } from "@mantine/modals";
 import {
   IconChevronRight,
-  IconExclamationMark,
-  IconLogout,
-  IconPower,
+  IconKeyboard,
+  IconSearch,
 } from "@tabler/icons-react";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { APP_TITLE } from "../../constants/app";
-import { useLogoutHandler } from "../../hooks/logout";
 import { useMediaMatch } from "../../hooks/media-match";
 import logoPath from "../../resources/app-logo.svg";
 import { useAppStyles } from "../../theme/modules/layout.styles";
@@ -40,7 +37,6 @@ export default function AppHeader({ open, setOpen }: IAppHeaderProps) {
   const isMobile = useMediaMatch();
   const [showShortcuts, shortcuts] = useDisclosure(false);
   useHotkeys([["i", shortcuts.open]]);
-  const { logoutUser } = useLogoutHandler();
 
   const titleHandler = useCallback((entries: MutationRecord[]) => {
     const nodeVal = entries.at(0)?.addedNodes.item(0)?.nodeValue ?? "";
@@ -58,24 +54,6 @@ export default function AppHeader({ open, setOpen }: IAppHeaderProps) {
       observer.disconnect();
     };
   }, [titleHandler]);
-
-  const confirmLogout = () =>
-    modals.openConfirmModal({
-      title: "Confirm Logout",
-      children: <Text color="red">Are you sure you want to logout?</Text>,
-      withCloseButton: false,
-      closeOnCancel: true,
-      labels: {
-        confirm: "Yes",
-        cancel: "No",
-      },
-      confirmProps: {
-        variant: "filled",
-        color: "red",
-        leftIcon: <IconLogout />,
-      },
-      onConfirm: logoutUser,
-    });
 
   return (
     <>
@@ -113,6 +91,7 @@ export default function AppHeader({ open, setOpen }: IAppHeaderProps) {
             {title[1]}
           </Text>
         </Tooltip>
+
         {!isMobile && (
           <Tooltip
             label={
@@ -132,19 +111,25 @@ export default function AppHeader({ open, setOpen }: IAppHeaderProps) {
               color={theme.primaryColor}
               onClick={shortcuts.open}
             >
-              <IconExclamationMark size={18} />
+              <IconKeyboard size={18} />
             </ActionIcon>
           </Tooltip>
         )}
-        <Tooltip label="Log Out" position="bottom" withArrow color="dark">
+        <Tooltip
+          label="Search Expenses"
+          position="bottom"
+          withArrow
+          color="dark"
+        >
           <ActionIcon
             size="md"
             variant="default"
             radius="lg"
-            color="red"
-            onClick={confirmLogout}
+            color={theme.primaryColor}
+            component={Link}
+            to="/search"
           >
-            <IconPower size={18} />
+            <IconSearch size={16} />
           </ActionIcon>
         </Tooltip>
       </Header>
