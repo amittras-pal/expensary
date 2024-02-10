@@ -111,17 +111,23 @@ export default function Login() {
             Login To:{" "}
           </Text>
           <Chip.Group onChange={(e: string) => setTarget(e)} value={target}>
-            <Group position="center" spacing="xs" mb="md">
-              <Chip variant="filled" value="/">
+            <Group position="center" spacing="6px" mb="md">
+              <Chip variant="filled" size="xs" value="/">
                 Home
               </Chip>
-              <Chip variant="filled" value="/expenses">
+              <Chip variant="filled" size="xs" value="/expenses">
                 Transactions
               </Chip>
-              <Chip variant="filled" value="/plans">
+              <Chip variant="filled" size="xs" value="/search">
+                Search
+              </Chip>
+              <Chip variant="filled" size="xs" value="/plans">
                 Plans
               </Chip>
-              <Chip variant="filled" value="/account" disabled>
+              <Chip variant="filled" size="xs" value="/export">
+                Export
+              </Chip>
+              <Chip variant="filled" size="xs" value="/account">
                 Account
               </Chip>
             </Group>
