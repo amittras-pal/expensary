@@ -22,26 +22,22 @@ import {
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import React, { memo, useMemo } from "react";
+import Highlighter from "react-highlight-words";
 import { Icons } from "../constants/categories";
 import { useCurrentUser } from "../context/user.context";
 import { useExpenseStyles } from "../theme/modules/expenseCard.styles";
 import { formatCurrency } from "../utils";
-import ExpenseDescription from "./ExpenseDescription";
 dayjs.extend(relativeTime);
 
 type ExpenseAction = (e: IExpense) => void;
-interface ReadOnlyCard {
+
+interface ExpenseCardProps {
   data: IExpense;
-  hideMenu: true;
+  hideMenu: boolean;
   onEditExpense?: ExpenseAction;
   onDeleteExpense?: ExpenseAction;
-}
-
-interface ActionableCard {
-  data: IExpense;
-  hideMenu: false;
-  onEditExpense: ExpenseAction;
-  onDeleteExpense: ExpenseAction;
+  highlight?: string;
+  hideMonthIndicator?: boolean;
 }
 
 function ExpenseCard({
@@ -49,7 +45,9 @@ function ExpenseCard({
   onEditExpense,
   onDeleteExpense,
   hideMenu,
-}: ActionableCard | ReadOnlyCard) {
+  highlight,
+  hideMonthIndicator,
+}: ExpenseCardProps) {
   const { classes } = useExpenseStyles();
   const { userData } = useCurrentUser();
   const { primaryColor } = useMantineTheme();
@@ -84,12 +82,22 @@ function ExpenseCard({
           }}
         >
           <Text fw="bold" fz="sm">
-            {data.title}
+            <Highlighter
+              searchWords={highlight?.split(" ") ?? []}
+              textToHighlight={data.title}
+              highlightClassName={classes.highlight}
+              autoEscape
+            />
           </Text>
           {data.description && (
-            <ExpenseDescription color="dimmed" fz="sm">
-              {data.description}
-            </ExpenseDescription>
+            <Text component="p" fz="xs" sx={{ whiteSpace: "pre-wrap" }} m={0}>
+              <Highlighter
+                searchWords={highlight?.split(" ") ?? []}
+                textToHighlight={data.description}
+                highlightClassName={classes.highlight}
+                autoEscape
+              />
+            </Text>
           )}
           <Badge
             variant="light"
@@ -154,20 +162,21 @@ function ExpenseCard({
               </Menu.Dropdown>
             </Menu>
           )}
-          {dayjs(data.date).month() !== dayjs().month() && (
-            <Tooltip
-              position="left"
-              label={
-                <Text component="span" fw="normal" size="sm">
-                  From {dayjs().subtract(1, "month").format("MMMM")}.
-                </Text>
-              }
-            >
-              <ThemeIcon radius="lg" size="sm" color="orange" variant="light">
-                <IconCalendarTime size={14} stroke={1.5} />
-              </ThemeIcon>
-            </Tooltip>
-          )}
+          {dayjs(data.date).month() !== dayjs().month() &&
+            !hideMonthIndicator && (
+              <Tooltip
+                position="left"
+                label={
+                  <Text component="span" fw="normal" size="sm">
+                    From {dayjs().subtract(1, "month").format("MMMM")}.
+                  </Text>
+                }
+              >
+                <ThemeIcon radius="lg" size="sm" color="orange" variant="light">
+                  <IconCalendarTime size={14} stroke={1.5} />
+                </ThemeIcon>
+              </Tooltip>
+            )}
           {data.linked && (
             <Tooltip
               position="left"

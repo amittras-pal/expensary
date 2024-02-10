@@ -86,3 +86,11 @@ interface SummaryItem {
   subCategories: SummaryCategory[];
   total: number;
 }
+
+interface ISearchReqBody {
+  q?: string;
+  startDate?: Date;
+  endDate?: Date;
+  sort?: Record<string, 1 | -1>;
+  categories?: string[];
+}

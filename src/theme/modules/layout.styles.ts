@@ -32,9 +32,6 @@ export const useNavBtnStyle = createStyles(
       color: theme.colors.dark[0],
       backgroundColor: active ? theme.colors.dark[5] : "transparent",
       boxShadow: active ? theme.shadows.md : "none",
-      "&:last-child": {
-        marginBottom: theme.spacing.sm,
-      },
       "&:hover": {
         backgroundColor: active ? theme.colors.dark[5] : theme.colors.dark[8],
       },
