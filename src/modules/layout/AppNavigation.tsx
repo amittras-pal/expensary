@@ -10,17 +10,17 @@ import {
 } from "@mantine/core";
 import { HorizontalSectionSharedProps } from "@mantine/core/lib/AppShell/HorizontalSection/HorizontalSection";
 import { useHotkeys } from "@mantine/hooks";
+import { modals } from "@mantine/modals";
 import { IconLogout, IconPower, IconUserCog } from "@tabler/icons-react";
 import React, { useMemo, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ROUTES } from "../../constants/routes";
+import { useLogoutHandler } from "../../hooks/logout";
 import { useMediaMatch } from "../../hooks/media-match";
 import {
   useAppStyles,
   useNavBtnStyle,
 } from "../../theme/modules/layout.styles";
-import { modals } from "@mantine/modals";
-import { useLogoutHandler } from "../../hooks/logout";
 
 type RouteChange = {
   onChange: React.Dispatch<React.SetStateAction<boolean>>;
@@ -57,12 +57,17 @@ export default function AppNavigation({ onChange, ...rest }: SidebarProps) {
       p="md"
       {...rest}
     >
-      <Navbar.Section grow>
-        <>
-          {ROUTES.map((route) => (
-            <NavLink {...route} key={route.label} onChange={onChange} />
-          ))}
-        </>
+      <Navbar.Section
+        grow
+        sx={(theme) => ({
+          display: "flex",
+          flexDirection: "column",
+          gap: theme.spacing.sm,
+        })}
+      >
+        {ROUTES.map((route) => (
+          <NavLink {...route} key={route.label} onChange={onChange} />
+        ))}
       </Navbar.Section>
       <Navbar.Section
         sx={() => ({
@@ -83,11 +88,11 @@ export default function AppNavigation({ onChange, ...rest }: SidebarProps) {
           <ActionIcon
             color="red"
             variant="light"
-            size="xl"
+            size="lg"
             radius="sm"
             onClick={confirmLogout}
           >
-            <IconPower size={24} />
+            <IconPower size={20} />
           </ActionIcon>
         </Tooltip>
       </Navbar.Section>
