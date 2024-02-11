@@ -29,7 +29,6 @@ export const useNavBtnStyle = createStyles(
       width: "100%",
       padding: theme.spacing.xs,
       borderRadius: theme.radius.sm,
-      marginBottom: theme.spacing.sm,
       color: theme.colors.dark[0],
       backgroundColor: active ? theme.colors.dark[5] : "transparent",
       boxShadow: active ? theme.shadows.md : "none",

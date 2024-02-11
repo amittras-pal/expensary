@@ -11,6 +11,7 @@ const theme: MantineThemeOverride = {
     TextInput: { defaultProps: { mb: "sm", variant: "filled" } },
     Textarea: { defaultProps: { mb: "sm", variant: "filled" } },
     Select: { defaultProps: { mb: "sm", variant: "filled" } },
+    MultiSelect: { defaultProps: { mb: "sm", variant: "filled" } },
     DateTimePicker: { defaultProps: { mb: "sm", variant: "filled" } },
     PasswordInput: { defaultProps: { mb: "sm", variant: "filled" } },
     Button: { defaultProps: { loaderPosition: "right" } },

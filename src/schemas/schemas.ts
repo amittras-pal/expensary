@@ -120,6 +120,12 @@ export const pwdChangeSchema = yup.object().shape({
     .required("Please enter pin again"),
 });
 
+export const gSearchSchema = yup.object().shape({
+  q: yup.string().optional(),
+  dateRange: yup.array().of(yup.date().nullable()).length(2).required(),
+  categories: yup.array().of(yup.string().required()),
+});
+
 export type LoginForm = yup.InferType<typeof loginSchema>;
 export type RegisterForm = yup.InferType<typeof registerSchema>;
 export type BudgetForm = yup.InferType<typeof budgetFormSchema>;
@@ -127,3 +133,4 @@ export type ExpenseForm = yup.InferType<ReturnType<typeof expenseSchema>>;
 export type ExpensePlanForm = yup.InferType<typeof expensePlanSchema>;
 export type PreferenceForm = yup.InferType<typeof preferencesSchema>;
 export type PwdChangeForm = yup.InferType<typeof pwdChangeSchema>;
+export type GlobalSearchForm = yup.InferType<typeof gSearchSchema>;

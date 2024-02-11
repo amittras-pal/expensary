@@ -1,9 +1,9 @@
 import {
   IconArrowsDoubleSwNe,
-  IconCalendarDown,
   IconDashboard,
+  IconDatabaseExport,
   IconReport,
-  IconUserCog,
+  IconSearch,
 } from "@tabler/icons-react";
 import React from "react";
 
@@ -20,7 +20,14 @@ export const ROUTES: RouteItem[] = [
     label: "Expenses List",
     path: "/expenses",
     exactMatch: true,
-    shortcut: "E",
+    shortcut: "L",
+  },
+  {
+    icon: <IconSearch size={16} />,
+    label: "Search Expenses",
+    path: "/search",
+    exactMatch: false,
+    shortcut: "S",
   },
   {
     icon: <IconReport size={16} />,
@@ -30,17 +37,10 @@ export const ROUTES: RouteItem[] = [
     shortcut: "P",
   },
   {
-    icon: <IconCalendarDown size={16} />,
-    label: "Report Download",
-    path: "/report",
+    icon: <IconDatabaseExport size={16} />,
+    label: "Export",
+    path: "/export",
     exactMatch: false,
-    shortcut: "R",
-  },
-  {
-    icon: <IconUserCog size={16} />,
-    label: "User Account",
-    path: "/account",
-    exactMatch: false,
-    shortcut: "U",
+    shortcut: "E",
   },
 ];

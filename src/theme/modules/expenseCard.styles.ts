@@ -11,4 +11,10 @@ export const useExpenseStyles = createStyles((theme) => ({
       marginBottom: theme.spacing.xs,
     },
   },
+  highlight: {
+    fontWeight: "bold",
+    color: theme.colors[theme.primaryColor][2],
+    backgroundColor: theme.fn.rgba(theme.colors[theme.primaryColor][9], 0.4),
+    borderRadius: theme.radius.xs,
+  },
 }));

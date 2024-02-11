@@ -55,3 +55,9 @@ export function deleteExpense(id: string): Promise<ResponseBody<undefined>> {
     .delete(ENDPOINTS.expenses, { params: { id } })
     .then((res) => res.data);
 }
+
+export function searchExpenses(payload: ISearchReqBody) {
+  return axios
+    .post<ResponseBody<IExpense[]>>(ENDPOINTS.search, payload)
+    .then((res) => res.data);
+}
