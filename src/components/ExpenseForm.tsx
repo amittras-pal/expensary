@@ -30,7 +30,7 @@ import React, {
 } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
-import { equationRX, time20Min } from "../constants/app";
+import { eqSanityRX, time20Min } from "../constants/app";
 import { useCurrentUser } from "../context/user.context";
 import { useErrorHandler } from "../hooks/error-handler";
 import { expenseSchema, ExpenseForm as FormSchema } from "../schemas/schemas";
@@ -51,9 +51,7 @@ export default function ExpenseForm({ data, onComplete }: IExpenseFormProps) {
   const { userData } = useCurrentUser();
   const { onError } = useErrorHandler();
   const params = useParams();
-  const [amountStr, setAmountStr] = useState<string>(
-    data?.amount.toString() ?? "0"
-  );
+  const [amount, setAmount] = useState<string>(data?.amount.toString() ?? "0");
 
   const minDate = useMemo(() => {
     const userDate = dayjs(userData?.createdAt).toDate().getTime();
@@ -183,28 +181,28 @@ export default function ExpenseForm({ data, onComplete }: IExpenseFormProps) {
   );
 
   useEffect(() => {
-    if (!amountStr) return;
-    if (amountStr.match(/[^0-9.]/)) {
-      if (equationRX.test(amountStr))
+    if (!amount) return;
+    if (amount.match(/[^\d.]/)) {
+      const equation = amount.replaceAll(eqSanityRX, "");
+      if (equation.length > 0)
         try {
           // eslint-disable-next-line no-eval
-          const finalValue = eval(amountStr);
+          const finalValue = parseFloat(eval(equation));
           updateAmount(finalValue);
-        } catch (error) {
+        } catch {
           setError("amount", {
             message: "Invalid Expression.",
             type: "pattern",
           });
         }
-    } else updateAmount(parseFloat(amountStr));
-  }, [amountStr, setError, updateAmount]);
+    } else updateAmount(parseFloat(amount));
+  }, [amount, setError, updateAmount]);
 
   const onAmountBlur: FocusEventHandler<HTMLInputElement> = (e) => {
-    if (errors.amount) return;
-    if (!e.target.value) {
-      setAmountStr("0");
+    if (e.target.value.length === 0) {
+      setAmount("0");
       updateAmount(0);
-    } else setAmountStr(watch("amount")?.toString() ?? "0");
+    } else if (!errors.amount) setAmount(watch("amount")?.toString() ?? "0");
   };
 
   return (
@@ -243,8 +241,8 @@ export default function ExpenseForm({ data, onComplete }: IExpenseFormProps) {
           placeholder="Enter number or calculation"
           label="Amount"
           icon={<IconCurrencyRupee size={18} />}
-          value={amountStr}
-          onChange={(e) => setAmountStr(e.target.value)}
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
           onBlur={onAmountBlur}
           description={
             <>
