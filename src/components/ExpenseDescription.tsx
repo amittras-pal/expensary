@@ -1,12 +1,12 @@
 import { Text, TextProps } from "@mantine/core";
 import React from "react";
-import { urlMatcher } from "../constants/app";
+import { urlRX } from "../constants/app";
 
 const ExpenseDescription = ({ children = "", ...rest }: TextProps) => {
   return (
     <Text {...rest} component="p" fz="xs" sx={{ whiteSpace: "pre-wrap" }} m={0}>
       {(children as string).split(" ").map((part, i) =>
-        urlMatcher.test(part) ? (
+        urlRX.test(part) ? (
           <Text
             key={part + i}
             component="a"
