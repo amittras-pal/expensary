@@ -22,6 +22,10 @@ export function getPercentage(amount: number = 0, total: number = 0): number {
   return parseInt(((amount / total) * 100).toFixed(0));
 }
 
+export function roundOff(num: number) {
+  return Math.round((num + Number.EPSILON) * 100) / 100;
+}
+
 export function getSeverityColor(
   amount: number = 0,
   total: number = 0

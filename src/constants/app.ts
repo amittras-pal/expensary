@@ -12,5 +12,6 @@ export const blinkColors: MantineColor[] = [
   "cyan",
 ];
 
-export const urlMatcher =
+export const eqSanityRX = /([^\d.()+\-*/])/g;
+export const urlRX =
   /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/gi;

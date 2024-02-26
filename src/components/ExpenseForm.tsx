@@ -14,13 +14,23 @@ import {
 } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 import { notifications } from "@mantine/notifications";
-import { IconCheck, IconCurrencyRupee } from "@tabler/icons-react";
+import {
+  IconCheck,
+  IconChevronRight,
+  IconCurrencyRupee,
+} from "@tabler/icons-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import React, { useMemo } from "react";
+import React, {
+  FocusEventHandler,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
-import { time20Min } from "../constants/app";
+import { eqSanityRX, time20Min } from "../constants/app";
 import { useCurrentUser } from "../context/user.context";
 import { useErrorHandler } from "../hooks/error-handler";
 import { expenseSchema, ExpenseForm as FormSchema } from "../schemas/schemas";
@@ -28,6 +38,7 @@ import { getCategories } from "../services/categories.service";
 import { createExpense, editExpense } from "../services/expense.service";
 import { getPlans } from "../services/plans.service";
 import { ResponseBody } from "../services/response.type";
+import { roundOff } from "../utils";
 import CategorySelectItem from "./CategorySelectItem";
 
 interface IExpenseFormProps {
@@ -40,6 +51,7 @@ export default function ExpenseForm({ data, onComplete }: IExpenseFormProps) {
   const { userData } = useCurrentUser();
   const { onError } = useErrorHandler();
   const params = useParams();
+  const [amount, setAmount] = useState<string>(data?.amount.toString() ?? "0");
 
   const minDate = useMemo(() => {
     const userDate = dayjs(userData?.createdAt).toDate().getTime();
@@ -75,6 +87,7 @@ export default function ExpenseForm({ data, onComplete }: IExpenseFormProps) {
     handleSubmit,
     reset,
     setValue,
+    setError,
     watch,
     formState: { errors, isValid },
   } = useForm<FormSchema>({
@@ -156,6 +169,42 @@ export default function ExpenseForm({ data, onComplete }: IExpenseFormProps) {
     else create(payload);
   };
 
+  const updateAmount = useCallback(
+    (e: number) => {
+      setValue("amount", roundOff(e), {
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: true,
+      });
+    },
+    [setValue]
+  );
+
+  useEffect(() => {
+    if (!amount) return;
+    if (amount.match(/[^\d.]/)) {
+      const equation = amount.replaceAll(eqSanityRX, "");
+      if (equation.length > 0)
+        try {
+          // eslint-disable-next-line no-eval
+          const finalValue = parseFloat(eval(equation));
+          updateAmount(finalValue);
+        } catch {
+          setError("amount", {
+            message: "Invalid Expression.",
+            type: "pattern",
+          });
+        }
+    } else updateAmount(parseFloat(amount));
+  }, [amount, setError, updateAmount]);
+
+  const onAmountBlur: FocusEventHandler<HTMLInputElement> = (e) => {
+    if (e.target.value.length === 0) {
+      setAmount("0");
+      updateAmount(0);
+    } else if (!errors.amount) setAmount(watch("amount")?.toString() ?? "0");
+  };
+
   return (
     <Box
       component="form"
@@ -188,25 +237,25 @@ export default function ExpenseForm({ data, onComplete }: IExpenseFormProps) {
           minRows={5}
         />
         <TextInput
-          {...register("amount")}
           error={errors?.amount?.message}
-          placeholder="Amount"
+          placeholder="Enter number or calculation"
           label="Amount"
-          inputMode="numeric"
           icon={<IconCurrencyRupee size={18} />}
-          onBlur={(e) => {
-            if (!e.target.value)
-              setValue("amount", 0, {
-                shouldTouch: true,
-                shouldDirty: true,
-                shouldValidate: true,
-              });
-          }}
-          description={`${
-            !parseInt(watch("amount")?.toString() ?? "0")
-              ? "Keeping 0 as amount will indicate a record type expense."
-              : ""
-          }`}
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+          onBlur={onAmountBlur}
+          description={
+            <>
+              <Text fz="xs" color="dimmed">
+                <IconChevronRight size={8} /> Enter number or calculation. E.g.:
+                (a+b*c)/d.
+              </Text>
+              <Text fz="xs" color="dimmed">
+                <IconChevronRight size={8} /> Keeping '0' indicates an expense
+                where money wasn't spent.
+              </Text>
+            </>
+          }
         />
         <Select
           searchable
