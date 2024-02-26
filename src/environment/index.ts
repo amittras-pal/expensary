@@ -1,5 +1,7 @@
 export function getBaseURL(): string {
-  return import.meta.env.NODE_ENV === "production"
-    ? "https://money-trace.onrender.com"
-    : import.meta.env.VITE_API?.toString() ?? "";
+  console.log(import.meta.env);
+
+  return import.meta.env.DEV
+    ? import.meta.env.VITE_API?.toString() ?? ""
+    : "https://money-trace.onrender.com";
 }
