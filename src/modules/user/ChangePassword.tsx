@@ -1,7 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Divider, Group, Text } from "@mantine/core";
 import { useMutation } from "@tanstack/react-query";
-import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import PinInput from "../../components/pin-input/PinInput";
 import { useCurrentUser } from "../../context/user.context";

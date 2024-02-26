@@ -10,7 +10,8 @@ import {
 import { notifications } from "@mantine/notifications";
 import { IconCheck, IconCopy, IconX } from "@tabler/icons-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import React, { useMemo, useRef, useState } from "react";
+import { ColDef, GridApi } from "ag-grid-community";
+import { useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import AgGridMod from "../../../components/ag-grid/AgGridMod";
 import {
@@ -23,17 +24,16 @@ import {
   CategoryFilter,
   SubCategoryFilter,
 } from "../../../components/ag-grid/plugins/filters";
+import {
+  MetaHeader,
+  RowCountHeader,
+} from "../../../components/ag-grid/plugins/headers";
 import { useErrorHandler } from "../../../hooks/error-handler";
 import { useMediaMatch } from "../../../hooks/media-match";
 import { getExpenseList } from "../../../services/expense.service";
 import { copyExpensesToBudget } from "../../../services/plans.service";
 import { usePlanExpensesStyles } from "../../../theme/modules/plan.styles";
 import { dateFormatter } from "../../../utils";
-import { ColDef, GridApi } from "ag-grid-community";
-import {
-  MetaHeader,
-  RowCountHeader,
-} from "../../../components/ag-grid/plugins/headers";
 
 interface IPlanExpensesListProps {
   plan: IExpensePlan;

@@ -11,7 +11,7 @@ import { useDisclosure, useDocumentTitle, useHotkeys } from "@mantine/hooks";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ColDef, FilterChangedEvent, GridApi } from "ag-grid-community";
 import dayjs from "dayjs";
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import DeleteExpense from "../../components/DeleteExpense";
 import ExpenseForm from "../../components/ExpenseForm";
 import AgGridMod from "../../components/ag-grid/AgGridMod";

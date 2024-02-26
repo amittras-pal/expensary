@@ -12,7 +12,6 @@ import { useDocumentTitle } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
-import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import PinInput from "../../components/pin-input/PinInput";

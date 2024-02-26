@@ -8,7 +8,7 @@ import {
 import { useDisclosure, useDocumentTitle, useHotkeys } from "@mantine/hooks";
 import { IconInfoCircle, IconPlus } from "@tabler/icons-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import DeleteExpense from "../../components/DeleteExpense";
 import ExpenseForm from "../../components/ExpenseForm";

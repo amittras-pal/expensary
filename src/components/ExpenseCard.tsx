@@ -21,7 +21,7 @@ import {
 } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import React, { memo, useMemo } from "react";
+import { memo, useMemo } from "react";
 import Highlighter from "react-highlight-words";
 import { Icons } from "../constants/categories";
 import { useCurrentUser } from "../context/user.context";

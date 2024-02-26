@@ -1,5 +1,4 @@
 import { Text, TextProps } from "@mantine/core";
-import React from "react";
 import { urlRX } from "../constants/app";
 
 const ExpenseDescription = ({ children = "", ...rest }: TextProps) => {

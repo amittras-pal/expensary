@@ -13,7 +13,6 @@ import {
   IconSortDescending,
 } from "@tabler/icons-react";
 import { IHeaderParams } from "ag-grid-community";
-import React from "react";
 import { getNextSortOrder } from "./utils";
 
 export function ColumnHeader({

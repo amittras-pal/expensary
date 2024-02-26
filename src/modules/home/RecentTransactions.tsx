@@ -1,6 +1,5 @@
 import { Box, Divider, ScrollArea, Text } from "@mantine/core";
 import dayjs from "dayjs";
-import React from "react";
 import ExpenseCard from "../../components/ExpenseCard";
 import ExpenseListSkeleton from "../../components/ExpenseListSkeleton";
 import { useCurrentUser } from "../../context/user.context";

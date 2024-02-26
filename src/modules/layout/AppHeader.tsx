@@ -17,7 +17,7 @@ import {
   IconKeyboard,
   IconSearch,
 } from "@tabler/icons-react";
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { APP_TITLE } from "../../constants/app";
 import { useMediaMatch } from "../../hooks/media-match";

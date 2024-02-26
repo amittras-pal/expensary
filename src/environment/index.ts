@@ -1,5 +1,3 @@
 export function getBaseURL(): string {
-  return process.env.NODE_ENV === "production"
-    ? "https://money-trace.onrender.com"
-    : process.env.REACT_APP_API?.toString() ?? "";
+  return import.meta.env.VITE_API_BASE_URL?.toString() ?? "";
 }

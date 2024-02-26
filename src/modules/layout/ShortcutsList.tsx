@@ -8,7 +8,6 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { IconMapPinFilled } from "@tabler/icons-react";
-import React from "react";
 import { useLocation } from "react-router-dom";
 import { planDetailsPath } from "../../constants/app";
 import { useShortcutBlockStyles } from "../../theme/modules/layout.styles";

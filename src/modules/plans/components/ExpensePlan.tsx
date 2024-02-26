@@ -6,7 +6,7 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import dayjs from "dayjs";
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { usePlanStyles } from "../../../theme/modules/plan.styles";
 

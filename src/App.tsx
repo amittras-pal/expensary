@@ -2,7 +2,7 @@ import { LoadingOverlay, MantineProvider } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
 import BudgetMonitor from "./components/monitors/BudgetMonitor";
 import Themer from "./components/monitors/Themer";

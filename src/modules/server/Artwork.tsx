@@ -1,5 +1,5 @@
 import { MantineColor, useMantineTheme } from "@mantine/core";
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import "./Artwork.scss";
 
 const barClasses = [".cls-10", ".cls-9", ".cls-6", ".cls-7", ".cls-8"];

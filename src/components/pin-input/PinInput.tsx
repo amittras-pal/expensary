@@ -1,6 +1,4 @@
-import { Box, PinInputProps, Text } from "@mantine/core";
-import React from "react";
-import { PinInput as MPinInput } from "@mantine/core";
+import { Box, PinInput as MPinInput, PinInputProps, Text } from "@mantine/core";
 
 interface EnhancedPinProps extends PinInputProps {
   label: string;

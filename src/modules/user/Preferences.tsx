@@ -13,7 +13,7 @@ import {
 import { notifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useCurrentUser } from "../../context/user.context";
 import { PreferenceForm, preferencesSchema } from "../../schemas/schemas";

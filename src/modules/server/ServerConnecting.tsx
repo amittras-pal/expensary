@@ -10,7 +10,7 @@ import {
 } from "@mantine/core";
 import { IconHelp, IconRefresh } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { blinkColors, time20Min } from "../../constants/app";
 import { pingServer } from "../../services/server.service";
 import { useConnectorStyles } from "../../theme/modules/connector.styles";
