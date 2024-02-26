@@ -18,7 +18,7 @@ import {
 } from "@tabler/icons-react";
 import { ICellRendererParams } from "ag-grid-community";
 import dayjs from "dayjs";
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { useCurrentUser } from "../../../context/user.context";
 import { formatCurrency } from "../../../utils";
 import ExpenseDescription from "../../ExpenseDescription";

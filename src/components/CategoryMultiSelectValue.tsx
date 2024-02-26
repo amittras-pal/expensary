@@ -1,5 +1,5 @@
 import { Badge, CloseButton, MultiSelectValueProps } from "@mantine/core";
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { Icons } from "../constants/categories";
 
 export default function CategoryMultiSelectValue({

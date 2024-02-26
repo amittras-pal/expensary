@@ -12,7 +12,7 @@ import { HorizontalSectionSharedProps } from "@mantine/core/lib/AppShell/Horizon
 import { useHotkeys } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
 import { IconLogout, IconPower, IconUserCog } from "@tabler/icons-react";
-import React, { useMemo, useRef } from "react";
+import { useMemo, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ROUTES } from "../../constants/routes";
 import { useLogoutHandler } from "../../hooks/logout";

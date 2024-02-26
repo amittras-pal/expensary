@@ -1,5 +1,5 @@
 import { Group, Text, ThemeIcon } from "@mantine/core";
-import React, { forwardRef, useMemo } from "react";
+import { forwardRef, useMemo } from "react";
 import { Icons } from "../constants/categories";
 
 interface ItemProps extends React.ComponentPropsWithoutRef<"div"> {

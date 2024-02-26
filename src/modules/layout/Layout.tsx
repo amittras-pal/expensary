@@ -1,5 +1,5 @@
 import { AppShell, LoadingOverlay } from "@mantine/core";
-import React, { Suspense, useState } from "react";
+import { Suspense, useState } from "react";
 import { Outlet } from "react-router-dom";
 import AuthGuard from "../guards/AuthGuard";
 import AppHeader from "./AppHeader";

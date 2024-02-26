@@ -1,11 +1,11 @@
-import React, { useEffect } from "react";
-import { useErrorHandler } from "../../hooks/error-handler";
-import { useCurrentUser } from "../../context/user.context";
-import { IconClockCheck, IconClockExclamation } from "@tabler/icons-react";
-import { notifications } from "@mantine/notifications";
-import { updateUserDetails } from "../../services/user.service";
-import { useMutation } from "@tanstack/react-query";
 import { Box, Button, Group, Text } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
+import { IconClockCheck, IconClockExclamation } from "@tabler/icons-react";
+import { useMutation } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { useCurrentUser } from "../../context/user.context";
+import { useErrorHandler } from "../../hooks/error-handler";
+import { updateUserDetails } from "../../services/user.service";
 
 const TimezoneMonitor = () => {
   const { onError } = useErrorHandler();

@@ -7,7 +7,7 @@ import {
   ThemeIcon,
   Tooltip,
 } from "@mantine/core";
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { Icons } from "../constants/categories";
 import { useBudgetItemStyles } from "../theme/modules/budgetItem.styles";
 import { formatCurrency } from "../utils";

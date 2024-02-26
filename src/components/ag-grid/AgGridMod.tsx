@@ -1,8 +1,7 @@
 import { AgGridReact, AgGridReactProps } from "ag-grid-react";
-import React from "react";
 import "./AgGridMod.scss";
-import { NoDataOverlay } from "./plugins/overlays";
 import { ColumnHeader } from "./plugins/headers";
+import { NoDataOverlay } from "./plugins/overlays";
 
 interface IAgGridModProps extends AgGridReactProps {
   height: number;

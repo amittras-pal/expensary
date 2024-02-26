@@ -12,8 +12,7 @@ import {
 import { notifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
-import React from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { useErrorHandler } from "../../../hooks/error-handler";
 import {
   ExpensePlanForm as FormSchema,

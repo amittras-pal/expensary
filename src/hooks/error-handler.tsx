@@ -1,8 +1,7 @@
-import { useLocation, useNavigate } from "react-router-dom";
 import { notifications } from "@mantine/notifications";
 import { IconX } from "@tabler/icons-react";
 import { isAxiosError } from "axios";
-import React from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export function useErrorHandler(func?: () => void) {
   const navigate = useNavigate();

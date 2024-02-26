@@ -1,7 +1,6 @@
 import { Accordion, Divider, Group, Text } from "@mantine/core";
 import { useDocumentTitle } from "@mantine/hooks";
 import dayjs from "dayjs";
-import React from "react";
 import { APP_TITLE } from "../../constants/app";
 import { useCurrentUser } from "../../context/user.context";
 import ChangePassword from "./ChangePassword";

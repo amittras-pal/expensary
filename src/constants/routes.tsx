@@ -5,7 +5,6 @@ import {
   IconReport,
   IconSearch,
 } from "@tabler/icons-react";
-import React from "react";
 
 export const ROUTES: RouteItem[] = [
   {

@@ -1,4 +1,3 @@
-
 import {
   Box,
   Button,
@@ -10,7 +9,7 @@ import {
 import { notifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
-import React from "react";
+
 import { useErrorHandler } from "../../../hooks/error-handler";
 import { deletePlan } from "../../../services/plans.service";
 import ExpensePlan from "./ExpensePlan";

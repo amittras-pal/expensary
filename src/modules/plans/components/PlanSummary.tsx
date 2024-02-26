@@ -10,7 +10,7 @@ import {
 } from "@mantine/core";
 import { IconListCheck } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 import BudgetItem from "../../../components/BudgetItem";
 import { useErrorHandler } from "../../../hooks/error-handler";
