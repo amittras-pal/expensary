@@ -8,8 +8,7 @@ jobs:
     if: "${{ github.event.pull_request.head.repo.full_name == github.repository }}"
     runs-on: ubuntu-latest
     env:
-      NODE_ENV: production
-      VITE_API: "${{ secrets.VITE_API }}"
+      VITE_API_BASE_URL: "${{ secrets.VITE_API_BASE_URL }}"
     steps:
       - uses: actions/checkout@v3
       - run: npm i && npm run build
