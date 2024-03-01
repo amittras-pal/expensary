@@ -257,7 +257,6 @@ export default function Expenses() {
             variant="filled"
             value={payload.startDate}
             valueFormat="MMM 'YY"
-            disabled={dayjs(userData?.createdAt).month() === dayjs().month()}
             onChange={handleMonthChange}
             maxDate={dayjs().toDate()}
             minDate={
