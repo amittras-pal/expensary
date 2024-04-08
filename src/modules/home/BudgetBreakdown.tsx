@@ -211,7 +211,7 @@ export default function BudgetBreakdown({
           >
             Add New
           </Button>
-          {isMobile && recents && (
+          {isMobile && recents > 0 && (
             <Button
               size="xs"
               variant="light"

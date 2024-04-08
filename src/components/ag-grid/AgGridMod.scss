@@ -38,7 +38,6 @@
         border-radius: var(--mantine-radius-sm);
         border: 2px solid var(--mantine-color-primary-5);
         background-color: var(--mantine-color-dark-4) !important;
-        background-color: var(--mantine-color-dark-4) !important;
       }
     }
     .ag-row {
@@ -60,8 +59,8 @@
     }
     .ag-row-selected {
       background-color: var(--mantine-color-dark-6) !important;
-      border-bottom-color: var(--mantine-color-dark-7) !important;
       border: 1px dashed var(--mantine-color-primary-5) !important;
+      border-bottom-color: var(--mantine-color-dark-7) !important;
       &::before {
         display: none;
       }
