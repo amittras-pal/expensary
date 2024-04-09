@@ -43,7 +43,7 @@ export default function BudgetBreakdown({
   showForm,
   showRecent,
   recents,
-}: IBudgetBreakdownProps) {
+}: Readonly<IBudgetBreakdownProps>) {
   const [showSelection, setShowSelection] = useState(false);
   const [selection, setSelection] = useState<string[]>([]);
   const { budget, userData } = useCurrentUser();

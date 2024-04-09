@@ -30,7 +30,10 @@ interface IAppHeaderProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function AppHeader({ open, setOpen }: IAppHeaderProps) {
+export default function AppHeader({
+  open,
+  setOpen,
+}: Readonly<IAppHeaderProps>) {
   const { classes } = useAppStyles();
   const theme = useMantineTheme();
   const [title, setTitle] = useState([APP_TITLE, "Dashboard"]);

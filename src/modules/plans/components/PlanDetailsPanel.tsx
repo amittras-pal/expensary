@@ -5,7 +5,9 @@ interface IPlanDetailsPanelProps {
   data: IExpensePlan;
 }
 
-export default function PlanDetailsPanel({ data }: IPlanDetailsPanelProps) {
+export default function PlanDetailsPanel({
+  data,
+}: Readonly<IPlanDetailsPanelProps>) {
   return (
     <Box
       sx={(theme) => ({

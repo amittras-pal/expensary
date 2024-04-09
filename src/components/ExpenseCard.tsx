@@ -47,7 +47,7 @@ function ExpenseCard({
   hideMenu,
   highlight,
   hideMonthIndicator,
-}: ExpenseCardProps) {
+}: Readonly<ExpenseCardProps>) {
   const { classes } = useExpenseStyles();
   const { userData } = useCurrentUser();
   const { primaryColor } = useMantineTheme();

@@ -24,7 +24,7 @@ function BudgetItem({
   selection,
   onSelectionChange,
   data,
-}: IBudgetItemProps) {
+}: Readonly<IBudgetItemProps>) {
   const [category, { subCategories, total }] = data;
 
   const { classes } = useBudgetItemStyles();

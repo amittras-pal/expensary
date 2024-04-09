@@ -22,7 +22,7 @@ interface IDeleteExpenseProps {
 export default function DeleteExpense({
   data,
   onComplete,
-}: IDeleteExpenseProps) {
+}: Readonly<IDeleteExpenseProps>) {
   const { primaryColor } = useMantineTheme();
   const { onError } = useErrorHandler();
 

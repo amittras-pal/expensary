@@ -18,7 +18,7 @@ export default function RecentTransactions({
   loadingList,
   onEditExpense,
   onDeleteExpense,
-}: IRecentTransactionsProps) {
+}: Readonly<IRecentTransactionsProps>) {
   const isMobile = useMediaMatch();
   const { classes } = useDashboardStyles();
   const { userData } = useCurrentUser();
@@ -65,7 +65,7 @@ function ItemList({
   list,
   onEditExpense,
   onDeleteExpense,
-}: Omit<IRecentTransactionsProps, "loadingList">): JSX.Element {
+}: Readonly<Omit<IRecentTransactionsProps, "loadingList">>) {
   return (
     <>
       {list?.length > 0

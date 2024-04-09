@@ -11,7 +11,7 @@ export default function PinInput({
   required,
   errorMsg,
   ...props
-}: EnhancedPinProps) {
+}: Readonly<EnhancedPinProps>) {
   // TODO: add styles here.
   return (
     <Box mb="md">
