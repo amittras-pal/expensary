@@ -95,5 +95,5 @@ export default function ServerConnecting({ children }: PropsWithChildren) {
       </Box>
     );
 
-  return children;
+  return <>{children}</>;
 }
