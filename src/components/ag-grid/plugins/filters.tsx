@@ -134,7 +134,7 @@ function SubCategory(props: IFilterParams<IExpense>, ref: any) {
 
   const categoryOptions: SubCategoryOption[] = useMemo(() => {
     const categoryInst = props.api.getFilterInstance("category.group");
-    if (!categoryInst || !categoryInst.isFilterActive()) return [];
+    if (!categoryInst?.isFilterActive()) return [];
 
     const selectedGroups = categoryInst.getModel() as string[];
     const avCats = new Set<string>();

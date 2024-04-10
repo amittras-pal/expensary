@@ -43,7 +43,7 @@ interface IPlanExpensesListProps {
 export default function PlanExpensesList({
   onExpenseAction,
   plan,
-}: IPlanExpensesListProps) {
+}: Readonly<IPlanExpensesListProps>) {
   const { onError } = useErrorHandler();
   const { classes } = usePlanExpensesStyles();
 

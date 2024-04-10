@@ -29,7 +29,7 @@ interface IExpensePlanFormProps {
 export default function ExpensePlanForm({
   data,
   onComplete,
-}: IExpensePlanFormProps) {
+}: Readonly<IExpensePlanFormProps>) {
   const { primaryColor } = useMantineTheme();
   const { onError } = useErrorHandler();
 

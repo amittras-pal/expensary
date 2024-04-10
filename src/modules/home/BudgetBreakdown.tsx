@@ -43,7 +43,7 @@ export default function BudgetBreakdown({
   showForm,
   showRecent,
   recents,
-}: IBudgetBreakdownProps) {
+}: Readonly<IBudgetBreakdownProps>) {
   const [showSelection, setShowSelection] = useState(false);
   const [selection, setSelection] = useState<string[]>([]);
   const { budget, userData } = useCurrentUser();
@@ -211,7 +211,7 @@ export default function BudgetBreakdown({
           >
             Add New
           </Button>
-          {isMobile && recents && (
+          {isMobile && recents > 0 && (
             <Button
               size="xs"
               variant="light"

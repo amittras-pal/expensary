@@ -14,7 +14,7 @@ import { notifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useCurrentUser } from "../../context/user.context";
 import { PreferenceForm, preferencesSchema } from "../../schemas/schemas";
 import { updateUserDetails } from "../../services/user.service";
@@ -42,7 +42,7 @@ export default function Preferences() {
   }, [primaryColor, setValue, userData]);
 
   const client = useQueryClient();
-  const { mutate: update, isLoading } = useMutation({
+  const { mutate: updatePreferences, isLoading } = useMutation({
     mutationFn: updateUserDetails,
     onSuccess: (res) => {
       notifications.show({
@@ -57,15 +57,12 @@ export default function Preferences() {
     },
   });
 
-  const updatePreferences: SubmitHandler<PreferenceForm> = (values) => {
-    // const payload = { editWindow: values.ed };
-    update(values);
-  };
-
   return (
     <Box
       component="form"
-      onSubmit={handleSubmit(updatePreferences)}
+      onSubmit={handleSubmit((values) => {
+        updatePreferences(values);
+      })}
       sx={(theme) => ({
         display: "flex",
         flexDirection: "column",

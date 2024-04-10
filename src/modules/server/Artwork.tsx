@@ -4,7 +4,7 @@ import "./Artwork.scss";
 
 const barClasses = [".cls-10", ".cls-9", ".cls-6", ".cls-7", ".cls-8"];
 
-export default function Artwork({ color }: { color: MantineColor }) {
+export default function Artwork({ color }: Readonly<{ color: MantineColor }>) {
   const ref = useRef<SVGSVGElement>(null);
   const { colors } = useMantineTheme();
 

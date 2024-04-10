@@ -19,7 +19,10 @@ interface IDeletePlanProps {
   onComplete: (e: boolean) => void;
 }
 
-export default function DeletePlan({ data, onComplete }: IDeletePlanProps) {
+export default function DeletePlan({
+  data,
+  onComplete,
+}: Readonly<IDeletePlanProps>) {
   const { primaryColor } = useMantineTheme();
   const { onError } = useErrorHandler();
 

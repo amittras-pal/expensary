@@ -5,7 +5,7 @@ const Themer = (): null => {
   const { primaryColor, colors } = useMantineTheme();
 
   useEffect(() => {
-    const root = document.querySelector(":root")! as HTMLElement;
+    const root: HTMLElement = document.querySelector(":root")!;
     colors[primaryColor].forEach((shade, index) => {
       root.style.setProperty(`--mantine-color-primary-${index}`, shade);
     });

@@ -46,7 +46,10 @@ interface IExpenseFormProps {
   onComplete: (refresh: boolean | IExpense) => void;
 }
 
-export default function ExpenseForm({ data, onComplete }: IExpenseFormProps) {
+export default function ExpenseForm({
+  data,
+  onComplete,
+}: Readonly<IExpenseFormProps>) {
   const { primaryColor } = useMantineTheme();
   const { userData } = useCurrentUser();
   const { onError } = useErrorHandler();
@@ -74,7 +77,7 @@ export default function ExpenseForm({ data, onComplete }: IExpenseFormProps) {
       object.plan = data.plan;
     }
 
-    if (!!params.id) {
+    if (typeof params.id === "string") {
       object.addToPlan = true;
       object.plan = params.id;
     }

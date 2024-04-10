@@ -24,7 +24,7 @@ import { formatCurrency } from "../../../utils";
 import ExpenseDescription from "../../ExpenseDescription";
 import { MenuCellProps, MetaCellProps } from "../interfaces";
 
-export function MetaCell({ data, page }: MetaCellProps) {
+export function MetaCell({ data, page }: Readonly<MetaCellProps>) {
   const { primaryColor } = useMantineTheme();
   if (!data?.description && !data?.linked && (data?.amount ?? 0) > 0)
     return null;
@@ -109,7 +109,7 @@ export function RowMenuCell({
   onDeleteExpense,
   rowIndex,
   plan,
-}: MenuCellProps) {
+}: Readonly<MenuCellProps>) {
   const { userData } = useCurrentUser();
   const availableActions = useMemo(() => {
     const actions = [];

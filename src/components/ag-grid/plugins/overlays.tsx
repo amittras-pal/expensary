@@ -2,7 +2,7 @@ import { Box, Text, ThemeIcon, useMantineTheme } from "@mantine/core";
 import { IconTemplate } from "@tabler/icons-react";
 import { NoDataOverlayProps } from "../interfaces";
 
-export function NoDataOverlay(props: NoDataOverlayProps) {
+export function NoDataOverlay(props: Readonly<NoDataOverlayProps>) {
   const { primaryColor } = useMantineTheme();
   return (
     <Box

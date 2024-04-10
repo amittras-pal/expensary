@@ -16,7 +16,10 @@ type AgGridModProps = Omit<
   | "defaultColDef"
 >;
 
-export default function AgGridMod({ height, ...props }: AgGridModProps) {
+export default function AgGridMod({
+  height,
+  ...props
+}: Readonly<AgGridModProps>) {
   return (
     <div
       className="ag-theme-material mtrace-ag-mod"
