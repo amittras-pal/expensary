@@ -77,7 +77,7 @@ export default function ExpenseForm({
       object.plan = data.plan;
     }
 
-    if (!!params.id) {
+    if (typeof params.id === "string") {
       object.addToPlan = true;
       object.plan = params.id;
     }

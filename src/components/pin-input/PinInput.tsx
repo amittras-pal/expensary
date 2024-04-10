@@ -12,7 +12,6 @@ export default function PinInput({
   errorMsg,
   ...props
 }: Readonly<EnhancedPinProps>) {
-  // TODO: add styles here.
   return (
     <Box mb="md">
       <Text fz="sm" fw={500} mb={2}>

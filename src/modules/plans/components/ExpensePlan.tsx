@@ -101,31 +101,6 @@ export default function ExpensePlan({
             )}
           </>
         )}
-        {/* {data.open && !hideMenu && (
-          <Menu shadow="md" position="bottom-end">
-            <Menu.Target>
-              <ActionIcon size="sm" radius="xl" variant="light">
-                <IconDotsVertical size={16} />
-              </ActionIcon>
-            </Menu.Target>
-
-            <Menu.Dropdown>
-              <Menu.Item
-                icon={<IconEdit size={14} />}
-                onClick={() => onPlanAction(data, "edit")}
-              >
-                Edit
-              </Menu.Item>
-              <Menu.Item
-                color="red"
-                icon={<IconTrash size={14} />}
-                onClick={() => onPlanAction(data, "delete")}
-              >
-                Delete
-              </Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
-        )} */}
       </Box>
       <Divider mb="sm" mt="auto" />
       <Text size="sm">
