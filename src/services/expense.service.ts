@@ -5,7 +5,7 @@ import { ResponseBody, SummaryResponse } from "./response.type";
 
 export function getSummary(
   plan: boolean | string | null,
-  payload: {
+  payload?: {
     startDate?: Date;
     endDate?: Date;
   }
