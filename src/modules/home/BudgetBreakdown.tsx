@@ -1,4 +1,5 @@
 import {
+  ActionIcon,
   Box,
   Button,
   Divider,
@@ -12,10 +13,12 @@ import {
   ThemeIcon,
   Tooltip,
 } from "@mantine/core";
+import { MonthPickerInput } from "@mantine/dates";
 import { useHotkeys } from "@mantine/hooks";
 import {
   IconArrowRight,
   IconArrowUpRight,
+  IconCalendarPin,
   IconCash,
   IconChevronUp,
   IconExclamationMark,
@@ -50,6 +53,10 @@ export default function BudgetBreakdown({
   const { onError } = useErrorHandler();
   const isMobile = useMediaMatch();
   const { classes } = useDashboardStyles();
+  const [payload, setPayload] = useState({
+    startDate: dayjs().startOf("month").toDate(),
+    endDate: dayjs().endOf("month").toDate(),
+  });
 
   const ref = useRef<HTMLDivElement>(null);
   const selectionToggle = useRef<HTMLInputElement>(null);
@@ -70,8 +77,8 @@ export default function BudgetBreakdown({
     isLoading,
     refetch,
   } = useQuery({
-    queryKey: ["summary", null],
-    queryFn: () => getSummary(null),
+    queryKey: ["summary", payload],
+    queryFn: () => getSummary(null, payload),
     refetchOnWindowFocus: false,
     staleTime: 120 * 1000,
     onError,
@@ -117,12 +124,55 @@ export default function BudgetBreakdown({
       </Box>
     );
 
+  const handleMonthChange = (e: Date) => {
+    setPayload((prev) => ({
+      ...prev,
+      startDate: dayjs(e).startOf("month").toDate(),
+      endDate: dayjs(e).endOf("month").toDate(),
+    }));
+  };
+
   return (
     <Box ref={ref} className={classes.budgetWrapper}>
       <Group position="apart">
-        <Text fw="bold" mr="auto">
-          {dayjs().format("MMM, 'YY")}
-        </Text>
+        <MonthPickerInput
+          size="xs"
+          sx={{ flex: 1, textAlign: "center" }}
+          placeholder="Select month"
+          variant="filled"
+          value={payload.startDate}
+          valueFormat="MMM 'YY"
+          onChange={handleMonthChange}
+          maxDate={dayjs().toDate()}
+          minDate={
+            userData ? dayjs(userData?.createdAt).toDate() : dayjs().toDate()
+          }
+          rightSection={
+            <Tooltip
+              label={
+                <Text component="span" fw="normal" size="sm">
+                  Go to current month
+                </Text>
+              }
+              color="dark"
+              position="bottom"
+            >
+              <ActionIcon
+                size="sm"
+                radius="xl"
+                variant="light"
+                onClick={() => {
+                  setPayload({
+                    startDate: dayjs().startOf("month").toDate(),
+                    endDate: dayjs().endOf("month").toDate(),
+                  });
+                }}
+              >
+                <IconCalendarPin size={16} />
+              </ActionIcon>
+            </Tooltip>
+          }
+        />
         {Object.entries(summary?.response?.summary ?? {})?.length > 1 && (
           <Switch
             labelPosition="left"
@@ -154,15 +204,20 @@ export default function BudgetBreakdown({
       <Divider my="xs" />
       <ScrollArea h={`calc(100vh - ${isMobile ? 272 : 242}px)`}>
         <SimpleGrid cols={1} spacing="xs">
-          {Object.entries(summary?.response?.summary ?? {})?.map((item) => (
-            <BudgetItem
-              key={item[0]}
-              data={item}
-              showSelection={showSelection}
-              selection={selection}
-              onSelectionChange={handleSelection}
-            />
-          ))}
+          {Object.entries(summary?.response?.summary ?? {})
+            ?.sort(
+              (firstItem, secondItem) =>
+                secondItem[1]?.total - firstItem[1]?.total
+            )
+            ?.map((item) => (
+              <BudgetItem
+                key={item[0]}
+                data={item}
+                showSelection={showSelection}
+                selection={selection}
+                onSelectionChange={handleSelection}
+              />
+            ))}
         </SimpleGrid>
       </ScrollArea>
       <Group grow spacing="xs" align="flex-start" mt="auto">
