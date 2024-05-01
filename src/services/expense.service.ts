@@ -4,13 +4,17 @@ import { ENDPOINTS } from "../constants/endpoints";
 import { ResponseBody, SummaryResponse } from "./response.type";
 
 export function getSummary(
-  plan: boolean | string | null
+  plan: boolean | string | null,
+  payload?: {
+    startDate?: Date;
+    endDate?: Date;
+  }
 ): Promise<ResponseBody<SummaryResponse>> {
   return axios
     .get(ENDPOINTS.summary, {
       params: {
-        firstDay: plan ? null : dayjs().startOf("month").toDate(),
-        lastDay: plan ? null : dayjs().endOf("month").toDate(),
+        firstDay: plan ? null : payload?.startDate,
+        lastDay: plan ? null : payload?.endDate,
         plan: plan,
       },
     })
