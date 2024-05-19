@@ -25,6 +25,9 @@ export default function ShortcutsList() {
       <Text fz="xs" mb="xs">
         <Kbd>I</Kbd> - Open Keyboard Shortcuts.
       </Text>
+      <Text fz="xs" mb="xs">
+        <Kbd>Ctrl+K</Kbd> - Search Expenses.
+      </Text>
       <Divider my="sm" />
       <SimpleGrid
         cols={2}

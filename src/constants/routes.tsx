@@ -3,7 +3,6 @@ import {
   IconDashboard,
   IconDatabaseExport,
   IconReport,
-  IconSearch,
 } from "@tabler/icons-react";
 
 export const ROUTES: RouteItem[] = [
@@ -20,13 +19,6 @@ export const ROUTES: RouteItem[] = [
     path: "/expenses",
     exactMatch: true,
     shortcut: "L",
-  },
-  {
-    icon: <IconSearch size={16} />,
-    label: "Search Expenses",
-    path: "/search",
-    exactMatch: false,
-    shortcut: "S",
   },
   {
     icon: <IconReport size={16} />,

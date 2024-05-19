@@ -12,17 +12,14 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useDisclosure, useHotkeys } from "@mantine/hooks";
-import {
-  IconChevronRight,
-  IconKeyboard,
-  IconSearch,
-} from "@tabler/icons-react";
+import { IconChevronRight, IconKeyboard } from "@tabler/icons-react";
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { APP_TITLE } from "../../constants/app";
 import { useMediaMatch } from "../../hooks/media-match";
 import logoPath from "../../resources/app-logo.svg";
 import { useAppStyles } from "../../theme/modules/layout.styles";
+import GlobalSearch from "../search/GlobalSearch";
 import ShortcutsList from "./ShortcutsList";
 
 interface IAppHeaderProps {
@@ -118,23 +115,7 @@ export default function AppHeader({
             </ActionIcon>
           </Tooltip>
         )}
-        <Tooltip
-          label="Search Expenses"
-          position="bottom"
-          withArrow
-          color="dark"
-        >
-          <ActionIcon
-            size="md"
-            variant="default"
-            radius="lg"
-            color={theme.primaryColor}
-            component={Link}
-            to="/search"
-          >
-            <IconSearch size={16} />
-          </ActionIcon>
-        </Tooltip>
+        <GlobalSearch />
       </Header>
       <Modal
         size="lg"
