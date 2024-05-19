@@ -155,14 +155,11 @@ export default function ExpenseForm({
   });
 
   const handleSave: SubmitHandler<FormSchema> = (values) => {
-    const payload: Partial<IExpense> = Object.assign(
-      {},
-      {
-        ...values,
-        amount: values.amount ?? 0,
-        description: values.description ?? "",
-      }
-    );
+    const payload: Partial<IExpense> = {
+      ...values,
+      amount: values.amount ?? 0,
+      description: values.description ?? "",
+    };
     if (!values.plan || !values.addToPlan) payload.plan = null;
     if (!values.linked) payload.linked = null;
 
@@ -189,8 +186,7 @@ export default function ExpenseForm({
       const equation = amount.replaceAll(eqSanityRX, "");
       if (equation.length > 0)
         try {
-          // eslint-disable-next-line no-eval
-          const finalValue = parseFloat(eval(equation));
+          const finalValue = parseFloat(eval(`"use strict";${equation}`));
           updateAmount(finalValue);
         } catch {
           setError("amount", {
