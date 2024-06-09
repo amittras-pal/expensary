@@ -14,6 +14,7 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { MonthPickerInput } from "@mantine/dates";
+import { MonthPickerInput } from "@mantine/dates";
 import { useHotkeys } from "@mantine/hooks";
 import {
   IconArrowRight,
@@ -58,6 +59,10 @@ export default function BudgetBreakdown({
     startDate: dayjs().startOf("month").toDate(),
     endDate: dayjs().endOf("month").toDate(),
   });
+  const [payload, setPayload] = useState({
+    startDate: dayjs().startOf("month").toDate(),
+    endDate: dayjs().endOf("month").toDate(),
+  });
 
   const ref = useRef<HTMLDivElement>(null);
   const selectionToggle = useRef<HTMLInputElement>(null);
@@ -88,6 +93,8 @@ export default function BudgetBreakdown({
     isLoading,
     refetch,
   } = useQuery({
+    queryKey: ["summary", payload],
+    queryFn: () => getSummary(null, payload),
     queryKey: ["summary", payload],
     queryFn: () => getSummary(null, payload),
     refetchOnWindowFocus: false,
@@ -140,6 +147,14 @@ export default function BudgetBreakdown({
         <Text>Budget Info not Available.</Text>
       </Box>
     );
+
+  const handleMonthChange = (e: Date) => {
+    setPayload((prev) => ({
+      ...prev,
+      startDate: dayjs(e).startOf("month").toDate(),
+      endDate: dayjs(e).endOf("month").toDate(),
+    }));
+  };
 
   const handleMonthChange = (e: Date) => {
     setPayload((prev) => ({
@@ -223,6 +238,20 @@ export default function BudgetBreakdown({
       <Divider my="xs" />
       <ScrollArea h={`calc(100vh - ${isMobile ? 272 : 242}px)`}>
         <SimpleGrid cols={1} spacing="xs">
+          {Object.entries(summary?.response?.summary ?? {})
+            ?.sort(
+              (firstItem, secondItem) =>
+                secondItem[1]?.total - firstItem[1]?.total
+            )
+            ?.map((item) => (
+              <BudgetItem
+                key={item[0]}
+                data={item}
+                showSelection={showSelection}
+                selection={selection}
+                onSelectionChange={handleSelection}
+              />
+            ))}
           {Object.entries(summary?.response?.summary ?? {})
             ?.sort(
               (firstItem, secondItem) =>
