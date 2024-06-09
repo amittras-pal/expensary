@@ -2,16 +2,15 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Button, Divider, Modal, Text, TextInput } from "@mantine/core";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useCurrentUser } from "../../context/user.context";
 import { useErrorHandler } from "../../hooks/error-handler";
 import { BudgetForm, budgetFormSchema } from "../../schemas/schemas";
 import { createBudget, getBudget } from "../../services/budget.service";
 import { getAuthToken } from "../../utils";
 
 const BudgetMonitor = () => {
-  const { budget, setBudget } = useCurrentUser();
+  const [budget, setBudget] = useState<number | null>();
   const { onError } = useErrorHandler();
 
   const payload = useMemo(
