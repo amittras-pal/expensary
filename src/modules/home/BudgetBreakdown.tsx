@@ -14,7 +14,6 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { MonthPickerInput } from "@mantine/dates";
-import { MonthPickerInput } from "@mantine/dates";
 import { useHotkeys } from "@mantine/hooks";
 import {
   IconArrowRight,
@@ -59,10 +58,6 @@ export default function BudgetBreakdown({
     startDate: dayjs().startOf("month").toDate(),
     endDate: dayjs().endOf("month").toDate(),
   });
-  const [payload, setPayload] = useState({
-    startDate: dayjs().startOf("month").toDate(),
-    endDate: dayjs().endOf("month").toDate(),
-  });
 
   const ref = useRef<HTMLDivElement>(null);
   const selectionToggle = useRef<HTMLInputElement>(null);
@@ -93,8 +88,6 @@ export default function BudgetBreakdown({
     isLoading,
     refetch,
   } = useQuery({
-    queryKey: ["summary", payload],
-    queryFn: () => getSummary(null, payload),
     queryKey: ["summary", payload],
     queryFn: () => getSummary(null, payload),
     refetchOnWindowFocus: false,
@@ -147,14 +140,6 @@ export default function BudgetBreakdown({
         <Text>Budget Info not Available.</Text>
       </Box>
     );
-
-  const handleMonthChange = (e: Date) => {
-    setPayload((prev) => ({
-      ...prev,
-      startDate: dayjs(e).startOf("month").toDate(),
-      endDate: dayjs(e).endOf("month").toDate(),
-    }));
-  };
 
   const handleMonthChange = (e: Date) => {
     setPayload((prev) => ({
