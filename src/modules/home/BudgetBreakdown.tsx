@@ -18,7 +18,7 @@ import { useHotkeys } from "@mantine/hooks";
 import {
   IconArrowRight,
   IconArrowUpRight,
-  IconCalendarPin,
+  IconCalendarRepeat,
   IconCash,
   IconChevronUp,
   IconExclamationMark,
@@ -32,6 +32,7 @@ import BudgetItem from "../../components/BudgetItem";
 import { useCurrentUser } from "../../context/user.context";
 import { useErrorHandler } from "../../hooks/error-handler";
 import { useMediaMatch } from "../../hooks/media-match";
+import { getBudget } from "../../services/budget.service";
 import { getSummary } from "../../services/expense.service";
 import { useDashboardStyles } from "../../theme/modules/dashboard.styles";
 import { formatCurrency, getPercentage, getSeverityColor } from "../../utils";
@@ -49,7 +50,7 @@ export default function BudgetBreakdown({
 }: Readonly<IBudgetBreakdownProps>) {
   const [showSelection, setShowSelection] = useState(false);
   const [selection, setSelection] = useState<string[]>([]);
-  const { budget, userData } = useCurrentUser();
+  const { userData } = useCurrentUser();
   const { onError } = useErrorHandler();
   const isMobile = useMediaMatch();
   const { classes } = useDashboardStyles();
@@ -71,6 +72,16 @@ export default function BudgetBreakdown({
       },
     ],
   ]);
+
+  const { data: budgetRes } = useQuery({
+    queryKey: ["budget", payload],
+    queryFn: () =>
+      getBudget({
+        month: dayjs(payload.startDate).month(),
+        year: dayjs(payload.startDate).year(),
+      }),
+    onError,
+  });
 
   const {
     data: summary,
@@ -97,10 +108,16 @@ export default function BudgetBreakdown({
 
   const { percColor, percSpent } = useMemo(
     () => ({
-      percSpent: getPercentage(summary?.response?.total, budget ?? 0),
-      percColor: getSeverityColor(summary?.response?.total, budget ?? 0),
+      percSpent: getPercentage(
+        summary?.response?.total,
+        budgetRes?.response?.amount ?? 0
+      ),
+      percColor: getSeverityColor(
+        summary?.response?.total,
+        budgetRes?.response?.amount ?? 0
+      ),
     }),
-    [budget, summary?.response?.total]
+    [budgetRes?.response?.amount, summary?.response?.total]
   );
 
   const selectionTotal = useMemo(() => {
@@ -117,7 +134,7 @@ export default function BudgetBreakdown({
       </Box>
     );
 
-  if (!budget)
+  if (!budgetRes?.response?.amount)
     return (
       <Box className={classes.noInfo}>
         <Text>Budget Info not Available.</Text>
@@ -148,29 +165,31 @@ export default function BudgetBreakdown({
             userData ? dayjs(userData?.createdAt).toDate() : dayjs().toDate()
           }
           rightSection={
-            <Tooltip
-              label={
-                <Text component="span" fw="normal" size="sm">
-                  Go to current month
-                </Text>
-              }
-              color="dark"
-              position="bottom"
-            >
-              <ActionIcon
-                size="sm"
-                radius="xl"
-                variant="light"
-                onClick={() => {
-                  setPayload({
-                    startDate: dayjs().startOf("month").toDate(),
-                    endDate: dayjs().endOf("month").toDate(),
-                  });
-                }}
+            payload.startDate.getMonth() === dayjs().month() ? null : (
+              <Tooltip
+                label={
+                  <Text component="span" fw="normal" size="sm">
+                    Return to current month
+                  </Text>
+                }
+                color="dark"
+                position="bottom"
               >
-                <IconCalendarPin size={16} />
-              </ActionIcon>
-            </Tooltip>
+                <ActionIcon
+                  size="sm"
+                  radius="xl"
+                  variant="light"
+                  onClick={() => {
+                    setPayload({
+                      startDate: dayjs().startOf("month").toDate(),
+                      endDate: dayjs().endOf("month").toDate(),
+                    });
+                  }}
+                >
+                  <IconCalendarRepeat size={16} />
+                </ActionIcon>
+              </Tooltip>
+            )
           }
         />
         {Object.entries(summary?.response?.summary ?? {})?.length > 1 && (
@@ -185,7 +204,7 @@ export default function BudgetBreakdown({
             }}
           />
         )}
-        {(summary?.response?.total ?? 0) > budget && (
+        {(summary?.response?.total ?? 0) > budgetRes?.response?.amount && (
           <Tooltip
             label={
               <Text component="span" fw="normal" size="sm">
@@ -218,6 +237,20 @@ export default function BudgetBreakdown({
                 onSelectionChange={handleSelection}
               />
             ))}
+          {Object.entries(summary?.response?.summary ?? {})
+            ?.sort(
+              (firstItem, secondItem) =>
+                secondItem[1]?.total - firstItem[1]?.total
+            )
+            ?.map((item) => (
+              <BudgetItem
+                key={item[0]}
+                data={item}
+                showSelection={showSelection}
+                selection={selection}
+                onSelectionChange={handleSelection}
+              />
+            ))}
         </SimpleGrid>
       </ScrollArea>
       <Group grow spacing="xs" align="flex-start" mt="auto">
@@ -235,7 +268,7 @@ export default function BudgetBreakdown({
               {percSpent}%
             </Text>
             <Text size="sm" fw="normal">
-              of {formatCurrency(budget)}
+              of {formatCurrency(budgetRes?.response?.amount)}
             </Text>
           </Group>
           <Progress size="xs" value={percSpent} color={percColor} w="100%" />
@@ -245,7 +278,9 @@ export default function BudgetBreakdown({
           </Text>
           <Text fz="sm">
             <IconCash size={16} style={{ marginBottom: -3 }} />{" "}
-            {formatCurrency(budget - (summary?.response?.total ?? 0))}
+            {formatCurrency(
+              budgetRes?.response?.amount - (summary?.response?.total ?? 0)
+            )}
           </Text>
         </Group>
         <Group

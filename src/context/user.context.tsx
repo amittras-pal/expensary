@@ -18,23 +18,18 @@ import { getAuthToken } from "../utils";
 
 type UserCtx = {
   userData: IUser | null;
-  budget: number | null;
   setUserData: Dispatch<SetStateAction<IUser | null>>;
-  setBudget: Dispatch<SetStateAction<number | null>>;
 };
 
 const UserContext = createContext<UserCtx>({
   userData: null,
   setUserData: () => null,
-  budget: null,
-  setBudget: () => null,
 });
 
 export const useCurrentUser = () => useContext(UserContext);
 
 export default function UserProvider({ children }: PropsWithChildren) {
   const [userData, setUserData] = useState<IUser | null>(null);
-  const [budget, setBudget] = useState<number | null>(null);
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const { onError } = useErrorHandler();
 
@@ -63,10 +58,7 @@ export default function UserProvider({ children }: PropsWithChildren) {
     },
   });
 
-  const ctx: UserCtx = useMemo(
-    () => ({ userData, budget, setUserData, setBudget }),
-    [budget, userData]
-  );
+  const ctx: UserCtx = useMemo(() => ({ userData, setUserData }), [userData]);
 
   return (
     <UserContext.Provider value={ctx}>
