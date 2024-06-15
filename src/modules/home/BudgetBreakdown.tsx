@@ -237,20 +237,6 @@ export default function BudgetBreakdown({
                 onSelectionChange={handleSelection}
               />
             ))}
-          {Object.entries(summary?.response?.summary ?? {})
-            ?.sort(
-              (firstItem, secondItem) =>
-                secondItem[1]?.total - firstItem[1]?.total
-            )
-            ?.map((item) => (
-              <BudgetItem
-                key={item[0]}
-                data={item}
-                showSelection={showSelection}
-                selection={selection}
-                onSelectionChange={handleSelection}
-              />
-            ))}
         </SimpleGrid>
       </ScrollArea>
       <Group grow spacing="xs" align="flex-start" mt="auto">
