@@ -186,7 +186,9 @@ export default function ExpenseForm({
       const equation = amount.replaceAll(eqSanityRX, "");
       if (equation.length > 0)
         try {
-          const finalValue = parseFloat(eval(`"use strict";${equation}`));
+          // Skipping sonar test here is fine.
+          // The expression going into 'eval' is sanitized with a strict regex
+          const finalValue = parseFloat(eval(`"use strict";${equation}`)); //NOSONAR
           updateAmount(finalValue);
         } catch {
           setError("amount", {
