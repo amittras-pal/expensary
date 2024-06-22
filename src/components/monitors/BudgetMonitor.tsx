@@ -4,14 +4,12 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { useMemo } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useCurrentUser } from "../../context/user.context";
 import { useErrorHandler } from "../../hooks/error-handler";
 import { BudgetForm, budgetFormSchema } from "../../schemas/schemas";
 import { createBudget, getBudget } from "../../services/budget.service";
 import { getAuthToken } from "../../utils";
 
 const BudgetMonitor = () => {
-  const { budget, setBudget } = useCurrentUser();
   const { onError } = useErrorHandler();
 
   const payload = useMemo(
@@ -22,16 +20,18 @@ const BudgetMonitor = () => {
     []
   );
 
-  const { isError, isLoading, refetch } = useQuery({
+  const {
+    isError,
+    isLoading,
+    refetch,
+    data: budgetRes,
+  } = useQuery({
     queryKey: ["budget", payload],
     queryFn: () => getBudget(payload),
     retry: 1,
     refetchOnWindowFocus: false,
-    enabled: Boolean(!budget && getAuthToken()),
+    enabled: Boolean(getAuthToken()),
     onError,
-    onSuccess: (res) => {
-      setBudget(res.response.amount);
-    },
   });
 
   const { mutate: create, isLoading: creating } = useMutation({
@@ -64,7 +64,12 @@ const BudgetMonitor = () => {
   return (
     <Modal
       onClose={() => null}
-      opened={Boolean(getAuthToken() && !budget && !isLoading && isError)}
+      opened={Boolean(
+        getAuthToken() &&
+          !(budgetRes?.response?.amount ?? 0) &&
+          !isLoading &&
+          isError
+      )}
       lockScroll
       closeOnClickOutside={false}
       closeOnEscape={false}
