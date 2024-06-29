@@ -1,6 +1,5 @@
 import {
   Button,
-  Checkbox,
   Group,
   SegmentedControl,
   useMantineTheme,
@@ -32,7 +31,7 @@ export default function DownloadReport() {
     null,
     null,
   ]);
-  const [includeList, setIncludeList] = useState(false);
+  const [includeList] = useState(false);
   const [view, setView] = useState<OpUnitType>("month");
 
   const { classes } = useReportStyles();
@@ -58,7 +57,7 @@ export default function DownloadReport() {
         res,
         `Report_${userData?.userName.replace(" ", "_")}_${dayjs()
           .toDate()
-          .toISOString()}.pdf`
+          .toISOString()}.xlsx`
       );
       notifications.show({
         message: "",
@@ -105,11 +104,11 @@ export default function DownloadReport() {
             onChange={setSelection}
           />
         )}
-        <Checkbox
+        {/* <Checkbox
           checked={includeList}
           onChange={(e) => setIncludeList(e.currentTarget.checked)}
           label="Include Expenses List"
-        />
+        /> */}
         <Button
           fullWidth
           disabled={!selection[0] || !selection[1]}
