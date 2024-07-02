@@ -77,7 +77,7 @@ export default function ExpensePlanForm({
   };
 
   const handleSave: SubmitHandler<FormSchema> = (values) => {
-    const payload = Object.assign({}, values);
+    const payload: Partial<IExpensePlan> = { ...values };
     if (data) update({ ...payload, _id: data._id, open: true });
     else create(payload);
   };
