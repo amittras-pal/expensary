@@ -252,7 +252,7 @@ export default function Expenses() {
         <Group spacing="xs" sx={{ width: "100%" }}>
           <MonthPickerInput
             size="xs"
-            sx={{ flex: 1, textAlign: "center" }}
+            sx={{ flexGrow: 1, textAlign: "center" }}
             placeholder="Select month"
             variant="filled"
             value={payload.startDate}
@@ -263,7 +263,12 @@ export default function Expenses() {
               userData ? dayjs(userData?.createdAt).toDate() : dayjs().toDate()
             }
           />
-          <Text ta="right" fw="bold" fz="xs" sx={{ flex: 3 }}>
+          <Text
+            ta="right"
+            fw="bold"
+            fz="xs"
+            sx={{ flexGrow: 3, whiteSpace: "nowrap" }}
+          >
             Total: {filterTotal > 0 ? formatCurrency(filterTotal) : "N.A."} of{" "}
             {formatCurrency(budgetRes?.response?.amount ?? 0)}
           </Text>

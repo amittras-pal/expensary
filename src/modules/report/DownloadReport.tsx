@@ -58,7 +58,7 @@ export default function DownloadReport() {
         res,
         `Report_${userData?.userName.replace(" ", "_")}_${dayjs()
           .toDate()
-          .toISOString()}.pdf`
+          .toISOString()}.xlsx`
       );
       notifications.show({
         message: "",
