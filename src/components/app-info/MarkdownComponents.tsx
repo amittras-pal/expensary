@@ -54,11 +54,11 @@ const Paragraph = (props: JSX.IntrinsicElements["p"] & ExtraProps) => {
   return (
     <Text component="p">
       {Array.isArray(props.children)
-        ? props.children.map((segment, index) =>
+        ? props.children.map((segment, i) =>
             typeof segment === "string" ? (
-              <AddLinksInGFM key={index}>{segment}</AddLinksInGFM>
+              <AddLinksInGFM key={segment + i}>{segment}</AddLinksInGFM>
             ) : (
-              <Fragment key={index}>{segment}</Fragment>
+              <Fragment key={segment + i}>{segment}</Fragment>
             )
           )
         : props.children}
@@ -168,12 +168,12 @@ const AddLinksInGFM = (props: Readonly<PropsWithChildren>) => {
       {props.children
         ?.toString()
         .split(" ")
-        .map((word, index) => {
+        .map((word, i) => {
           if (word.startsWith("@"))
-            return <UserCard key={index} username={word} />;
+            return <UserCard key={word + i} username={word} />;
           if (word.startsWith("https://"))
-            return <PRLink key={index} link={word} />;
-          return <Fragment key={index}>{`${word} `}</Fragment>;
+            return <PRLink key={word + i} link={word} />;
+          return <Fragment key={word + i}>{`${word} `}</Fragment>;
         })}
     </>
   );
