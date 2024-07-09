@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import { useMemo } from "react";
 import Markdown from "react-markdown";
 import { useErrorHandler } from "../../hooks/error-handler";
-import { getChangelog } from "../../services/changelog.service";
+import { getChangelog } from "../../services/app-info.service";
 import { components } from "./MarkdownComponents";
 
 export default function Changelog() {

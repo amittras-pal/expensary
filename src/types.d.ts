@@ -116,3 +116,21 @@ interface IReleaseResponse {
     };
   };
 }
+
+interface IContributorInfo {
+  user: {
+    name: string;
+    avatarUrl: string;
+    bio: string;
+    createdAt: string;
+    company: string;
+    location: string;
+    socialAccounts: {
+      nodes: {
+        displayName: string;
+        provider: string;
+      }[];
+    };
+    url: string;
+  };
+}
