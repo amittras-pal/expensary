@@ -10,7 +10,7 @@ import { components } from "./MarkdownComponents";
 export default function Changelog() {
   const { onError } = useErrorHandler();
 
-  const { data: detailsRes, isLoading } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["changelog"],
     staleTime: 10 * 60 * 1000,
     queryFn: getChangelog,
@@ -18,9 +18,9 @@ export default function Changelog() {
   });
 
   const versions = useMemo(() => {
-    if (!detailsRes) return [];
-    return detailsRes.response.repository.releases.nodes;
-  }, [detailsRes]);
+    if (!data) return [];
+    return data.response.repository.releases.nodes;
+  }, [data]);
 
   if (isLoading)
     return (

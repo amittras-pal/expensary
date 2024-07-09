@@ -1,11 +1,4 @@
-import {
-  Group,
-  GroupProps,
-  Modal,
-  Text,
-  ThemeIcon,
-  useMantineTheme,
-} from "@mantine/core";
+import { Group, GroupProps, Modal, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconPoint } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
@@ -19,7 +12,6 @@ export default function AppInfo(props: Readonly<GroupProps>) {
   const [showVersions, { open, close }] = useDisclosure(false);
 
   const isMobile = useMediaMatch();
-  const { primaryColor } = useMantineTheme();
   const { userData, setUserData } = useCurrentUser();
 
   useEffect(() => {
@@ -45,9 +37,7 @@ export default function AppInfo(props: Readonly<GroupProps>) {
         <Text td="underline" fz="xs" color="dimmed">
           About
         </Text>
-        <ThemeIcon size={12} color={primaryColor} variant="default">
-          <IconPoint size={12}></IconPoint>
-        </ThemeIcon>
+        <IconPoint size={12} />
         <Text
           td="underline"
           sx={{ cursor: "pointer" }}
@@ -65,7 +55,7 @@ export default function AppInfo(props: Readonly<GroupProps>) {
         closeOnEscape={false}
         closeOnClickOutside={false}
         fullScreen={isMobile}
-        size={"xl"}
+        size="xl"
         title="What's New in the Latest Version"
       >
         <Changelog />

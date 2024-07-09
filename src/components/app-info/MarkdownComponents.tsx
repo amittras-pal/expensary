@@ -33,7 +33,7 @@ const Heading = (props: JSX.IntrinsicElements["h2"] & ExtraProps) => {
 
 // Render 'ul' tags
 const UnorderedList = (props: JSX.IntrinsicElements["ul"] & ExtraProps) => {
-  return <List>{props.children}</List>;
+  return <List type="unordered">{props.children}</List>;
 };
 
 // Render 'li' tags
@@ -180,7 +180,7 @@ const AddLinksInGFM = (props: Readonly<PropsWithChildren>) => {
 };
 
 // Markdown component set.
-export const components: Partial<Components> = {
+export const components: Components = {
   h1: Heading,
   h2: Heading,
   h3: Heading,
