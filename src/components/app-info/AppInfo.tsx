@@ -7,14 +7,37 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { useMediaMatch } from "../../hooks/media-match";
-import Changelog from "./Changelog";
 import { IconPoint } from "@tabler/icons-react";
+import { useMutation } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { useCurrentUser } from "../../context/user.context";
+import { useMediaMatch } from "../../hooks/media-match";
+import { updateUserDetails } from "../../services/user.service";
+import Changelog from "./Changelog";
 
 export default function AppInfo(props: Readonly<GroupProps>) {
-  const [changelog, { close, open }] = useDisclosure(false);
+  const [showVersions, { open, close }] = useDisclosure(false);
+
   const isMobile = useMediaMatch();
   const { primaryColor } = useMantineTheme();
+  const { userData, setUserData } = useCurrentUser();
+
+  useEffect(() => {
+    if (userData && userData.seenChangelog === false) open();
+    else close();
+  }, [userData]);
+
+  const { mutate } = useMutation({
+    mutationFn: updateUserDetails,
+    onSuccess: () => {
+      setUserData((v) => (v !== null ? { ...v, seenChangelog: true } : null));
+    },
+  });
+
+  const handleClose = () => {
+    close();
+    if (userData?.seenChangelog === false) mutate({ seenChangelog: true });
+  };
 
   return (
     <>
@@ -37,8 +60,8 @@ export default function AppInfo(props: Readonly<GroupProps>) {
       </Group>
       <Modal
         centered
-        onClose={close}
-        opened={changelog}
+        onClose={handleClose}
+        opened={showVersions}
         closeOnEscape={false}
         closeOnClickOutside={false}
         fullScreen={isMobile}

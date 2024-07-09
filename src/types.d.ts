@@ -18,6 +18,7 @@ interface GuardProps {
 }
 
 /** ========================ENTITIES========================  */
+
 interface IUser {
   _id?: string;
   userName: string;
@@ -28,6 +29,7 @@ interface IUser {
   updatedAt: string;
   editWindow: number;
   color: string;
+  seenChangelog: boolean;
 }
 
 interface ICategory {

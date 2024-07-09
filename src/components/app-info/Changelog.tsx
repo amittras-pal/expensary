@@ -12,6 +12,7 @@ export default function Changelog() {
 
   const { data: detailsRes, isLoading } = useQuery({
     queryKey: ["changelog"],
+    staleTime: 10 * 60 * 1000,
     queryFn: getChangelog,
     onError,
   });
