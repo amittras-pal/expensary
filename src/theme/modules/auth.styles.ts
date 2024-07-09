@@ -6,6 +6,7 @@ export const useAuthStyles = createStyles((theme) => ({
     width: "100vw",
     margin: 0,
     display: "flex",
+    flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
     padding: theme.spacing.md,
@@ -13,6 +14,7 @@ export const useAuthStyles = createStyles((theme) => ({
   paper: {
     minWidth: "340px",
     textAlign: "start",
+    marginTop: "auto",
     padding: theme.spacing.md,
     boxShadow: theme.shadows.lg,
     borderWidth: "1px",

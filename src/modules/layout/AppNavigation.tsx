@@ -14,6 +14,7 @@ import { modals } from "@mantine/modals";
 import { IconLogout, IconPower, IconUserCog } from "@tabler/icons-react";
 import { useMemo, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
+import AppInfo from "../../components/app-info/AppInfo";
 import { ROUTES } from "../../constants/routes";
 import { useLogoutHandler } from "../../hooks/logout";
 import { useMediaMatch } from "../../hooks/media-match";
@@ -95,6 +96,9 @@ export default function AppNavigation({ onChange, ...rest }: SidebarProps) {
             <IconPower size={20} />
           </ActionIcon>
         </Tooltip>
+      </Navbar.Section>
+      <Navbar.Section>
+        <AppInfo />
       </Navbar.Section>
     </Navbar>
   );
