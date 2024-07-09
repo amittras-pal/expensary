@@ -94,3 +94,25 @@ interface ISearchReqBody {
   sort?: Record<string, 1 | -1>;
   categories?: string[];
 }
+
+interface IReleaseInfo {
+  name: string;
+  publishedAt: string;
+  isLatest: boolean;
+  isPrerelease: boolean;
+  isDraft: boolean;
+  tagName: string;
+  description: string;
+  author: {
+    name: string;
+    avatarUrl: string;
+  };
+}
+
+interface IReleaseResponse {
+  repository: {
+    releases: {
+      nodes: IReleaseInfo[];
+    };
+  };
+}
