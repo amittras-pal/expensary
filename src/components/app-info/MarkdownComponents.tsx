@@ -1,10 +1,12 @@
 import {
   Avatar,
+  Blockquote,
   Box,
   Code,
   Divider,
   Group,
   HoverCard,
+  Image,
   List,
   Loader,
   Text,
@@ -22,10 +24,30 @@ const CodeBlock = (props: JSX.IntrinsicElements["code"] & ExtraProps) => {
 };
 
 // Render 'hX' tags,
-// all headings are rendered as h2 for now.
-const Heading = (props: JSX.IntrinsicElements["h2"] & ExtraProps) => {
+const Heading1 = (props: JSX.IntrinsicElements["h1"] & ExtraProps) => {
   return (
-    <Text component="h2">
+    <Text component="h1" fz="2.5rem" fw="normal">
+      <AddLinksInGFM>{props.children}</AddLinksInGFM>
+    </Text>
+  );
+};
+const Heading2 = (props: JSX.IntrinsicElements["h2"] & ExtraProps) => {
+  return (
+    <Text component="h2" fz="2rem" fw="normal">
+      <AddLinksInGFM>{props.children}</AddLinksInGFM>
+    </Text>
+  );
+};
+const Heading3 = (props: JSX.IntrinsicElements["h3"] & ExtraProps) => {
+  return (
+    <Text component="h3" fz="1.75rem" fw="normal">
+      <AddLinksInGFM>{props.children}</AddLinksInGFM>
+    </Text>
+  );
+};
+const Heading4 = (props: JSX.IntrinsicElements["h4"] & ExtraProps) => {
+  return (
+    <Text component="h4" fz="1.5rem" fw="normal">
       <AddLinksInGFM>{props.children}</AddLinksInGFM>
     </Text>
   );
@@ -179,14 +201,53 @@ const AddLinksInGFM = (props: Readonly<PropsWithChildren>) => {
   );
 };
 
+const Anchor = (props: JSX.IntrinsicElements["a"] & ExtraProps) => {
+  return (
+    <Text
+      component="a"
+      href={props.href}
+      target="_black"
+      color="indigo"
+      fw="bold"
+    >
+      {props.children}
+    </Text>
+  );
+};
+
+const QuoteBlock = (
+  props: JSX.IntrinsicElements["blockquote"] & ExtraProps
+) => {
+  return (
+    <Blockquote
+      color="indigo"
+      sx={(theme) => ({ borderLeft: `5px solid ${theme.colors.gray[9]}` })}
+    >
+      {props.children}
+    </Blockquote>
+  );
+};
+
+const HorizontalRule = (_props: JSX.IntrinsicElements["hr"] & ExtraProps) => {
+  return <Divider my="md" variant="dashed" />;
+};
+
+const Img = (props: JSX.IntrinsicElements["img"] & ExtraProps) => {
+  return <Image src={props.src} alt={props.alt} />;
+};
+
 // Markdown component set.
 export const components: Components = {
-  h1: Heading,
-  h2: Heading,
-  h3: Heading,
-  h4: Heading,
+  h1: Heading1,
+  h2: Heading2,
+  h3: Heading3,
+  h4: Heading4,
   ul: UnorderedList,
   li: ListItem,
   p: Paragraph,
   code: CodeBlock,
+  a: Anchor,
+  blockquote: QuoteBlock,
+  hr: HorizontalRule,
+  img: Img,
 };

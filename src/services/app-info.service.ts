@@ -11,3 +11,7 @@ export function getContributor(params: {
 }): Promise<ResponseBody<IContributorInfo>> {
   return axios.get(ENDPOINTS.contributor, { params }).then((res) => res.data);
 }
+
+export function getAboutFile(): Promise<string> {
+  return fetch("/about.md").then((res) => res.text());
+}

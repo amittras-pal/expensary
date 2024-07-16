@@ -3,6 +3,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { IconPoint } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useCurrentUser } from "../../context/user.context";
 import { useMediaMatch } from "../../hooks/media-match";
 import { updateUserDetails } from "../../services/user.service";
@@ -34,7 +35,13 @@ export default function AppInfo(props: Readonly<GroupProps>) {
   return (
     <>
       <Group {...props} spacing="xs" position="center">
-        <Text td="underline" fz="xs" color="dimmed">
+        <Text
+          component={Link}
+          to={userData ? "/about-app" : "/about"}
+          td="underline"
+          fz="xs"
+          color="dimmed"
+        >
           About
         </Text>
         <IconPoint size={12} />
