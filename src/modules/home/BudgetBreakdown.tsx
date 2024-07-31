@@ -223,20 +223,16 @@ export default function BudgetBreakdown({
       <Divider my="xs" />
       <ScrollArea h={`calc(100vh - ${isMobile ? 272 : 242}px)`}>
         <SimpleGrid cols={1} spacing="xs">
-          {Object.entries(summary?.response?.summary ?? {})
-            ?.sort(
-              (firstItem, secondItem) =>
-                secondItem[1]?.total - firstItem[1]?.total
-            )
-            ?.map((item) => (
-              <BudgetItem
-                key={item[0]}
-                data={item}
-                showSelection={showSelection}
-                selection={selection}
-                onSelectionChange={handleSelection}
-              />
-            ))}
+          {Object.entries(summary?.response?.summary ?? {})?.map((item) => (
+            <BudgetItem
+              key={item[0]}
+              data={item}
+              overallSpent={summary?.response.total ?? 0}
+              showSelection={showSelection}
+              selection={selection}
+              onSelectionChange={handleSelection}
+            />
+          ))}
         </SimpleGrid>
       </ScrollArea>
       <Group grow spacing="xs" align="flex-start" mt="auto">
