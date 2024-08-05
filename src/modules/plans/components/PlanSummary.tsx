@@ -88,7 +88,11 @@ function PlanSummary() {
             </Box>
           )}
           {summaryData?.map((data) => (
-            <BudgetItem data={data} key={data[0]} />
+            <BudgetItem
+              data={data}
+              key={data[0]}
+              overallSpent={summary?.response.total ?? 0}
+            />
           ))}
         </SimpleGrid>
       </ScrollArea>

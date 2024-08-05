@@ -12,5 +12,18 @@ export const useBudgetItemStyles = createStyles((theme) => ({
     alignItems: "center",
     width: "100%",
     gap: 8,
+    position: "relative",
+  },
+  elevate: {
+    zIndex: 1,
+  },
+  share: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+    height: "100%",
+    opacity: 0.1,
+    borderRadius: theme.radius.sm,
+    zIndex: 0,
   },
 }));

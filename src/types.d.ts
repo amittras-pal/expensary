@@ -18,6 +18,7 @@ interface GuardProps {
 }
 
 /** ========================ENTITIES========================  */
+
 interface IUser {
   _id?: string;
   userName: string;
@@ -28,6 +29,7 @@ interface IUser {
   updatedAt: string;
   editWindow: number;
   color: string;
+  seenChangelog: boolean;
 }
 
 interface ICategory {
@@ -93,4 +95,44 @@ interface ISearchReqBody {
   endDate?: Date;
   sort?: Record<string, 1 | -1>;
   categories?: string[];
+}
+
+interface IReleaseInfo {
+  name: string;
+  publishedAt: string;
+  isLatest: boolean;
+  isPrerelease: boolean;
+  isDraft: boolean;
+  tagName: string;
+  description: string;
+  author: {
+    name: string;
+    avatarUrl: string;
+  };
+}
+
+interface IReleaseResponse {
+  repository: {
+    releases: {
+      nodes: IReleaseInfo[];
+    };
+  };
+}
+
+interface IContributorInfo {
+  user: {
+    name: string;
+    avatarUrl: string;
+    bio: string;
+    createdAt: string;
+    company: string;
+    location: string;
+    socialAccounts: {
+      nodes: {
+        displayName: string;
+        provider: string;
+      }[];
+    };
+    url: string;
+  };
 }
