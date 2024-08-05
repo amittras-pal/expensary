@@ -1,4 +1,5 @@
-import { Badge, CloseButton, MultiSelectValueProps } from "@mantine/core";
+import { Button, Group, MultiSelectValueProps, Tooltip } from "@mantine/core";
+import { IconX } from "@tabler/icons-react";
 import { useMemo } from "react";
 import { Icons } from "../constants/categories";
 
@@ -14,25 +15,33 @@ export default function CategoryMultiSelectValue({
   const Icon = useMemo(() => Icons[icon], [icon]);
 
   return (
-    <div {...rest}>
-      <Badge
-        variant="light"
-        color={color}
-        sx={{ paddingRight: "0px" }}
-        leftSection={<Icon size={12} style={{ marginBottom: -2 }} />}
-        rightSection={
-          <CloseButton
-            onMouseDown={onRemove}
-            color="red"
-            variant="filled"
-            size={22}
-            iconSize={14}
+    <Group spacing={0} {...rest}>
+      <Tooltip label={label} withinPortal position="bottom" color="dark">
+        <Button.Group>
+          <Button
+            radius="lg"
+            color={color}
+            variant="light"
+            size="xs"
+            px={4}
+            sx={{ pointerEvents: "none", maxHeight: "22px" }}
             tabIndex={-1}
-          />
-        }
-      >
-        {label}
-      </Badge>
-    </div>
+          >
+            <Icon size={14} />
+          </Button>
+          <Button
+            color="red"
+            variant="light"
+            radius="lg"
+            size="xs"
+            px={4}
+            sx={{ maxHeight: "22px" }}
+            onClick={onRemove}
+          >
+            <IconX size={14} />
+          </Button>
+        </Button.Group>
+      </Tooltip>
+    </Group>
   );
 }

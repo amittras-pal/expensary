@@ -13,6 +13,7 @@ const theme: MantineThemeOverride = {
     Select: { defaultProps: { mb: "sm", variant: "filled" } },
     MultiSelect: { defaultProps: { mb: "sm", variant: "filled" } },
     DateTimePicker: { defaultProps: { mb: "sm", variant: "filled" } },
+    DatePickerInput: { defaultProps: { mb: "sm", variant: "filled" } },
     PasswordInput: { defaultProps: { mb: "sm", variant: "filled" } },
     Button: { defaultProps: { loaderPosition: "right" } },
     Divider: { defaultProps: { variant: "dashed" } },

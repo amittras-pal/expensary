@@ -1,22 +1,23 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
+  Accordion,
+  ActionIcon,
   Box,
   Button,
   Divider,
   Group,
-  Modal,
+  Loader,
   MultiSelect,
   ScrollArea,
   SimpleGrid,
   Text,
   TextInput,
-  ThemeIcon,
   useMantineTheme,
 } from "@mantine/core";
-import { DatePicker, PickerBaseProps } from "@mantine/dates";
-import { useDisclosure, useDocumentTitle } from "@mantine/hooks";
-import { IconFilter, IconSearch } from "@tabler/icons-react";
-import { useQuery } from "@tanstack/react-query";
+import { DatePickerInput, PickerBaseProps } from "@mantine/dates";
+import { useDocumentTitle } from "@mantine/hooks";
+import { IconX } from "@tabler/icons-react";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -36,15 +37,24 @@ interface CommonPickerProps extends PickerBaseProps<"range"> {
   maxDate: Date;
 }
 
-export default function GlobalSearch() {
+export default function GlobalSearch2() {
   useDocumentTitle(`${APP_TITLE} | Search Expenses`);
   const isMobile = useMediaMatch();
   const { primaryColor } = useMantineTheme();
-  const { onError } = useErrorHandler();
 
+  const { onError } = useErrorHandler();
   const { userData } = useCurrentUser();
 
   const [filters, setFilters] = useState<ISearchReqBody>({});
+  const [showFilter, setShowFilter] = useState<string | null>("show");
+
+  const { data: categoryRes, isLoading: loadingCategories } = useQuery({
+    queryKey: ["categories"],
+    queryFn: getCategories,
+    onError,
+    staleTime: time20Min,
+  });
+
   const appliedFilter = useMemo(() => {
     let count = 0;
     if (filters.q) count++;
@@ -52,6 +62,16 @@ export default function GlobalSearch() {
     if (filters.startDate || filters.endDate) count++;
     return count;
   }, [filters]);
+
+  const {
+    data: expenses,
+    mutate: search,
+    isLoading,
+    reset: clearResults,
+  } = useMutation({
+    mutationFn: searchExpenses,
+    onError,
+  });
 
   const pickerProps = useMemo(
     (): CommonPickerProps => ({
@@ -80,23 +100,8 @@ export default function GlobalSearch() {
     resolver: yupResolver(gSearchSchema),
   });
 
-  const { data: categoryRes, isLoading: loadingCategories } = useQuery({
-    queryKey: ["categories"],
-    queryFn: getCategories,
-    onError,
-    staleTime: time20Min,
-  });
-
-  const { data: expenses, isLoading } = useQuery({
-    queryKey: ["search-results", filters],
-    queryFn: () => searchExpenses(filters),
-    enabled: appliedFilter > 0,
-    onError,
-  });
-
-  const [modalOpen, filterModal] = useDisclosure(false);
   const handleSearch: SubmitHandler<GlobalSearchForm> = (values) => {
-    filterModal.close();
+    setShowFilter(null);
     const payload: ISearchReqBody = {};
     if (values.q) payload.q = values.q;
     if (values.categories?.length) payload.categories = values.categories;
@@ -105,138 +110,162 @@ export default function GlobalSearch() {
       payload.endDate = values.dateRange[1] ?? undefined;
     }
     setFilters(payload);
+    search(payload);
   };
 
   const handleClear = () => {
     setFilters({});
+    clearResults();
     reset();
-    filterModal.close();
   };
 
   return (
-    <>
-      <Group position="apart">
-        <Group>
-          <IconSearch size={18} />
-          <Text fw="bold">Search Expenses</Text>
-        </Group>
-        <Button
-          size="xs"
-          color={primaryColor}
-          onClick={filterModal.open}
-          variant={appliedFilter > 0 ? "filled" : "ghost"}
-          leftIcon={<IconFilter size={18} />}
-          loading={appliedFilter > 0 && isLoading}
-        >
-          Filters {appliedFilter > 0 ? `(${appliedFilter})` : ""}
-        </Button>
-      </Group>
-      <Modal
-        opened={modalOpen}
-        onClose={filterModal.close}
-        title="Apply Filters"
+    <Box>
+      <Accordion
+        variant="separated"
+        value={showFilter}
+        onChange={setShowFilter}
       >
-        <Box
-          component="form"
-          onSubmit={handleSubmit(handleSearch)}
-          onReset={handleClear}
-        >
-          <TextInput
-            label="Expense Title / Description"
-            placeholder="Enter text to search"
-            {...register("q")}
-            autoFocus
-          />
-          <MultiSelect
-            searchable
-            clearable
-            label="Categories"
-            disabled={loadingCategories}
-            value={watch("categories")}
-            disableSelectedItemFiltering
-            onChange={(e) => setValue("categories", e, { shouldDirty: true })}
-            itemComponent={CategorySelectItem}
-            valueComponent={CategoryMultiSelectValue}
-            placeholder={
-              loadingCategories ? "Loading Categories" : "Select Categories"
-            }
-            data={
-              categoryRes?.response?.map((cat) => ({
-                ...cat,
-                value: cat._id ?? "",
-              })) ?? []
-            }
-          />
-          <Text fz="sm" fw={500}>
-            Date Range
-          </Text>
-          <Group position="center" my="md">
-            <DatePicker
-              {...pickerProps}
-              defaultDate={watch("dateRange")[0] ?? new Date()}
-              onChange={(e) => setValue("dateRange", e, { shouldDirty: true })}
-              value={[watch("dateRange")[0]!, watch("dateRange")[1]!]}
-            />
-          </Group>
-          <Group position="center">
-            <Button type="reset" variant="outline">
-              Clear All
-            </Button>
-            <Button type="submit" disabled={!isDirty || !isValid}>
-              Search
-            </Button>
-          </Group>
-        </Box>
-      </Modal>
-      {appliedFilter > 0 && (
-        <>
-          <Text fz="xs" color="dimmed" fs="italic">
-            {expenses?.response.length} Expenses Found
-          </Text>
-          {(expenses?.response.length ?? 0) > 0 && (
-            <>
-              <Divider my="xs" />
-              <ScrollArea h="calc(100vh - 162px)" sx={{ paddingBottom: "1px" }}>
-                <SimpleGrid cols={isMobile ? 1 : 2} spacing="xs">
-                  {expenses?.response.map((ex) => (
-                    <ExpenseCard
-                      hideMenu
-                      key={ex._id}
-                      data={ex}
-                      hideMonthIndicator
-                      highlight={filters.q ?? ""}
+        <Accordion.Item value="show">
+          <Accordion.Control>
+            Filters {appliedFilter > 0 ? `(${appliedFilter} applied)` : ""}
+          </Accordion.Control>
+          <Accordion.Panel>
+            <Box
+              component="form"
+              onSubmit={handleSubmit(handleSearch)}
+              onReset={handleClear}
+            >
+              <SimpleGrid cols={isMobile ? 1 : 3} spacing="sm">
+                <TextInput
+                  mb={0}
+                  rightSection={
+                    <ClearField
+                      onClick={() => setValue("q", "", { shouldDirty: true })}
+                      disabled={!watch("q")?.length}
                     />
-                  ))}
-                </SimpleGrid>
-              </ScrollArea>
-            </>
-          )}
-        </>
-      )}
-      {appliedFilter === 0 && (
-        <Box
-          sx={(theme) => ({
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "calc(100vh - 162px)",
-            gap: theme.spacing.sm,
-          })}
-        >
-          <ThemeIcon
-            color={primaryColor}
-            variant="light"
-            radius="xl"
-            size={120}
-          >
-            <IconSearch size={100} stroke={1} />
-          </ThemeIcon>
-          <Text color="dimmed">
-            Use the filters to search all your expenses.
-          </Text>
-        </Box>
-      )}
-    </>
+                  }
+                  placeholder="Enter Title / Description"
+                  {...register("q")}
+                  autoFocus
+                />
+                <MultiSelect
+                  searchable
+                  mb={0}
+                  disabled={loadingCategories}
+                  value={watch("categories")}
+                  disableSelectedItemFiltering
+                  onChange={(e) =>
+                    setValue("categories", e, { shouldDirty: true })
+                  }
+                  itemComponent={CategorySelectItem}
+                  valueComponent={CategoryMultiSelectValue}
+                  rightSection={
+                    <ClearField
+                      onClick={() =>
+                        setValue("categories", [], { shouldDirty: true })
+                      }
+                      disabled={!watch("categories")?.length}
+                    />
+                  }
+                  placeholder={
+                    loadingCategories
+                      ? "Loading Categories"
+                      : "Select Categories"
+                  }
+                  data={
+                    categoryRes?.response?.map((cat) => ({
+                      ...cat,
+                      value: cat._id ?? "",
+                    })) ?? []
+                  }
+                />
+                <DatePickerInput
+                  {...pickerProps}
+                  mb={0}
+                  placeholder="Select Date Range"
+                  defaultDate={watch("dateRange")[0] ?? new Date()}
+                  onChange={(e) =>
+                    setValue("dateRange", e, { shouldDirty: true })
+                  }
+                  value={[watch("dateRange")[0]!, watch("dateRange")[1]!]}
+                  rightSection={
+                    <ClearField
+                      disabled={
+                        !watch("dateRange")[0] || !watch("dateRange")[1]
+                      }
+                      onClick={() =>
+                        setValue("dateRange", [null, null], {
+                          shouldDirty: true,
+                        })
+                      }
+                    />
+                  }
+                />
+                <div></div>
+                <div></div>
+                <Group grow>
+                  <Button type="reset" variant="outline">
+                    Clear All
+                  </Button>
+                  <Button type="submit" disabled={!isDirty || !isValid}>
+                    Search
+                  </Button>
+                </Group>
+              </SimpleGrid>
+            </Box>
+          </Accordion.Panel>
+        </Accordion.Item>
+      </Accordion>
+      <Divider
+        my="sm"
+        color={primaryColor}
+        labelPosition="center"
+        label={
+          <>
+            {isLoading && (
+              <>
+                <Loader size={20} mr="xs" />
+                <Text fz="sm">Loading Expenses</Text>
+              </>
+            )}
+            {expenses && (
+              <Text fz="sm">{expenses?.response.length} Expenses Found</Text>
+            )}
+            {!expenses && !isLoading && (
+              <Text fz="sm">Apply Filters Above</Text>
+            )}
+          </>
+        }
+      />
+      <ScrollArea h="calc(100vh - 190px)" sx={{ paddingBottom: "1px" }}>
+        <SimpleGrid cols={isMobile ? 1 : 2} spacing="xs">
+          {expenses?.response.map((ex) => (
+            <ExpenseCard
+              hideMenu
+              key={ex._id}
+              data={ex}
+              hideMonthIndicator
+              highlight={filters.q ?? ""}
+            />
+          ))}
+        </SimpleGrid>
+      </ScrollArea>
+    </Box>
+  );
+}
+
+function ClearField(
+  props: Readonly<{
+    onClick?: React.MouseEventHandler<HTMLButtonElement>;
+    disabled?: boolean;
+  }>
+) {
+  if (props.disabled) return null;
+
+  return (
+    <ActionIcon size="sm" color="red" variant="light" onClick={props.onClick}>
+      <IconX size={16} />
+    </ActionIcon>
   );
 }
