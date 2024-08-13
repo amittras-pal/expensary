@@ -97,7 +97,7 @@ export default function AppNavigation({ onChange, ...rest }: SidebarProps) {
           </ActionIcon>
         </Tooltip>
       </Navbar.Section>
-      <Navbar.Section>
+      <Navbar.Section mt="sm">
         <AppInfo />
       </Navbar.Section>
     </Navbar>
