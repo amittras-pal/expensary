@@ -23,8 +23,6 @@ export default function Preferences() {
   const { userData } = useCurrentUser();
   const { primaryColor, colors } = useMantineTheme();
 
-  console.log(userData);
-
   const {
     formState: { isValid, isDirty },
     handleSubmit,
