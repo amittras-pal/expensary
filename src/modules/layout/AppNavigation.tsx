@@ -1,5 +1,4 @@
 import {
-  ActionIcon,
   Group,
   Kbd,
   Navbar,
@@ -11,7 +10,7 @@ import {
 import { HorizontalSectionSharedProps } from "@mantine/core/lib/AppShell/HorizontalSection/HorizontalSection";
 import { useHotkeys } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
-import { IconLogout, IconPower, IconUserCog } from "@tabler/icons-react";
+import { IconLogout, IconPower } from "@tabler/icons-react";
 import { useMemo, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import AppInfo from "../../components/app-info/AppInfo";
@@ -32,6 +31,9 @@ type SidebarProps = Omit<HorizontalSectionSharedProps, "children"> &
 
 export default function AppNavigation({ onChange, ...rest }: SidebarProps) {
   const { classes } = useAppStyles();
+  const { classes: btnClasses } = useNavBtnStyle({ active: false });
+  const isMobile = useMediaMatch();
+
   const { logoutUser } = useLogoutHandler();
   const confirmLogout = () =>
     modals.openConfirmModal({
@@ -52,10 +54,10 @@ export default function AppNavigation({ onChange, ...rest }: SidebarProps) {
     });
   return (
     <Navbar
-      width={{ base: 300 }}
+      p="sm"
+      width={{ base: isMobile ? 300 : 60 }}
       hiddenBreakpoint="sm"
       className={classes.navigation}
-      p="md"
       {...rest}
     >
       <Navbar.Section
@@ -77,28 +79,23 @@ export default function AppNavigation({ onChange, ...rest }: SidebarProps) {
           alignItems: "center",
         })}
       >
-        <NavLink
-          icon={<IconUserCog size={16} />}
-          label="My Account"
-          path="/account"
-          shortcut="U"
-          exactMatch={false}
-          onChange={onChange}
-        />
-        <Tooltip label="Log Out" position="bottom" withArrow color="dark">
-          <ActionIcon
-            color="red"
-            variant="light"
-            size="lg"
-            radius="sm"
-            onClick={confirmLogout}
-          >
-            <IconPower size={20} />
-          </ActionIcon>
+        <Tooltip
+          label="Log Out"
+          position="right"
+          events={{ focus: true, hover: true, touch: false }}
+          disabled={isMobile}
+          offset={10}
+        >
+          <UnstyledButton onClick={confirmLogout} className={btnClasses.navBtn}>
+            <ThemeIcon variant={"light"} color="red" size={36}>
+              <IconPower size={20} />
+            </ThemeIcon>
+            {isMobile && <Text size="sm">Log Out</Text>}
+          </UnstyledButton>
         </Tooltip>
       </Navbar.Section>
       <Navbar.Section>
-        <AppInfo />
+        <AppInfo type={isMobile ? "text" : "menu"} mt="sm" position="left" />
       </Navbar.Section>
     </Navbar>
   );
@@ -123,20 +120,31 @@ function NavLink({ onChange, ...route }: NavLinkProps) {
   useHotkeys([[route.shortcut, navigateViaShortcut]]);
 
   return (
-    <UnstyledButton
-      ref={ref}
-      component={Link}
-      onClick={() => onChange(false)}
-      to={route.path}
-      className={classes.navBtn}
+    <Tooltip
+      label={
+        <Group spacing={6}>
+          <Text fz="sm">{route.label}</Text>
+          <Kbd ml="auto">{route.shortcut}</Kbd>
+        </Group>
+      }
+      width={170}
+      offset={10}
+      position="right"
+      disabled={isMobile}
+      events={{ focus: true, hover: true, touch: false }}
     >
-      <Group>
-        <ThemeIcon variant={active ? "filled" : "light"}>
+      <UnstyledButton
+        ref={ref}
+        component={Link}
+        onClick={() => onChange(false)}
+        to={route.path}
+        className={classes.navBtn}
+      >
+        <ThemeIcon variant={active ? "filled" : "light"} size={36}>
           {route.icon}
         </ThemeIcon>
-        <Text size="sm">{route.label}</Text>
-        {!isMobile && <Kbd ml="auto">{route.shortcut}</Kbd>}
-      </Group>
-    </UnstyledButton>
+        {isMobile && <Text size="sm">{route.label}</Text>}
+      </UnstyledButton>
+    </Tooltip>
   );
 }
