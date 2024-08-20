@@ -91,10 +91,10 @@ export const expensePlanSchema = yup.object().shape({
 export const preferencesSchema = yup.object().shape({
   editWindow: yup
     .number()
-    .typeError("Edit window can be between 7-25 days.")
+    .typeError("Edit window can be between 5-25 days.")
     .required()
-    .min(7, "Edit window can be between 7-25 days.")
-    .max(25, "Edit window can be between 7-25 days."),
+    .min(5, "Edit window can be between 5-25 days.")
+    .max(25, "Edit window can be between 5-25 days."),
   color: yup.string().required("Please Select a theme color."),
 });
 

@@ -5,8 +5,8 @@ import {
   ColorSwatch,
   Divider,
   Group,
+  Slider,
   Text,
-  TextInput,
   Tooltip,
   useMantineTheme,
 } from "@mantine/core";
@@ -24,21 +24,26 @@ export default function Preferences() {
   const { primaryColor, colors } = useMantineTheme();
 
   const {
-    formState: { errors, isValid, isDirty },
-    register,
+    formState: { isValid, isDirty },
     handleSubmit,
     setValue,
     watch,
+    reset,
   } = useForm<PreferenceForm>({
-    defaultValues: { editWindow: 7, color: primaryColor },
+    defaultValues: {
+      editWindow: userData?.editWindow ?? 7,
+      color: userData?.color ?? primaryColor,
+    },
     shouldFocusError: true,
     mode: "onChange",
     resolver: yupResolver(preferencesSchema),
   });
 
   useEffect(() => {
-    setValue("editWindow", userData?.editWindow ?? 0);
-    setValue("color", userData?.color ?? primaryColor);
+    reset(
+      { editWindow: userData?.editWindow, color: userData?.color },
+      { keepDefaultValues: false }
+    );
   }, [primaryColor, setValue, userData]);
 
   const client = useQueryClient();
@@ -79,20 +84,28 @@ export default function Preferences() {
           adding/editing window.
         </Text>
         <Divider my="sm" />
-        <TextInput
-          {...register("editWindow")}
-          required
-          label="Expense Edit Window"
-          type="number"
-          inputMode="numeric"
-          description="Value is in days..."
-          min={7}
+        <Slider
+          value={watch("editWindow")}
+          onChange={(e) => {
+            setValue("editWindow", e, {
+              shouldTouch: true,
+              shouldDirty: true,
+              shouldValidate: true,
+            });
+          }}
+          min={5}
           max={25}
           step={1}
-          error={errors?.editWindow?.message}
+          marks={[
+            { value: 5, label: "5" },
+            { value: 10, label: "10" },
+            { value: 15, label: "15" },
+            { value: 20, label: "20" },
+            { value: 25, label: "25" },
+          ]}
         />
       </Box>
-      <Divider color={primaryColor} />
+      <Divider color={primaryColor} mt="md" />
       <Box>
         <Text fw="bold" fz="sm" mb="sm">
           Color Theme
