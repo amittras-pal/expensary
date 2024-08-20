@@ -26,7 +26,7 @@ interface CommonPickerProps extends PickerBaseProps<"range"> {
 }
 
 export default function DownloadReport() {
-  useDocumentTitle(`${APP_TITLE} | Download Report`);
+  useDocumentTitle(`${APP_TITLE} | Export Expenses`);
   const { primaryColor } = useMantineTheme();
   const [selection, setSelection] = useState<[Date | null, Date | null]>([
     null,
