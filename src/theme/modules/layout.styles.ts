@@ -25,15 +25,15 @@ export const useShortcutBlockStyles = createStyles((theme) => ({
 export const useNavBtnStyle = createStyles(
   (theme, { active }: { active: boolean }) => ({
     navBtn: {
-      display: "block",
+      display: "flex",
+      alignItems: "center",
+      gap: theme.spacing.sm,
       width: "100%",
-      padding: theme.spacing.xs,
       borderRadius: theme.radius.sm,
       color: theme.colors.dark[0],
-      backgroundColor: active ? theme.colors.dark[5] : "transparent",
-      boxShadow: active ? theme.shadows.md : "none",
+      fontWeight: active ? "bold" : "normal",
       "&:hover": {
-        backgroundColor: active ? theme.colors.dark[5] : theme.colors.dark[8],
+        backgroundColor: theme.colors.dark[5],
       },
     },
   })

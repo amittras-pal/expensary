@@ -4,6 +4,7 @@ import {
   IconDatabaseExport,
   IconReport,
   IconSearch,
+  IconUserCog,
 } from "@tabler/icons-react";
 
 export const ROUTES: RouteItem[] = [
@@ -41,5 +42,12 @@ export const ROUTES: RouteItem[] = [
     path: "/export",
     exactMatch: false,
     shortcut: "E",
+  },
+  {
+    icon: <IconUserCog size={16} />,
+    label: "My Account",
+    path: "/account",
+    exactMatch: false,
+    shortcut: "U",
   },
 ];

@@ -148,7 +148,7 @@ export default function Login() {
             </Text>
           </Text>
         </Container>
-        <AppInfo mt="auto" />
+        <AppInfo mt="auto" type="text" />
       </Box>
     </PublicGuard>
   );
