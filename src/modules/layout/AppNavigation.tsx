@@ -94,6 +94,7 @@ export default function AppNavigation({ onChange, ...rest }: SidebarProps) {
           </UnstyledButton>
         </Tooltip>
       </Navbar.Section>
+      <Navbar.Section>
         <AppInfo type={isMobile ? "text" : "menu"} mt="sm" position="left" />
       </Navbar.Section>
     </Navbar>
