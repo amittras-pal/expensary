@@ -221,7 +221,7 @@ export default function BudgetBreakdown({
         )}
       </Group>
       <Divider my="xs" />
-      <ScrollArea h={`calc(100vh - ${isMobile ? 272 : 242}px)`}>
+      <ScrollArea h={`calc(100vh - ${isMobile ? 272 : 247}px)`}>
         <SimpleGrid cols={1} spacing="xs">
           {Object.entries(summary?.response?.summary ?? {})?.map((item) => (
             <BudgetItem

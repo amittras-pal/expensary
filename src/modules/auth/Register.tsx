@@ -146,7 +146,7 @@ export default function Register() {
             </Text>
           </Text>
         </Container>
-        <AppInfo mt="auto" />
+        <AppInfo mt="auto" type="text" />
       </Box>
     </PublicGuard>
   );
