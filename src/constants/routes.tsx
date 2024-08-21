@@ -38,7 +38,7 @@ export const ROUTES: RouteItem[] = [
   },
   {
     icon: <IconDatabaseExport size={16} />,
-    label: "Export",
+    label: "Export Expenses",
     path: "/export",
     exactMatch: false,
     shortcut: "E",

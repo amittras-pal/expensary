@@ -42,7 +42,7 @@ interface ExpenseAtRow extends IExpense {
 }
 
 export default function Expenses() {
-  useDocumentTitle(`${APP_TITLE} | Transactions`);
+  useDocumentTitle(`${APP_TITLE} | Expenses List`);
   const { userData } = useCurrentUser();
   const { onError } = useErrorHandler();
 
