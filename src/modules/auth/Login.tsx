@@ -17,6 +17,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
+import AppInfo from "../../components/app-info/AppInfo";
 import PinInput from "../../components/pin-input/PinInput";
 import { APP_TITLE } from "../../constants/app";
 import { useCurrentUser } from "../../context/user.context";
@@ -147,6 +148,7 @@ export default function Login() {
             </Text>
           </Text>
         </Container>
+        <AppInfo mt="auto" type="text" />
       </Box>
     </PublicGuard>
   );

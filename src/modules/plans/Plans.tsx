@@ -29,7 +29,7 @@ interface PlanSegregation {
 }
 
 export default function Plans() {
-  useDocumentTitle(`${APP_TITLE} | Expense Plans`);
+  useDocumentTitle(`${APP_TITLE} | Vacations & Plans`);
   const { primaryColor } = useMantineTheme();
   const { onError } = useErrorHandler();
   const { data, isLoading } = useQuery({
