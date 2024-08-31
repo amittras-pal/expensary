@@ -182,7 +182,7 @@ export default function ExpenseForm({
 
   useEffect(() => {
     if (!amount) return;
-    if (amount.match(/[^\d.]/)) {
+    if (RegExp(/[^\d.]/).exec(amount)) {
       const equation = amount.replaceAll(eqSanityRX, "");
       if (equation.length > 0)
         try {
