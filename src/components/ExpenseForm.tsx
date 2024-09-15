@@ -140,6 +140,9 @@ export default function ExpenseForm({
     enabled: watch("addToPlan"),
     refetchOnMount: false,
     onError,
+    onSuccess: (res) => {
+      if (res?.response?.length === 1) setValue("plan", res.response[0]._id);
+    },
   });
 
   const { mutate: create, isLoading: creating } = useMutation({
