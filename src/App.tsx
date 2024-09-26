@@ -5,6 +5,7 @@ import { Notifications } from "@mantine/notifications";
 import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
 import BudgetMonitor from "./components/monitors/BudgetMonitor";
+import NetworkMonitor from "./components/monitors/NetworkMonitor";
 import Themer from "./components/monitors/Themer";
 import TimezoneMonitor from "./components/monitors/TimezoneMonitor";
 import { primaryColor } from "./constants/app";
@@ -33,6 +34,7 @@ export default function App() {
             <BudgetMonitor />
             <Themer />
             <TimezoneMonitor />
+            <NetworkMonitor />
             {/* Main App */}
             <Suspense fallback={<LoadingOverlay visible overlayBlur={5} />}>
               <Outlet />
