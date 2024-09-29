@@ -3,7 +3,7 @@ import { createStyles } from "@mantine/core";
 export const useAppStyles = createStyles((theme) => ({
   header: {
     display: "flex",
-    alignItems: "center",
+    alignItems: "flex-end",
     padding: theme.spacing.md,
     boxShadow: theme.shadows.sm,
   },

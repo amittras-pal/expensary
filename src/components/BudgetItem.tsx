@@ -74,7 +74,7 @@ function BudgetItem({
             </Tooltip>
           ))}
           <Text color="dimmed" fz="xs" ml="auto" pt={1}>
-            ({share}%)
+            {share < 1 ? "<1" : share} %
           </Text>
         </Group>
       </Box>
