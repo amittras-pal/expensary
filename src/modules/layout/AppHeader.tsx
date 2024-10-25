@@ -12,15 +12,10 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useDisclosure, useHotkeys } from "@mantine/hooks";
-import {
-  IconChevronRight,
-  IconKeyboard,
-  IconSearch,
-} from "@tabler/icons-react";
-import { useCallback, useEffect, useState } from "react";
+import { IconKeyboard, IconSearch, IconTallymark1 } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
-import { APP_TITLE } from "../../constants/app";
 import { useMediaMatch } from "../../hooks/media-match";
+import { useTitleMonitor } from "../../hooks/title";
 import logoPath from "../../resources/app-logo.svg";
 import { useAppStyles } from "../../theme/modules/layout.styles";
 import ShortcutsList from "./ShortcutsList";
@@ -36,27 +31,11 @@ export default function AppHeader({
 }: Readonly<IAppHeaderProps>) {
   const { classes } = useAppStyles();
   const theme = useMantineTheme();
-  const [title, setTitle] = useState([APP_TITLE, "Dashboard"]);
+
+  const title = useTitleMonitor();
   const isMobile = useMediaMatch();
   const [showShortcuts, shortcuts] = useDisclosure(false);
   useHotkeys([["i", shortcuts.open]]);
-
-  const titleHandler = useCallback((entries: MutationRecord[]) => {
-    const nodeVal = entries.at(0)?.addedNodes.item(0)?.nodeValue ?? "";
-    const pageTitle = nodeVal?.split("|").map((part) => part.trim()) ?? [];
-    setTitle(pageTitle);
-  }, []);
-
-  useEffect(() => {
-    const observer = new MutationObserver(titleHandler);
-    observer.observe(document.querySelector("title")!, {
-      childList: true,
-      subtree: false,
-    });
-    return () => {
-      observer.disconnect();
-    };
-  }, [titleHandler]);
 
   return (
     <>
@@ -67,7 +46,7 @@ export default function AppHeader({
             onClick={() => setOpen((o) => !o)}
             size="sm"
             color={theme.colors.gray[6]}
-            mr="md"
+            mr={6}
           />
         </MediaQuery>
         <ThemeIcon
@@ -79,16 +58,10 @@ export default function AppHeader({
         >
           <Image src={logoPath} />
         </ThemeIcon>
-        <Text
-          fz="lg"
-          fw="bold"
-          mr={4}
-          component={Link}
-          to="/"
-          sx={{ whiteSpace: "nowrap" }}
-        >
-          {title[0]} <IconChevronRight size={14} />
+        <Text fw="bold" component={Link} to="/" sx={{ whiteSpace: "nowrap" }}>
+          {title[0]}
         </Text>
+        <IconTallymark1 size={24} stroke={1} />
         <Tooltip label={title[1]} disabled={!isMobile} color="dark">
           <Text fz="sm" fw={400} color="dimmed" mr="auto" lineClamp={1}>
             {title[1]}

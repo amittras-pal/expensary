@@ -12,28 +12,28 @@ The application is paired with the corressponding backend application which can 
 
 - Clone the repository.
 - Run `npm install` for the dependencies.
-- Create a `.env` file in the root of the application with the following information.
+- Create a `.env.local` file in the root of the application with the following information.
 
 ```
 VITE_API_BASE_URL=<local_port_of_your_backend>
-NODE_ENV=dev
+NODE_ENV=development
 ```
 
-- `NOTE 1`: Make sure you have the backend application running too before running the frontend. Follow the steps to run the backed as mentioned [here](https://github.com/amittras-pal/money-trace#local-setup-for-development)
+- `NOTE 1`: Make sure you have the backend application running too before running the frontend. Follow the steps to run the backed as mentioned [here](https://github.com/amittras-pal/money-trace#local-setup-for-development).
 
 ### Suggested Extensions and Plugins :
 
 _(If using Visual Studio Code)_
 
-**Utilities:**
+**DX Utilities Utilities:**
 
 - GitLens
 - Prettier
 - Todo Tree
 - ESLint
 
-**Visual Enhancements:**
+**Visual Enhancements for IDE:**
 
-- Material Icon Theme _[for file/folder icons]_
-- Carbon Product Icons _[for application icons]_
-- One Dark Pro _[application color theme]_
+- Material Icon Theme: _[for file/folder icons]_
+- Carbon Product Icons: _[for application icons]_
+- One Dark Pro: _[application color theme]_

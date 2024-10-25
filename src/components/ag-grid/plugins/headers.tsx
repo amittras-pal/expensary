@@ -23,7 +23,7 @@ export function ColumnHeader({
   enableSorting,
   showColumnMenu,
   setSort,
-}: IHeaderParams<IExpense>) {
+}: Readonly<IHeaderParams<IExpense>>) {
   const { primaryColor } = useMantineTheme();
   return (
     <Group position="left" sx={{ width: "100%" }} spacing="xs">
@@ -68,7 +68,7 @@ export function ColumnHeader({
   );
 }
 
-export function RowCountHeader({ api }: IHeaderParams<IExpense>) {
+export function RowCountHeader({ api }: Readonly<IHeaderParams<IExpense>>) {
   return (
     <Text component="span" mx="auto" color="red" fw="bold">
       {api.getDisplayedRowCount()}
