@@ -1,7 +1,7 @@
 import { useMantineTheme } from "@mantine/core";
 import { useEffect } from "react";
 
-const Themer = (): null => {
+const ThemeMonitor = (): null => {
   const { primaryColor, colors } = useMantineTheme();
 
   useEffect(() => {
@@ -14,4 +14,4 @@ const Themer = (): null => {
   return null;
 };
 
-export default Themer;
+export default ThemeMonitor;

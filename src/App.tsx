@@ -6,7 +6,7 @@ import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
 import BudgetMonitor from "./components/monitors/BudgetMonitor";
 import NetworkMonitor from "./components/monitors/NetworkMonitor";
-import Themer from "./components/monitors/Themer";
+import ThemeMonitor from "./components/monitors/ThemeMonitor";
 import TimezoneMonitor from "./components/monitors/TimezoneMonitor";
 import { primaryColor } from "./constants/app";
 import UserProvider from "./context/user.context";
@@ -32,7 +32,7 @@ export default function App() {
             <Notifications position="top-center" autoClose={3500} />
             {/* Monitors */}
             <BudgetMonitor />
-            <Themer />
+            <ThemeMonitor />
             <TimezoneMonitor />
             <NetworkMonitor />
             {/* Main App */}
