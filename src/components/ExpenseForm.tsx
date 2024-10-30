@@ -140,6 +140,9 @@ export default function ExpenseForm({
     enabled: watch("addToPlan"),
     refetchOnMount: false,
     onError,
+    onSuccess: (res) => {
+      if (res?.response?.length === 1) setValue("plan", res.response[0]._id);
+    },
   });
 
   const { mutate: create, isLoading: creating } = useMutation({
@@ -182,7 +185,7 @@ export default function ExpenseForm({
 
   useEffect(() => {
     if (!amount) return;
-    if (amount.match(/[^\d.]/)) {
+    if (RegExp(/[^\d.]/).exec(amount)) {
       const equation = amount.replaceAll(eqSanityRX, "");
       if (equation.length > 0)
         try {

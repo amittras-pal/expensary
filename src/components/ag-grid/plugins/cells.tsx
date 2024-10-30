@@ -90,7 +90,7 @@ export function MetaCell({ data, page }: Readonly<MetaCellProps>) {
 export function CategoryCell({
   data,
   value,
-}: ICellRendererParams<IExpense, string>) {
+}: Readonly<ICellRendererParams<IExpense, string>>) {
   return (
     <Badge
       size="sm"
@@ -166,7 +166,9 @@ export function RowMenuCell({
   );
 }
 
-export function AmountCell({ value }: ICellRendererParams<IExpense, number>) {
+export function AmountCell({
+  value,
+}: Readonly<ICellRendererParams<IExpense, number>>) {
   return (
     <Text
       sx={{ height: "100%", display: "flex", alignItems: "center" }}
