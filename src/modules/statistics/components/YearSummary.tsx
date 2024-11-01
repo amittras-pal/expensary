@@ -50,7 +50,8 @@ export default function YearSummary(props: Readonly<YearSummaryProps>) {
 
   const onChartClick: CategoricalChartFunc = (e) => {
     if (e.activeTooltipIndex && props.data)
-      props.onSelect(e.activeTooltipIndex);
+      if (props.data[e.activeTooltipIndex].budget > 0)
+        props.onSelect(e.activeTooltipIndex);
   };
 
   if (props.isLoading)
@@ -97,13 +98,13 @@ export default function YearSummary(props: Readonly<YearSummaryProps>) {
           />
           <Legend formatter={getLegend} />
           <Line
-            type="natural"
+            type="monotone"
             dataKey="total"
             stroke={colors.gray[3]}
             dot={(props) => Dot({ ...props, colors })}
           />
           <Line
-            type="natural"
+            type="monotone"
             dataKey="budget"
             stroke={colors.dark[2]}
             strokeDasharray="3 3"
@@ -127,16 +128,18 @@ const monthFormatter = (value: number, isMobile: boolean) => {
 const Dot = (props: any) => {
   const { cx, cy, payload, value, colors } = props;
 
+  const dotColor = () => {
+    if (value === payload.budget) return colors.blue[7];
+    return value > payload.budget ? colors.red[7] : colors.green[7];
+  };
+
   return (
     <IconPoint
       size={40}
       x={cx - 20}
       y={cy - 20}
       key={payload.month}
-      style={{
-        cursor: "pointer",
-        color: value > payload.budget ? colors.red[7] : colors.green[7],
-      }}
+      style={{ cursor: "pointer", color: dotColor() }}
     />
   );
 };
@@ -152,7 +155,7 @@ const BudgetByTotalTooltip = (props: any) => {
     };
   }, [props.payload]);
 
-  if (props.active && data?.budget && data.total)
+  if (props.active)
     return (
       <Box
         sx={(theme) => ({
@@ -168,14 +171,22 @@ const BudgetByTotalTooltip = (props: any) => {
             .format("MMMM")}
         </Text>
         <Divider color="gray" my={4} />
-        <Text fz="sm">Budget: {formatCurrency(data.budget)}</Text>
-        <Text fz="sm" color={data.total > data.budget ? "red" : "green"}>
-          Total Spent: {formatCurrency(data.total)}
-        </Text>
-        <Divider color="gray" my={4} />
-        <Text fz="xs" color="dimmed" fs="italic">
-          Click to see details...
-        </Text>
+        {data?.budget && data.budget > 0 ? (
+          <>
+            <Text fz="sm">Budget: {formatCurrency(data.budget)}</Text>
+            <Text fz="sm" color={data.total > data.budget ? "red" : "green"}>
+              Total Spent: {formatCurrency(data.total)}
+            </Text>
+            <Divider color="gray" my={4} />
+            <Text fz="xs" color="dimmed" fs="italic">
+              Click to see details...
+            </Text>
+          </>
+        ) : (
+          <Text fz="sm" fs="italic">
+            Data not available.
+          </Text>
+        )}
       </Box>
     );
 

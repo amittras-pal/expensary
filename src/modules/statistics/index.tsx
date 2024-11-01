@@ -27,15 +27,28 @@ export default function StatsEngine() {
     onError,
   });
 
-  const chartData: ChartData[] | null = useMemo(() => {
-    return (
-      data?.response.trend.map((summary) => ({
-        ...summary,
-        budget:
-          data.response.budgets.find((item) => item.month === summary.month)
-            ?.amount ?? 0,
-      })) ?? null
-    );
+  const chartData: ChartData[] = useMemo(() => {
+    const startMonth = data?.response.trend[0].month ?? 1;
+    const endMonth = data?.response.trend.at(-1)?.month ?? 12;
+    const output: ChartData[] = [];
+    Array(12)
+      .keys()
+      .map((v) => v + 1)
+      .forEach((id) => {
+        if (id < startMonth || id > endMonth)
+          output.push({ month: id, budget: 0, total: 0, categories: [] });
+        else {
+          const item = data?.response.trend.find((item) => item.month === id);
+          output.push({
+            ...item!,
+            budget:
+              data?.response.budgets.find((item) => item.month === id)
+                ?.amount ?? 0,
+          });
+        }
+      });
+
+    return output;
   }, [data]);
 
   const selected = useMemo(
@@ -52,8 +65,8 @@ export default function StatsEngine() {
           year={year}
           onNavigate={(dir) => setActiveIndex((v) => v + dir)}
           monthRange={[
-            chartData?.at(0)?.month ?? 0,
-            chartData?.at(-1)?.month ?? 0,
+            data?.response.trend?.at(0)?.month ?? 0,
+            data?.response.trend?.at(-1)?.month ?? 0,
           ]}
         />
       ) : (
