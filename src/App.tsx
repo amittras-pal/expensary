@@ -1,9 +1,10 @@
-import { LoadingOverlay, MantineProvider } from "@mantine/core";
+import { MantineProvider } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
 import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
+import OverlayLoader from "./components/loaders/OverlayLoader";
 import BudgetMonitor from "./components/monitors/BudgetMonitor";
 import NetworkMonitor from "./components/monitors/NetworkMonitor";
 import ThemeMonitor from "./components/monitors/ThemeMonitor";
@@ -36,7 +37,7 @@ export default function App() {
             <TimezoneMonitor />
             <NetworkMonitor />
             {/* Main App */}
-            <Suspense fallback={<LoadingOverlay visible overlayBlur={5} />}>
+            <Suspense fallback={<OverlayLoader visible />}>
               <Outlet />
             </Suspense>
           </UserProvider>

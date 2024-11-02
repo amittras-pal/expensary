@@ -4,7 +4,6 @@ import {
   Button,
   Divider,
   Group,
-  Loader,
   Progress,
   ScrollArea,
   SimpleGrid,
@@ -29,6 +28,7 @@ import dayjs from "dayjs";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import BudgetItem from "../../components/BudgetItem";
+import ContainedLoader from "../../components/loaders/ContainedLoader";
 import { useCurrentUser } from "../../context/user.context";
 import { useErrorHandler } from "../../hooks/error-handler";
 import { useMediaMatch } from "../../hooks/media-match";
@@ -130,7 +130,7 @@ export default function BudgetBreakdown({
   if (isLoading)
     return (
       <Box className={classes.noInfo}>
-        <Loader size={50} />
+        <ContainedLoader size={150} />
       </Box>
     );
 

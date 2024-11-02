@@ -1,10 +1,4 @@
-import {
-  ActionIcon,
-  LoadingOverlay,
-  Modal,
-  Tabs,
-  useMantineTheme,
-} from "@mantine/core";
+import { ActionIcon, Modal, Tabs, useMantineTheme } from "@mantine/core";
 import { useDisclosure, useDocumentTitle, useHotkeys } from "@mantine/hooks";
 import { IconInfoCircle, IconPlus } from "@tabler/icons-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -12,6 +6,7 @@ import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import DeleteExpense from "../../components/DeleteExpense";
 import ExpenseForm from "../../components/ExpenseForm";
+import OverlayLoader from "../../components/loaders/OverlayLoader";
 import { APP_TITLE } from "../../constants/app";
 import { useErrorHandler } from "../../hooks/error-handler";
 import { getPlanDetails } from "../../services/plans.service";
@@ -78,7 +73,7 @@ export default function PlanDetails() {
 
   useHotkeys([["N", formModal.open]]);
 
-  if (isLoading || !detailsRes) return <LoadingOverlay visible />;
+  if (isLoading || !detailsRes) return <OverlayLoader visible />;
 
   return (
     <>
