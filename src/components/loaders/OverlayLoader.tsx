@@ -1,5 +1,5 @@
 import { LoadingOverlay, LoadingOverlayProps } from "@mantine/core";
-import LogoLoader from "./LogoLoader";
+import BrandLoader from "./LogoLoader";
 
 export default function OverlayLoader(props: Readonly<LoadingOverlayProps>) {
   return (
@@ -7,7 +7,7 @@ export default function OverlayLoader(props: Readonly<LoadingOverlayProps>) {
       {...props}
       overlayBlur={5}
       transitionDuration={100}
-      loader={LogoLoader({ size: 250 })}
+      loader={BrandLoader({ size: 250 })}
     />
   );
 }

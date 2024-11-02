@@ -28,7 +28,6 @@ export default function About() {
       className="about-content"
       py={pathname.endsWith("app") ? 0 : "lg"}
     >
-      <ContainedLoader size={200} />
       <Markdown components={components}>{data}</Markdown>
     </Container>
   );

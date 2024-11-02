@@ -1,4 +1,4 @@
-.logo-loader {
+svg.logo-loader {
   .body,
   .head,
   .leg {
@@ -9,25 +9,47 @@
   }
 
   .body {
-    animation: draw-body 3s ease-in-out alternate infinite,
+    animation: body 3s ease-in-out alternate infinite,
       fill 3s ease-in-out alternate infinite;
     stroke-dasharray: 2573.875732421875;
   }
 
   .leg {
-    animation: draw-leg 3s ease-in-out alternate infinite,
+    animation: leg 3s ease-in-out alternate infinite,
       fill 3s ease-in-out alternate infinite;
     stroke-dasharray: 705.975341796875;
   }
 
   .head {
-    animation: draw-head 3s ease-in-out alternate infinite,
+    animation: head 3s ease-in-out alternate infinite,
       fill 3s ease-in-out alternate infinite;
     stroke-dasharray: 470.79998779296875;
   }
+
+  &.brand {
+    .body,
+    .head,
+    .leg {
+      stroke: var(--mantine-color-indigo-3);
+    }
+    .body {
+      animation: body 3s ease-in-out alternate infinite,
+        fill-brand 3s ease-in-out alternate infinite;
+    }
+
+    .leg {
+      animation: leg 3s ease-in-out alternate infinite,
+        fill-brand 3s ease-in-out alternate infinite;
+    }
+
+    .head {
+      animation: head 3s ease-in-out alternate infinite,
+        fill-brand 3s ease-in-out alternate infinite;
+    }
+  }
 }
 
-@keyframes draw-body {
+@keyframes body {
   from {
     stroke-dashoffset: 2573.875732421875;
   }
@@ -36,7 +58,7 @@
   }
 }
 
-@keyframes draw-leg {
+@keyframes leg {
   from {
     stroke-dashoffset: 705.975341796875;
   }
@@ -45,7 +67,7 @@
   }
 }
 
-@keyframes draw-head {
+@keyframes head {
   from {
     stroke-dashoffset: 470.79998779296875;
   }
@@ -60,5 +82,14 @@
   }
   to {
     fill: var(--mantine-color-primary-7);
+  }
+}
+
+@keyframes fill-brand {
+  from {
+    fill: #00000000;
+  }
+  to {
+    fill: var(--mantine-color-indigo-7);
   }
 }

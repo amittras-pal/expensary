@@ -1,12 +1,12 @@
 import { Box } from "@mantine/core";
-import LogoLoader, { LogoLoaderProps } from "./LogoLoader";
+import BrandLoader, { BrandLoaderProps } from "./LogoLoader";
 
-export default function ContainedLoader(props: Readonly<LogoLoaderProps>) {
+export default function ContainedLoader(props: Readonly<BrandLoaderProps>) {
   return (
     <Box
       sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
     >
-      <LogoLoader {...props} />
+      <BrandLoader {...props} />
     </Box>
   );
 }

@@ -5,13 +5,13 @@ import { Notifications } from "@mantine/notifications";
 import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
 import OverlayLoader from "./components/loaders/OverlayLoader";
+import PreLoader from "./components/loaders/PreLoader";
 import BudgetMonitor from "./components/monitors/BudgetMonitor";
 import NetworkMonitor from "./components/monitors/NetworkMonitor";
 import ThemeMonitor from "./components/monitors/ThemeMonitor";
 import TimezoneMonitor from "./components/monitors/TimezoneMonitor";
 import { primaryColor } from "./constants/app";
 import UserProvider from "./context/user.context";
-import ServerConnecting from "./modules/server/ServerConnecting";
 import theme from "./theme";
 
 export default function App() {
@@ -27,7 +27,7 @@ export default function App() {
       withCSSVariables
       theme={{ ...theme, primaryColor: color }}
     >
-      <ServerConnecting>
+      <PreLoader>
         <ModalsProvider>
           <UserProvider>
             <Notifications position="top-center" autoClose={3500} />
@@ -42,7 +42,7 @@ export default function App() {
             </Suspense>
           </UserProvider>
         </ModalsProvider>
-      </ServerConnecting>
+      </PreLoader>
     </MantineProvider>
   );
 }
