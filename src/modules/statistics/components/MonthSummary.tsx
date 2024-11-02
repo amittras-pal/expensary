@@ -115,13 +115,13 @@ export default function MonthSummary(props: Readonly<MonthSummaryProps>) {
                 onMouseEnter={onPieEnter}
               >
                 {chartData.map((entry) => (
-                  <Cell key={entry.category} fill={colors[entry.color][7]} />
+                  <Cell key={entry.name} fill={colors[entry.color][7]} />
                 ))}
               </Pie>
             </PieChart>
           </ResponsiveContainer>
           <Badge variant="light" color={chartData[activeIndex].color} mb="xs">
-            {chartData[activeIndex].category}
+            {chartData[activeIndex].name}
           </Badge>
           <Text>
             <Text component="span" color="dimmed">
@@ -151,7 +151,6 @@ export default function MonthSummary(props: Readonly<MonthSummaryProps>) {
             </Text>
           </Text>
         </Box>
-        {/* <Box sx={{ flex: 1 }}>Calendar Here.</Box> */}
       </Group>
     </>
   );

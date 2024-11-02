@@ -13,7 +13,7 @@ export type SummaryResponse = {
 export type CategoryStats = {
   amount: number;
   items: number;
-  category: string;
+  name: string;
   color: MantineColor;
 };
 

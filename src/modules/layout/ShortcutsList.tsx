@@ -7,7 +7,11 @@ import {
   ThemeIcon,
   useMantineTheme,
 } from "@mantine/core";
-import { IconMapPinFilled } from "@tabler/icons-react";
+import {
+  IconArrowLeft,
+  IconArrowRight,
+  IconMapPinFilled,
+} from "@tabler/icons-react";
 import { useLocation } from "react-router-dom";
 import { planDetailsPath } from "../../constants/app";
 import { useShortcutBlockStyles } from "../../theme/modules/layout.styles";
@@ -124,10 +128,16 @@ export default function ShortcutsList() {
             <Kbd>Backspace</Kbd> - In Month View: Go back to yeat view.
           </Text>
           <Text fz="xs" mb="xs">
-            <Kbd>Right Arrow</Kbd> - In Month View; Go to next month.
+            <Kbd>
+              <IconArrowRight size={14} style={{ marginBottom: -3 }} />
+            </Kbd>{" "}
+            - In Month View; Go to next month.
           </Text>
           <Text fz="xs" mb="xs">
-            <Kbd>Left Arrow</Kbd> - In Month View; Go to previous month.
+            <Kbd>
+              <IconArrowLeft size={14} style={{ marginBottom: -3 }} />
+            </Kbd>{" "}
+            - In Month View; Go to previous month.
           </Text>
         </Box>
       </SimpleGrid>
