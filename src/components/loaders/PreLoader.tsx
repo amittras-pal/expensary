@@ -30,6 +30,7 @@ export default function PreLoader(props: Readonly<PropsWithChildren>) {
   const { colors } = useMantineTheme();
   const isMobile = useMediaMatch();
 
+  const backdropRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const points: MutableRefObject<COORDS[]> = useRef([]);
 
@@ -59,10 +60,11 @@ export default function PreLoader(props: Readonly<PropsWithChildren>) {
   useEffect(() => {
     let frameReqId: number;
     const canvas = canvasRef.current;
+    const backdrop = backdropRef.current;
 
-    if (canvas) {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+    if (canvas && backdrop) {
+      canvas.width = backdrop.clientWidth;
+      canvas.height = backdrop.clientHeight;
       if (!points.current.length) points.current = createPoints(canvas);
 
       const ctx = canvas.getContext("2d");
@@ -72,18 +74,16 @@ export default function PreLoader(props: Readonly<PropsWithChildren>) {
           if (!isError) {
             ctx.fillStyle = `${colors.indigo[9]}aa`;
             ctx.strokeStyle = `${colors.indigo[6]}77`;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
             points.current = updatePoints(points.current, [
               canvas.width,
               canvas.height,
             ]);
-            drawBackdrop(points.current, ctx);
           } else {
             ctx.fillStyle = `${colors.red[9]}aa`;
             ctx.strokeStyle = `${colors.red[6]}77`;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            drawBackdrop(points.current, ctx);
           }
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          drawBackdrop(points.current, ctx);
         };
         animateBackdrop();
       }
@@ -94,7 +94,9 @@ export default function PreLoader(props: Readonly<PropsWithChildren>) {
   if (isLoading || isError)
     return (
       <>
-        <canvas ref={canvasRef} />
+        <Box className={classes.backdropContainer} ref={backdropRef}>
+          <canvas ref={canvasRef} />
+        </Box>
         <Box className={classes.logoContainer}>
           <Text align="center" fw="bold" fz="lg" pt="md">
             {APP_TITLE}
@@ -143,6 +145,7 @@ export default function PreLoader(props: Readonly<PropsWithChildren>) {
                 component="span"
                 td="underline"
                 fw="bold"
+                sx={{ cursor: "pointer" }}
                 onClick={() => document.location.reload()}
               >
                 {" "}
@@ -158,6 +161,13 @@ export default function PreLoader(props: Readonly<PropsWithChildren>) {
 }
 
 const usePreloaderStyles = createStyles((theme) => ({
+  backdropContainer: {
+    width: "100vw",
+    height: "100vh",
+    position: "fixed",
+    top: 0,
+    left: 0,
+  },
   logoContainer: {
     position: "fixed",
     top: "50%",
