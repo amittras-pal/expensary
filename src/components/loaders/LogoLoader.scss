@@ -1,0 +1,64 @@
+.logo-loader {
+  .body,
+  .head,
+  .leg {
+    stroke: var(--mantine-color-primary-3);
+    stroke-miterlimit: 10;
+    stroke-width: 10px;
+    stroke-linecap: round;
+  }
+
+  .body {
+    animation: draw-body 3s ease-in-out alternate infinite,
+      fill 3s ease-in-out alternate infinite;
+    stroke-dasharray: 2573.875732421875;
+  }
+
+  .leg {
+    animation: draw-leg 3s ease-in-out alternate infinite,
+      fill 3s ease-in-out alternate infinite;
+    stroke-dasharray: 705.975341796875;
+  }
+
+  .head {
+    animation: draw-head 3s ease-in-out alternate infinite,
+      fill 3s ease-in-out alternate infinite;
+    stroke-dasharray: 470.79998779296875;
+  }
+}
+
+@keyframes draw-body {
+  from {
+    stroke-dashoffset: 2573.875732421875;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes draw-leg {
+  from {
+    stroke-dashoffset: 705.975341796875;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes draw-head {
+  from {
+    stroke-dashoffset: 470.79998779296875;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes fill {
+  from {
+    fill: #00000000;
+  }
+  to {
+    fill: var(--mantine-color-primary-7);
+  }
+}
