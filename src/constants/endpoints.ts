@@ -17,4 +17,5 @@ export const ENDPOINTS = Object.freeze({
   downloadReport: "/api/reports",
   changelog: "/api/app-info/changelog",
   contributor: "/api/app-info/contributor",
+  yearStats: "/api/statistics/year-stats",
 });
