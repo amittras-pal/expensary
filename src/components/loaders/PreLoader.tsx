@@ -78,10 +78,10 @@ export default function PreLoader(props: Readonly<PropsWithChildren>) {
           if (!isError) {
             ctx.fillStyle = colors.indigo[9];
             ctx.strokeStyle = `${colors.indigo[6]}77`;
-            points.current = updatePoints(points.current, [
-              canvas.width,
-              canvas.height,
-            ]);
+            points.current = updatePoints(points.current, {
+              w: canvas.width,
+              h: canvas.height,
+            });
           } else {
             ctx.fillStyle = colors.red[9];
             ctx.strokeStyle = `${colors.red[6]}77`;
