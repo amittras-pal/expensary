@@ -19,16 +19,22 @@ import {
   useState,
 } from "react";
 import { APP_TITLE, time20Min } from "../../constants/app";
-import { useMediaMatch } from "../../hooks/media-match";
 import { pingServer } from "../../services/server.service";
 import BrandLogo from "./logo-stroke.svg?react";
 import BrandLoader from "./LogoLoader";
 import "./PreLoader.scss";
-import { COORDS, createPoints, drawBackdrop, updatePoints } from "./utils";
+import {
+  COORDS,
+  createPoints,
+  drawBackdrop,
+  randomIncrememt,
+  updatePoints,
+} from "./utils";
 
 export default function PreLoader(props: Readonly<PropsWithChildren>) {
   const { colors } = useMantineTheme();
-  const isMobile = useMediaMatch();
+
+  const [progress, setProgress] = useState(0);
 
   const backdropRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -42,21 +48,19 @@ export default function PreLoader(props: Readonly<PropsWithChildren>) {
     staleTime: time20Min,
     refetchOnWindowFocus: true,
   });
-  const [progress, setProgress] = useState(0);
+
+  // ProgressBar increment.
   useEffect(() => {
     const progressInterval = setInterval(() => {
-      setProgress(
-        (v) => v + Math.floor((Math.random() * Math.PI) / 1.6) + 0.07
-      );
+      setProgress((v) => v + randomIncrememt());
     }, 500);
-
     if (isError) clearInterval(progressInterval);
-
     return () => {
       clearInterval(progressInterval);
     };
   }, [isError]);
 
+  // Backdrop animation.
   useEffect(() => {
     let frameReqId: number;
     const canvas = canvasRef.current;
@@ -72,14 +76,14 @@ export default function PreLoader(props: Readonly<PropsWithChildren>) {
         const animateBackdrop = () => {
           frameReqId = requestAnimationFrame(animateBackdrop);
           if (!isError) {
-            ctx.fillStyle = `${colors.indigo[9]}aa`;
+            ctx.fillStyle = colors.indigo[9];
             ctx.strokeStyle = `${colors.indigo[6]}77`;
             points.current = updatePoints(points.current, [
               canvas.width,
               canvas.height,
             ]);
           } else {
-            ctx.fillStyle = `${colors.red[9]}aa`;
+            ctx.fillStyle = colors.red[9];
             ctx.strokeStyle = `${colors.red[6]}77`;
           }
           ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -89,7 +93,7 @@ export default function PreLoader(props: Readonly<PropsWithChildren>) {
       }
     }
     return () => cancelAnimationFrame(frameReqId);
-  }, [isMobile, isError]);
+  }, [isError]);
 
   if (isLoading || isError)
     return (
@@ -111,7 +115,7 @@ export default function PreLoader(props: Readonly<PropsWithChildren>) {
           </Box>
         </Box>
         <Box className={classes.progressContainer}>
-          <Flex gap="xs" align="center" mb="xs" justify="space-between">
+          <Flex align="center" mb="xs" justify="space-between">
             <Text fz="sm" fs="italic">
               Connecting to Server, Please Wait...
             </Text>
@@ -120,7 +124,7 @@ export default function PreLoader(props: Readonly<PropsWithChildren>) {
               multiline
               position="top-end"
               label={
-                <Text fz="xs" color="dimmed" align="left">
+                <Text fz="xs" align="left">
                   The API server is hosted on a free-tier NodeJS hosting
                   platform and might take a while to boot up after being idle
                   for a time. Thank you for your patience!

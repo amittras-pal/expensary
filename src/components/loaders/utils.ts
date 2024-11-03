@@ -1,14 +1,19 @@
+import { randomNumber } from "../../utils";
+
 // Types and utility functions for preloader backdrop canvas computations.
 export type COORDS = { x: number; y: number; dx: number; dy: number };
+
+// Radius of each point to draw.
+const radius = 5;
 
 // Generate points placed randomly within the canvas bounds.
 export const createPoints = (canvas: HTMLCanvasElement): COORDS[] => {
   const isMobile = window.matchMedia("(max-width: 576px)").matches;
   return [...Array(isMobile ? 35 : 75).keys()].map(() => ({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    dx: (Math.random() - 0.5) * 2,
-    dy: (Math.random() - 0.5) * 2,
+    x: randomNumber() * canvas.width,
+    y: randomNumber() * canvas.height,
+    dx: (randomNumber() - 0.5) * 2,
+    dy: (randomNumber() - 0.5) * 2,
   }));
 };
 
@@ -17,10 +22,10 @@ export const updatePoints = (
   points: COORDS[],
   bounds: [number, number]
 ): COORDS[] => {
-  return points.map((point) => {
-    let dx = point.x < 10 || point.x > bounds[0] - 10 ? -point.dx : point.dx;
-    let dy = point.y < 10 || point.y > bounds[1] - 10 ? -point.dy : point.dy;
-    return { x: point.x + dx, y: point.y + dy, dx, dy };
+  return points.map((pt) => {
+    let dx = pt.x < radius || pt.x > bounds[0] - radius ? -pt.dx : pt.dx;
+    let dy = pt.y < radius || pt.y > bounds[1] - radius ? -pt.dy : pt.dy;
+    return { x: pt.x + dx, y: pt.y + dy, dx, dy };
   });
 };
 
@@ -43,14 +48,17 @@ export const drawBackdrop = (
   ctx.beginPath();
   for (const sp of points) {
     ctx.moveTo(sp.x, sp.y);
-    for (const tp of points) if (distance(sp, tp) < 150) ctx.lineTo(tp.x, tp.y);
+    for (const tp of points) if (distance(sp, tp) < 125) ctx.lineTo(tp.x, tp.y);
   }
   ctx.stroke();
 
   for (const p of points) {
     ctx.beginPath();
-    ctx.arc(p.x, p.y, 10, 0, Math.PI * 2, false);
+    ctx.arc(p.x, p.y, radius, 0, Math.PI * 2, false);
     ctx.fill();
-    ctx.stroke();
   }
+};
+
+export const randomIncrememt = () => {
+  return Math.floor((randomNumber() * Math.PI) / 1.6) + 0.07;
 };
