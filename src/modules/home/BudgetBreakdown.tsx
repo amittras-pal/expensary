@@ -7,6 +7,7 @@ import {
   Progress,
   ScrollArea,
   SimpleGrid,
+  Stack,
   Switch,
   Text,
   ThemeIcon,
@@ -32,6 +33,7 @@ import ContainedLoader from "../../components/loaders/ContainedLoader";
 import { useCurrentUser } from "../../context/user.context";
 import { useErrorHandler } from "../../hooks/error-handler";
 import { useMediaMatch } from "../../hooks/media-match";
+import EmptyState from "../../resources/empty-state.svg?react";
 import { getBudget } from "../../services/budget.service";
 import { getSummary } from "../../services/expense.service";
 import { useDashboardStyles } from "../../theme/modules/dashboard.styles";
@@ -127,6 +129,14 @@ export default function BudgetBreakdown({
     );
   }, [selection, summary?.response]);
 
+  const handleMonthChange = (e: Date) => {
+    setPayload((prev) => ({
+      ...prev,
+      startDate: dayjs(e).startOf("month").toDate(),
+      endDate: dayjs(e).endOf("month").toDate(),
+    }));
+  };
+
   if (isLoading)
     return (
       <Box className={classes.noInfo}>
@@ -137,17 +147,13 @@ export default function BudgetBreakdown({
   if (!budgetRes?.response?.amount)
     return (
       <Box className={classes.noInfo}>
-        <Text>Budget Info not Available.</Text>
+        <EmptyState />
+        <Text fs="italic" fz="sm">
+          Budget not created for {dayjs().format("MMMM")}. Please create a
+          budget to proceed further.
+        </Text>
       </Box>
     );
-
-  const handleMonthChange = (e: Date) => {
-    setPayload((prev) => ({
-      ...prev,
-      startDate: dayjs(e).startOf("month").toDate(),
-      endDate: dayjs(e).endOf("month").toDate(),
-    }));
-  };
 
   return (
     <Box ref={ref} className={classes.budgetWrapper}>
@@ -221,20 +227,29 @@ export default function BudgetBreakdown({
         )}
       </Group>
       <Divider my="xs" />
-      <ScrollArea h={`calc(100vh - ${isMobile ? 272 : 247}px)`}>
-        <SimpleGrid cols={1} spacing="xs">
-          {Object.entries(summary?.response?.summary ?? {})?.map((item) => (
-            <BudgetItem
-              key={item[0]}
-              data={item}
-              overallSpent={summary?.response.total ?? 0}
-              showSelection={showSelection}
-              selection={selection}
-              onSelectionChange={handleSelection}
-            />
-          ))}
-        </SimpleGrid>
-      </ScrollArea>
+      {Object.entries(summary?.response?.summary ?? {}).length > 0 ? (
+        <ScrollArea h={`calc(100vh - ${isMobile ? 272 : 247}px)`}>
+          <SimpleGrid cols={1} spacing="xs">
+            {Object.entries(summary?.response?.summary ?? {})?.map((item) => (
+              <BudgetItem
+                key={item[0]}
+                data={item}
+                overallSpent={summary?.response.total ?? 0}
+                showSelection={showSelection}
+                selection={selection}
+                onSelectionChange={handleSelection}
+              />
+            ))}
+          </SimpleGrid>
+        </ScrollArea>
+      ) : (
+        <Stack h="100%" justify="center">
+          <EmptyState height={350} />
+          <Text fs="italic" align="center" fz="sm">
+            No expenses added yet for this month.
+          </Text>
+        </Stack>
+      )}
       <Group grow spacing="xs" align="flex-start" mt="auto">
         <Group
           sx={{

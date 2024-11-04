@@ -124,11 +124,19 @@ export default function PreLoader(props: Readonly<PropsWithChildren>) {
               multiline
               position="top-end"
               label={
-                <Text fz="xs" align="left">
-                  The API server is hosted on a free-tier NodeJS hosting
-                  platform and might take a while to boot up after being idle
-                  for a time. Thank you for your patience!
-                </Text>
+                <>
+                  <Text fz="xs" fw="bold" align="left" fs="italic">
+                    Why is it taking so long to load?
+                  </Text>
+                  <Text fz="xs" align="left" mt="sm">
+                    Our compute engine is hosted on a free-tier platform to save
+                    cost. It may take a about a minute to restart after being
+                    inactive for a while.
+                  </Text>
+                  <Text fz="xs" align="left" mt="sm" fs="italic">
+                    Thank you for your patience!!
+                  </Text>
+                </>
               }
             >
               <ThemeIcon color="gray" radius={"xl"} variant="light">

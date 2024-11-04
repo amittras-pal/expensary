@@ -26,8 +26,8 @@ export const useDashboardStyles = createStyles((theme) => {
       alignItems: "center",
       borderRadius: theme.radius.md,
       backgroundColor: theme.colors.gray[8],
+      height: "100%",
     },
-
     badge: {
       display: "flex",
       gap: theme.spacing.xs,
