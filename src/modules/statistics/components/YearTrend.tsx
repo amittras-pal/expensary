@@ -7,7 +7,7 @@ import {
   Text,
   useMantineTheme,
 } from "@mantine/core";
-import { IconPoint } from "@tabler/icons-react";
+import { IconCircleDotted, IconPoint } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { Dispatch, SetStateAction, useMemo } from "react";
 import {
@@ -26,15 +26,17 @@ import { useMediaMatch } from "../../../hooks/media-match";
 import { abbreviateNumber, formatCurrency } from "../../../utils";
 import { ChartData } from "../types";
 
-type YearSummaryProps = {
+type YearTrendProps = {
   data: ChartData[] | null;
   onSelect: (e: number) => void;
   year: string;
+  month: number;
   isLoading: boolean;
+  disableChange: boolean;
   setYear: Dispatch<SetStateAction<string>>;
 };
 
-export default function YearSummary(props: Readonly<YearSummaryProps>) {
+export default function YearTrend(props: Readonly<YearTrendProps>) {
   const { userData } = useCurrentUser();
   const { colors } = useMantineTheme();
   const isMobile = useMediaMatch();
@@ -74,6 +76,7 @@ export default function YearSummary(props: Readonly<YearSummaryProps>) {
           data={yearOptions}
           mb={0}
           autoFocus
+          disabled={props.disableChange}
         />
       </Group>
       <ResponsiveContainer height="90%" width="100%">
@@ -93,7 +96,6 @@ export default function YearSummary(props: Readonly<YearSummaryProps>) {
             cursor={{
               stroke: colors.gray[6],
               strokeWidth: 6,
-              onClick: (e) => console.log(e),
             }}
           />
           <Legend formatter={getLegend} />
@@ -101,7 +103,9 @@ export default function YearSummary(props: Readonly<YearSummaryProps>) {
             type="monotone"
             dataKey="total"
             stroke={colors.gray[3]}
-            dot={(props) => Dot({ ...props, colors })}
+            dot={(dotProps) =>
+              dot({ ...dotProps, colors, selection: props.month })
+            }
           />
           <Line
             type="monotone"
@@ -125,22 +129,32 @@ const monthFormatter = (value: number, isMobile: boolean) => {
     .format(isMobile ? "MMM" : "MMMM");
 };
 
-const Dot = (props: any) => {
-  const { cx, cy, payload, value, colors } = props;
-
+const dot = (props: any) => {
+  const { cx, cy, payload, value, colors, selection } = props;
   const dotColor = () => {
     if (value === payload.budget) return colors.blue[7];
     return value > payload.budget ? colors.red[7] : colors.green[7];
   };
 
   return (
-    <IconPoint
-      size={40}
-      x={cx - 20}
-      y={cy - 20}
-      key={payload.month}
-      style={{ cursor: "pointer", color: dotColor() }}
-    />
+    <>
+      {selection + 1 === payload.month && (
+        <IconCircleDotted
+          size={40}
+          x={cx - 20}
+          y={cy - 20}
+          key={`${payload.month}-dot-active`}
+          style={{ color: colors.blue[4] }}
+        />
+      )}
+      <IconPoint
+        size={40}
+        x={cx - 20}
+        y={cy - 20}
+        key={`${payload.month}-dot`}
+        style={{ cursor: "pointer", color: dotColor() }}
+      />
+    </>
   );
 };
 

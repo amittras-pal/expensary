@@ -1,14 +1,15 @@
-import { Box, createStyles } from "@mantine/core";
+import { Box, createStyles, Group } from "@mantine/core";
 import { useDocumentTitle } from "@mantine/hooks";
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 import { APP_TITLE } from "../../constants/app";
 import { useErrorHandler } from "../../hooks/error-handler";
+import { useMediaMatch } from "../../hooks/media-match";
 import type { YearStatsItem } from "../../services/response.type";
 import { getYearStats } from "../../services/statistics.service";
-import MonthSummary from "./components/MonthSummary";
-import YearSummary from "./components/YearSummary";
+import MonthDonut from "./components/MonthDonut";
+import YearTrend from "./components/YearTrend";
 
 type ChartData = YearStatsItem & { budget: number };
 
@@ -18,7 +19,7 @@ export default function StatsEngine() {
   const { onError } = useErrorHandler();
 
   useDocumentTitle(`${APP_TITLE} | Spend Statistics`);
-
+  const isMobile = useMediaMatch();
   const { classes } = useChartTileClasses();
 
   const { isLoading, data } = useQuery({
@@ -28,13 +29,14 @@ export default function StatsEngine() {
   });
 
   const chartData: ChartData[] = useMemo(() => {
-    const startMonth = data?.response.trend[0].month ?? 1;
-    const endMonth = data?.response.trend.at(-1)?.month ?? 12;
+    if (!data?.response?.trend) return [];
+    const startMonth = data.response.trend.at(0)?.month ?? 1;
+    const endMonth = data.response.trend.at(-1)?.month ?? 12;
     const output: ChartData[] = [];
     Array(12)
       .keys()
-      .map((v) => v + 1)
-      .forEach((id) => {
+      .forEach((k) => {
+        const id = k + 1;
         if (id < startMonth || id > endMonth)
           output.push({ month: id, budget: 0, total: 0, categories: [] });
         else {
@@ -47,7 +49,6 @@ export default function StatsEngine() {
           });
         }
       });
-
     return output;
   }, [data]);
 
@@ -57,28 +58,35 @@ export default function StatsEngine() {
   );
 
   return (
-    <Box className={classes.card}>
-      {selected ? (
-        <MonthSummary
-          data={selected}
-          onClose={() => setActiveIndex(-1)}
-          year={year}
-          onNavigate={(dir) => setActiveIndex((v) => v + dir)}
-          monthRange={[
-            data?.response.trend?.at(0)?.month ?? 0,
-            data?.response.trend?.at(-1)?.month ?? 0,
-          ]}
-        />
-      ) : (
-        <YearSummary
-          isLoading={isLoading}
-          data={chartData}
-          year={year}
-          setYear={setYear}
-          onSelect={setActiveIndex}
-        />
+    <Group spacing="sm" grow>
+      {(!isMobile || (isMobile && activeIndex === -1)) && (
+        <Box className={classes.card}>
+          <YearTrend
+            isLoading={isLoading}
+            data={chartData}
+            year={year}
+            month={activeIndex}
+            setYear={setYear}
+            onSelect={setActiveIndex}
+            disableChange={activeIndex > -1}
+          />
+        </Box>
       )}
-    </Box>
+      {activeIndex > -1 && (
+        <Box className={classes.card}>
+          <MonthDonut
+            data={selected}
+            year={year}
+            onNavigate={(dir) => setActiveIndex((v) => v + dir)}
+            onClose={() => setActiveIndex(-1)}
+            monthRange={[
+              data?.response.trend.at(0)?.month ?? 0,
+              data?.response.trend.at(-1)?.month ?? 0,
+            ]}
+          />
+        </Box>
+      )}
+    </Group>
   );
 }
 
