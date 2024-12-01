@@ -1,6 +1,7 @@
-import { AppShell, LoadingOverlay } from "@mantine/core";
+import { AppShell } from "@mantine/core";
 import { Suspense, useState } from "react";
 import { Outlet } from "react-router-dom";
+import OverlayLoader from "../../components/loaders/OverlayLoader";
 import AuthGuard from "../guards/AuthGuard";
 import AppHeader from "./AppHeader";
 import AppNavigation from "./AppNavigation";
@@ -18,7 +19,7 @@ export default function Layout() {
         navbarOffsetBreakpoint="sm"
         padding="md"
       >
-        <Suspense fallback={<LoadingOverlay visible overlayBlur={5} />}>
+        <Suspense fallback={<OverlayLoader visible />}>
           <Outlet />
         </Suspense>
       </AppShell>

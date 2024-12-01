@@ -23,11 +23,10 @@ export default function RecentTransactions({
   const { classes } = useDashboardStyles();
   const { userData } = useCurrentUser();
 
-  if (loadingList) return <ExpenseListSkeleton />;
-
   return isMobile ? (
     <ItemList
       list={list}
+      loadingList={loadingList}
       onEditExpense={onEditExpense}
       onDeleteExpense={onDeleteExpense}
     />
@@ -40,7 +39,9 @@ export default function RecentTransactions({
           alignItems: "center",
         }}
       >
-        <Text fw="bold">{list?.length ?? 0} Recent Transactions</Text>
+        <Text fw="bold">
+          {list?.length > 0 ? list.length : "No"} Recent Transactions
+        </Text>
         <Text color="dimmed" fz="xs" fs="italic">
           Since{" "}
           {dayjs()
@@ -53,6 +54,7 @@ export default function RecentTransactions({
       <ScrollArea h="calc(100vh - 162px)">
         <ItemList
           list={list}
+          loadingList={loadingList}
           onEditExpense={onEditExpense}
           onDeleteExpense={onDeleteExpense}
         />
@@ -63,22 +65,29 @@ export default function RecentTransactions({
 
 function ItemList({
   list,
+  loadingList,
   onEditExpense,
   onDeleteExpense,
-}: Readonly<Omit<IRecentTransactionsProps, "loadingList">>) {
+}: Readonly<IRecentTransactionsProps>) {
+  if (loadingList) return <ExpenseListSkeleton />;
+
   return (
     <>
-      {list?.length > 0
-        ? list.map((exp) => (
-            <ExpenseCard
-              hideMenu={false}
-              key={exp._id}
-              data={exp}
-              onEditExpense={onEditExpense}
-              onDeleteExpense={onDeleteExpense}
-            />
-          ))
-        : "No Expenses"}
+      {list?.length > 0 ? (
+        list.map((exp) => (
+          <ExpenseCard
+            hideMenu={false}
+            key={exp._id}
+            data={exp}
+            onEditExpense={onEditExpense}
+            onDeleteExpense={onDeleteExpense}
+          />
+        ))
+      ) : (
+        <Text fs="italic" align="center" my="xl" fz="sm">
+          No recent expenses to show.
+        </Text>
+      )}
     </>
   );
 }

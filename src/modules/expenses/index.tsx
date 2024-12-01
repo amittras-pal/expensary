@@ -1,11 +1,4 @@
-import {
-  Box,
-  Divider,
-  Group,
-  LoadingOverlay,
-  Modal,
-  Text,
-} from "@mantine/core";
+import { Box, Divider, Group, Modal, Text } from "@mantine/core";
 import { MonthPickerInput } from "@mantine/dates";
 import { useDisclosure, useDocumentTitle, useHotkeys } from "@mantine/hooks";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -29,6 +22,7 @@ import {
   MetaHeader,
   RowCountHeader,
 } from "../../components/ag-grid/plugins/headers";
+import OverlayLoader from "../../components/loaders/OverlayLoader";
 import { APP_TITLE } from "../../constants/app";
 import { useCurrentUser } from "../../context/user.context";
 import { useErrorHandler } from "../../hooks/error-handler";
@@ -303,7 +297,7 @@ export default function Expenses() {
           <DeleteExpense data={targetExpense} onComplete={handleClose} />
         )}
       </Modal>
-      <LoadingOverlay visible={loadingBudget || loadingList} />
+      <OverlayLoader visible={loadingBudget || loadingList} />
     </>
   );
 }
