@@ -6,7 +6,6 @@ import {
   Button,
   Divider,
   Group,
-  Loader,
   MultiSelect,
   ScrollArea,
   SimpleGrid,
@@ -24,6 +23,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import CategoryMultiSelectValue from "../../components/CategoryMultiSelectValue";
 import CategorySelectItem from "../../components/CategorySelectItem";
 import ExpenseCard from "../../components/ExpenseCard";
+import ContainedLoader from "../../components/loaders/ContainedLoader";
 import { APP_TITLE, time20Min } from "../../constants/app";
 import { useCurrentUser } from "../../context/user.context";
 import { useErrorHandler } from "../../hooks/error-handler";
@@ -225,8 +225,10 @@ export default function GlobalSearch2() {
           <>
             {isLoading && (
               <>
-                <Loader size={20} mr="xs" />
-                <Text fz="sm">Loading Expenses</Text>
+                <ContainedLoader size={20} />
+                <Text fz="sm" ml="xs">
+                  Loading Expenses
+                </Text>
               </>
             )}
             {expenses && (

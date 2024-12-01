@@ -1,4 +1,3 @@
-import { LoadingOverlay } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -11,6 +10,7 @@ import {
   useMemo,
   useState,
 } from "react";
+import OverlayLoader from "../components/loaders/OverlayLoader";
 import { time20Min } from "../constants/app";
 import { useErrorHandler } from "../hooks/error-handler";
 import { getUserData } from "../services/user.service";
@@ -28,7 +28,9 @@ const UserContext = createContext<UserCtx>({
 
 export const useCurrentUser = () => useContext(UserContext);
 
-export default function UserProvider({ children }: PropsWithChildren) {
+export default function UserProvider({
+  children,
+}: Readonly<PropsWithChildren>) {
   const [userData, setUserData] = useState<IUser | null>(null);
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const { onError } = useErrorHandler();
@@ -62,7 +64,7 @@ export default function UserProvider({ children }: PropsWithChildren) {
 
   return (
     <UserContext.Provider value={ctx}>
-      {loadingUser ? <LoadingOverlay visible overlayBlur={5} /> : children}
+      {loadingUser ? <OverlayLoader visible /> : children}
     </UserContext.Provider>
   );
 }

@@ -2,7 +2,6 @@ import {
   ActionIcon,
   Box,
   Group,
-  LoadingOverlay,
   Notification,
   Portal,
   Text,
@@ -28,6 +27,7 @@ import {
   MetaHeader,
   RowCountHeader,
 } from "../../../components/ag-grid/plugins/headers";
+import OverlayLoader from "../../../components/loaders/OverlayLoader";
 import { useErrorHandler } from "../../../hooks/error-handler";
 import { useMediaMatch } from "../../../hooks/media-match";
 import { getExpenseList } from "../../../services/expense.service";
@@ -193,7 +193,7 @@ export default function PlanExpensesList({
 
   return (
     <>
-      <LoadingOverlay visible={loadingList} />
+      <OverlayLoader visible={loadingList} />
       <Box ref={ref} sx={{ height: "100%" }}>
         <AgGridMod
           columnDefs={columns}

@@ -1,0 +1,95 @@
+svg.logo-loader {
+  .body,
+  .head,
+  .leg {
+    stroke: var(--mantine-color-primary-3);
+    stroke-miterlimit: 10;
+    stroke-width: 10px;
+    stroke-linecap: round;
+  }
+
+  .body {
+    animation: body 3s ease-in-out alternate infinite,
+      fill 3s ease-in-out alternate infinite;
+    stroke-dasharray: 2573.875732421875;
+  }
+
+  .leg {
+    animation: leg 3s ease-in-out alternate infinite,
+      fill 3s ease-in-out alternate infinite;
+    stroke-dasharray: 705.975341796875;
+  }
+
+  .head {
+    animation: head 3s ease-in-out alternate infinite,
+      fill 3s ease-in-out alternate infinite;
+    stroke-dasharray: 470.79998779296875;
+  }
+
+  &.brand {
+    .body,
+    .head,
+    .leg {
+      stroke: var(--mantine-color-indigo-3);
+    }
+    .body {
+      animation: body 3s ease-in-out alternate infinite,
+        fill-brand 3s ease-in-out alternate infinite;
+    }
+
+    .leg {
+      animation: leg 3s ease-in-out alternate infinite,
+        fill-brand 3s ease-in-out alternate infinite;
+    }
+
+    .head {
+      animation: head 3s ease-in-out alternate infinite,
+        fill-brand 3s ease-in-out alternate infinite;
+    }
+  }
+}
+
+@keyframes body {
+  from {
+    stroke-dashoffset: 2573.875732421875;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes leg {
+  from {
+    stroke-dashoffset: 705.975341796875;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes head {
+  from {
+    stroke-dashoffset: 470.79998779296875;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes fill {
+  from {
+    fill: #00000000;
+  }
+  to {
+    fill: var(--mantine-color-primary-7);
+  }
+}
+
+@keyframes fill-brand {
+  from {
+    fill: #00000000;
+  }
+  to {
+    fill: var(--mantine-color-indigo-7);
+  }
+}

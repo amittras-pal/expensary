@@ -8,7 +8,6 @@ import {
   HoverCard,
   Image,
   List,
-  Loader,
   Text,
   ThemeIcon,
 } from "@mantine/core";
@@ -17,6 +16,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Fragment, PropsWithChildren, useMemo, useState } from "react";
 import { Components, ExtraProps } from "react-markdown";
 import { getContributor } from "../../services/app-info.service";
+import ContainedLoader from "../loaders/ContainedLoader";
 
 // Render a code block
 const CodeBlock = (props: JSX.IntrinsicElements["code"] & ExtraProps) => {
@@ -120,7 +120,7 @@ const UserCard = (props: Readonly<{ username: string }>) => {
       </HoverCard.Target>
       <HoverCard.Dropdown>
         {isLoading ? (
-          <Loader size="xl" />
+          <ContainedLoader size={150} />
         ) : (
           <>
             <Group position="left" align="center">

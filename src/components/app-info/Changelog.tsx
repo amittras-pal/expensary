@@ -1,10 +1,11 @@
-import { Accordion, Badge, Group, Loader, Text } from "@mantine/core";
+import { Accordion, Badge, Box, Group, Text } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { useMemo } from "react";
 import Markdown from "react-markdown";
 import { useErrorHandler } from "../../hooks/error-handler";
 import { getChangelog } from "../../services/app-info.service";
+import ContainedLoader from "../loaders/ContainedLoader";
 import { components } from "./MarkdownComponents";
 
 export default function Changelog() {
@@ -24,9 +25,9 @@ export default function Changelog() {
 
   if (isLoading)
     return (
-      <Group position="center" my="xl">
-        <Loader size="xl" />
-      </Group>
+      <Box my="xl">
+        <ContainedLoader size={150} />
+      </Box>
     );
 
   return (

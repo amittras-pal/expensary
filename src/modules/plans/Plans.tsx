@@ -4,7 +4,6 @@ import {
   Box,
   Button,
   Divider,
-  Loader,
   Modal,
   SimpleGrid,
   Text,
@@ -16,6 +15,7 @@ import { notifications } from "@mantine/notifications";
 import { IconCheck, IconChecklist, IconPlus, IconX } from "@tabler/icons-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
+import ContainedLoader from "../../components/loaders/ContainedLoader";
 import { APP_TITLE } from "../../constants/app";
 import { useErrorHandler } from "../../hooks/error-handler";
 import { getPlans, updatePlan } from "../../services/plans.service";
@@ -141,7 +141,7 @@ export default function Plans() {
           alignItems: "center",
         }}
       >
-        <Loader size={80} />
+        <ContainedLoader size={150} />
       </Box>
     );
 
