@@ -1,8 +1,8 @@
 # Expensary
 
-A simple-yet powerful personal expense tracker. 
+A simple-yet-powerful personal expense tracker. 
 
-The application brings forth a simple model of setting a fixed budget each month and then adding expenses across multiple categories to keep track of them. With no third-party apps integrations and a somewhat strict ideology of how ans when you add your expenses, it promotes discipline and caution towards your expenses.
+The application brings forth a simple budget based model of adding expenses across multiple categories to keep track of them. We are inspired from a stadalone no-distractions based approach to logging and managing expenses. It's minimal, and straightforward.
 
 ## Top Features
 
@@ -16,17 +16,23 @@ Your dashboard offers you a summary view of all the expenses you have added so f
 
 You can also get a sum of specific categories to get an idea of how certain categories affect your expenditure at the toggle of a switch.
 
-#### 3. Listing and Archival
+#### 3. Statistics
+
+Your account comes with a powerful statistics module that makes historical analysis of your spending habits a breeze with interactive charts and graphs. It gives you a straightforward method of seeing how you have spent your money over the year at a glance.
+
+_The stats views are planned to be upgraded in the future with more powerful features like caregory-wise breakdowns and analysis._
+
+#### 4. Listing and Archival
 
 The listing page offers powerful sorting and filtering controls for all expenses listed-by-month right from the first expense to the latest one in a calendar month. You can go back to the very first expense you created. 
 
-#### 4. Search
+#### 5. Search
 
 **Trying to find something from long back??**
 
 Try using the search functionality to find expenses by a matching words, or by one or more categories, or by a range of dates that you remember it was added on.
 
-#### 5. Vacations & Plans
+#### 6. Vacations & Plans
 
 **There are times when you want to keep track of expenses that are not part of your monthly budget.**
 
@@ -34,7 +40,7 @@ _Worry Not!!_ Expensary offers you the power to create separate plans to group y
 
 _**P.S.:** You can also migrate expenses from the plan to your regular budget if you wanted to once you closed the plan..._
 
-#### 6. Export
+#### 7. Exporting expenses list and summary
 
 **Do you want to crunch some numbers in excel?**
 
@@ -44,7 +50,7 @@ You can export your expense by month or dates range to an excel sheet that you c
 
 Keyboard shortcuts are available for all major actions in the application while on a desktop computer, fully utilizing the mighty leyboard. Explore them by tapping "i" anywhere while logged in.
 
-**ON that note:** The application is WAI-ARIA compatible to make sure a smooth user experience with just the keyboard.
+**ON that note:** The application is accessibility compatible to make sure a smooth user experience with just the keyboard.
 
 ---
 

@@ -1,5 +1,6 @@
 import {
   IconArrowsDoubleSwNe,
+  IconChartHistogram,
   IconDashboard,
   IconDatabaseExport,
   IconReport,
@@ -21,6 +22,13 @@ export const ROUTES: RouteItem[] = [
     path: "/expenses",
     exactMatch: true,
     shortcut: "L",
+  },
+  {
+    icon: <IconChartHistogram size={16} />,
+    label: "Spend Statistics",
+    path: "/statistics",
+    exactMatch: true,
+    shortcut: "T",
   },
   {
     icon: <IconSearch size={16} />,
