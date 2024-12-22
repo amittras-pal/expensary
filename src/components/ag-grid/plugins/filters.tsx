@@ -1,12 +1,4 @@
-import {
-  Box,
-  Button,
-  Checkbox,
-  Group,
-  Loader,
-  ScrollArea,
-  Text,
-} from "@mantine/core";
+import { Box, Button, Checkbox, Group, ScrollArea, Text } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { IFilterParams } from "ag-grid-community";
 import { IFilterReactComp } from "ag-grid-react";
@@ -21,6 +13,7 @@ import { time20Min } from "../../../constants/app";
 import { useErrorHandler } from "../../../hooks/error-handler";
 import { getCategories } from "../../../services/categories.service";
 import { useCategoryFilterStyles } from "../../../theme/modules/grid.styles";
+import ContainedLoader from "../../loaders/ContainedLoader";
 import { SubCategoryOption } from "../interfaces";
 
 function Category(props: IFilterParams<IExpense>, ref: any) {
@@ -90,7 +83,7 @@ function Category(props: IFilterParams<IExpense>, ref: any) {
       <Checkbox.Group value={selection} onChange={setSelection}>
         <Group spacing="xs" className={classes.selectionGroup}>
           {isLoading ? (
-            <Loader size={32} />
+            <ContainedLoader size={150} />
           ) : (
             categoryOptions.map((opt) => (
               <Checkbox
@@ -198,7 +191,7 @@ function SubCategory(props: IFilterParams<IExpense>, ref: any) {
           <Checkbox.Group value={selection} onChange={setSelection}>
             <Group spacing="xs" className={classes.selectionGroup}>
               {isLoading ? (
-                <Loader size={32} />
+                <ContainedLoader size={150} />
               ) : (
                 categoryOptions.map((opt) => (
                   <Fragment key={opt.group}>

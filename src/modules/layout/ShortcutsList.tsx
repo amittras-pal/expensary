@@ -7,7 +7,11 @@ import {
   ThemeIcon,
   useMantineTheme,
 } from "@mantine/core";
-import { IconMapPinFilled } from "@tabler/icons-react";
+import {
+  IconArrowLeft,
+  IconArrowRight,
+  IconMapPinFilled,
+} from "@tabler/icons-react";
 import { useLocation } from "react-router-dom";
 import { planDetailsPath } from "../../constants/app";
 import { useShortcutBlockStyles } from "../../theme/modules/layout.styles";
@@ -91,19 +95,49 @@ export default function ShortcutsList() {
         </Box>
         <Box
           className={cx(classes.block, {
-            [classes.highlight]: pathname.match(planDetailsPath),
+            [classes.highlight]: RegExp(planDetailsPath).exec(pathname),
           })}
         >
           <Text
             fz="md"
             fw="bold"
             mb="sm"
-            color={pathname.match(planDetailsPath) ? primaryColor : ""}
+            color={RegExp(planDetailsPath).exec(pathname) ? primaryColor : ""}
           >
-            Plan Details {pathname.match(planDetailsPath) && <YouAreHere />}
+            Plan Details{" "}
+            {RegExp(planDetailsPath).exec(pathname) && <YouAreHere />}
           </Text>
           <Text fz="xs" mb="xs">
             <Kbd>N</Kbd> - Add New Expense to plan.
+          </Text>
+        </Box>
+        <Box
+          className={cx(classes.block, {
+            [classes.highlight]: pathname === "/statistics",
+          })}
+        >
+          <Text
+            fz="md"
+            fw="bold"
+            mb="sm"
+            color={pathname === "/statistics" ? primaryColor : ""}
+          >
+            Spend Statistics {pathname === "/statistics" && <YouAreHere />}
+          </Text>
+          <Text fz="xs" mb="xs">
+            <Kbd>Backspace</Kbd> - In Month View: Go back to yeat view.
+          </Text>
+          <Text fz="xs" mb="xs">
+            <Kbd>
+              <IconArrowRight size={14} style={{ marginBottom: -3 }} />
+            </Kbd>{" "}
+            - In Month View; Go to next month.
+          </Text>
+          <Text fz="xs" mb="xs">
+            <Kbd>
+              <IconArrowLeft size={14} style={{ marginBottom: -3 }} />
+            </Kbd>{" "}
+            - In Month View; Go to previous month.
           </Text>
         </Box>
       </SimpleGrid>

@@ -5,13 +5,22 @@ export function getAuthToken() {
   return localStorage.getItem("authToken");
 }
 
-const formatter = new Intl.NumberFormat("en-IN", {
+const currencyFormat = new Intl.NumberFormat("en-IN", {
   style: "currency",
   currency: "INR",
 });
 
+const numAbbrFormat = new Intl.NumberFormat("en-IN", {
+  notation: "compact",
+  maximumFractionDigits: 2,
+});
+
 export function formatCurrency(amount: number = 0) {
-  return formatter.format(amount);
+  return currencyFormat.format(amount);
+}
+
+export function abbreviateNumber(value: number) {
+  return numAbbrFormat.format(value);
 }
 
 export function dateFormatter({ value }: { value: string }) {
@@ -49,3 +58,9 @@ export function downloadFile(dataBlob: Blob, fileName: string) {
   document.body.removeChild(link);
   URL.revokeObjectURL(href);
 }
+
+// Replace `Math.random()`
+export const randomNumber = () => {
+  const random = window.crypto.getRandomValues(new Uint8Array(1));
+  return random[0] / Math.pow(2, 8);
+};

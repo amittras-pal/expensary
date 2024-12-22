@@ -15,6 +15,7 @@ const User = lazy(() => import("./modules/user"));
 const DownloadReport = lazy(() => import("./modules/report/DownloadReport"));
 const GlobalSearch = lazy(() => import("./modules/search/GlobalSearch"));
 const About = lazy(() => import("./components/app-info/About"));
+const StatsEngine = lazy(() => import("./modules/statistics"));
 
 const root = ReactDOM.createRoot(document.getElementById("root")!);
 const client = new QueryClient();
@@ -36,6 +37,7 @@ const router = createBrowserRouter([
           { path: "/account", element: <User /> },
           { path: "/search", element: <GlobalSearch /> },
           { path: "/about-app", element: <About /> },
+          { path: "/statistics", element: <StatsEngine /> },
         ],
       },
       { path: "/login", element: <Login /> },

@@ -1,10 +1,11 @@
-import { Container, Group, Loader } from "@mantine/core";
+import { Box, Container } from "@mantine/core";
 import { useDocumentTitle } from "@mantine/hooks";
 import { useQuery } from "@tanstack/react-query";
 import Markdown from "react-markdown";
 import { useLocation } from "react-router-dom";
 import { APP_TITLE } from "../../constants/app";
 import { getAboutFile } from "../../services/app-info.service";
+import ContainedLoader from "../loaders/ContainedLoader";
 import "./About.scss";
 import { components } from "./MarkdownComponents";
 
@@ -18,9 +19,9 @@ export default function About() {
   });
 
   return isLoading ? (
-    <Group position="center">
-      <Loader />
-    </Group>
+    <Box my="xl">
+      <ContainedLoader size={150} />
+    </Box>
   ) : (
     <Container
       size="md"
