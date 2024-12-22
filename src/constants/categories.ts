@@ -29,6 +29,7 @@ import {
   IconScissors,
   IconStereoGlasses,
   IconTags,
+  IconTicket,
   IconTie,
   IconToolsKitchen2,
   IconTrain,
@@ -75,4 +76,5 @@ export const Icons: Record<string, (props: TablerIconsProps) => JSX.Element> = {
   IconScissors,
   IconArmchair2,
   IconReceipt2,
+  IconTicket
 };
