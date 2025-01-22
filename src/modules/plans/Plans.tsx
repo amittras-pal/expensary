@@ -7,6 +7,7 @@ import {
   Modal,
   SimpleGrid,
   Text,
+  Tooltip,
   useMantineTheme,
 } from "@mantine/core";
 import { useDisclosure, useDocumentTitle, useHotkeys } from "@mantine/hooks";
@@ -250,16 +251,18 @@ export default function Plans() {
           </SimpleGrid>
         </>
       )}
-      <ActionIcon
-        size="xl"
-        radius="xl"
-        variant="filled"
-        color={primaryColor}
-        onClick={formModal.open}
-        sx={{ position: "fixed", bottom: "1rem", right: "1rem" }}
-      >
-        <IconPlus size={24} />
-      </ActionIcon>
+      <Tooltip label="Create new Plan" position="left" color="dark">
+        <ActionIcon
+          size="xl"
+          radius="xl"
+          variant="filled"
+          color={primaryColor}
+          onClick={formModal.open}
+          sx={{ position: "fixed", bottom: "1rem", right: "1rem" }}
+        >
+          <IconPlus size={24} />
+        </ActionIcon>
+      </Tooltip>
       <Modal
         opened={showForm || confirm}
         withCloseButton={false}

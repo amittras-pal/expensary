@@ -1,3 +1,4 @@
 export function getBaseURL(): string {
-  return import.meta.env.VITE_API_BASE_URL?.toString() ?? "";
+  const baseUrl = import.meta.env.VITE_API_BASE_URL?.toString();
+  return baseUrl ? `${baseUrl}/api` : "";
 }
