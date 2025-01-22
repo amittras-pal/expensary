@@ -160,7 +160,6 @@ export default function PlanDetails() {
           <IconTableDown size={20} />
         </ActionIcon>
       </Tooltip>
-      {/* )} */}
       <Modal
         opened={showForm || confirm}
         withCloseButton={false}

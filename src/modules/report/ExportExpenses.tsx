@@ -94,7 +94,7 @@ export default function DownloadReport() {
     queryKey: ["plans-list", false],
     queryFn: () => getPlans("false"),
     refetchOnMount: false,
-    staleTime: 10 * 60 * 60,
+    staleTime: 10 * 60 * 1000,
     enabled: view === "plan",
     onError,
   });
