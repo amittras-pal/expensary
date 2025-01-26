@@ -51,7 +51,7 @@ export default function YearTrend(props: Readonly<YearTrendProps>) {
   }, []);
 
   const onChartClick: CategoricalChartFunc = (e) => {
-    if (e.activeTooltipIndex && props.data)
+    if (e.activeTooltipIndex !== undefined && props.data)
       if (props.data[e.activeTooltipIndex].budget > 0)
         props.onSelect(e.activeTooltipIndex);
   };
