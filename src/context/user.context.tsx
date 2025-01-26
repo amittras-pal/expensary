@@ -11,7 +11,7 @@ import {
   useState,
 } from "react";
 import OverlayLoader from "../components/loaders/OverlayLoader";
-import { time20Min } from "../constants/app";
+import { _20Min } from "../constants/app";
 import { useErrorHandler } from "../hooks/error-handler";
 import { getUserData } from "../services/user.service";
 import { getAuthToken } from "../utils";
@@ -49,8 +49,7 @@ export default function UserProvider({
   const { isFetching: loadingUser } = useQuery({
     queryKey: ["user-info"],
     enabled: loggedIn,
-    staleTime: time20Min,
-    refetchOnWindowFocus: false,
+    staleTime: _20Min,
     queryFn: getUserData,
     onError: onError,
     retry: 0,

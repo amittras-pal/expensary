@@ -48,7 +48,7 @@ export default function PlanDetails() {
 
     if (refreshData) {
       client.invalidateQueries(["list", payload]);
-      client.invalidateQueries(["summary", params.id]);
+      client.invalidateQueries(["plan-summary", params.id]);
       client.invalidateQueries(["plan-details", params.id]);
     }
 
