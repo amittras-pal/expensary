@@ -1,9 +1,8 @@
-import { Box, Text, ThemeIcon, useMantineTheme } from "@mantine/core";
+import { Box, Text, ThemeIcon } from "@mantine/core";
 import { IconTemplate } from "@tabler/icons-react";
 import { NoDataOverlayProps } from "../interfaces";
 
 export function NoDataOverlay(props: Readonly<NoDataOverlayProps>) {
-  const { primaryColor } = useMantineTheme();
   return (
     <Box
       sx={{
@@ -19,7 +18,12 @@ export function NoDataOverlay(props: Readonly<NoDataOverlayProps>) {
       <ThemeIcon size={140} variant="light" radius="lg">
         <IconTemplate size={100} />
       </ThemeIcon>
-      <Text ta="center" sx={() => ({ color: primaryColor[4] })}>
+      <Text
+        ta="center"
+        sx={(theme) => ({
+          color: theme.colors[theme.primaryColor][3],
+        })}
+      >
         {props.message}
       </Text>
     </Box>
