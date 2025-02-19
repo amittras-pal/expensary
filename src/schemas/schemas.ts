@@ -74,6 +74,8 @@ export const registerSchema = yup.object().shape({
     .oneOf([yup.ref("pin"), 0], "Pins do not match")
     .required("Please enter pin again"),
   timeZone: yup.string(),
+  recoveryChallenge: yup.string(),
+  recoveryAnswer: yup.string(),
 });
 
 export const expensePlanSchema = yup.object().shape({

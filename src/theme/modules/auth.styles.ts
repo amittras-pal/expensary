@@ -8,7 +8,6 @@ export const useAuthStyles = createStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "center",
     padding: theme.spacing.md,
   },
   paper: {
