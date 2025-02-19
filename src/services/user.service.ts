@@ -35,3 +35,9 @@ export function changeUserPassword(payload: {
     .post<ResponseBody<undefined>>(ENDPOINTS.changePassword, payload)
     .then((res) => res.data);
 }
+
+export function checkUserExists(params: { email: string }) {
+  return axios
+    .get<ResponseBody<undefined>>(ENDPOINTS.userExists, { params })
+    .then((res) => res.data);
+}

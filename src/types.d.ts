@@ -30,6 +30,10 @@ interface IUser {
   editWindow: number;
   color: string;
   seenChangelog: boolean;
+  lastActive: string;
+  lastLogin: string;
+  recoveryChallenge?: string;
+  recoveryAnswer?: string;
 }
 
 interface ICategory {
