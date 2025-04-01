@@ -10,17 +10,8 @@ const currencyFormat = new Intl.NumberFormat("en-IN", {
   currency: "INR",
 });
 
-const numAbbrFormat = new Intl.NumberFormat("en-IN", {
-  notation: "compact",
-  maximumFractionDigits: 2,
-});
-
 export function formatCurrency(amount: number = 0) {
   return currencyFormat.format(amount);
-}
-
-export function abbreviateNumber(value: number) {
-  return numAbbrFormat.format(value);
 }
 
 export function dateFormatter({ value }: { value: string }) {

@@ -6,7 +6,6 @@ import { useErrorHandler } from "../../../hooks/error-handler";
 import { useMediaMatch } from "../../../hooks/media-match";
 import type { YearStatsItem } from "../../../services/response.type";
 import { getYearStats } from "../../../services/statistics.service";
-import MonthDonut from "./MonthDonut";
 import YearTrend from "./YearTrend";
 
 type ChartData = YearStatsItem & { budget: number };
@@ -47,11 +46,6 @@ export default function ReportLayout() {
     return output;
   }, [data]);
 
-  const selected = useMemo(
-    () => chartData?.[activeIndex] ?? null,
-    [chartData, activeIndex]
-  );
-
   return (
     <Group spacing="sm" grow>
       {(!isMobile || (isMobile && activeIndex === -1)) && (
@@ -60,24 +54,9 @@ export default function ReportLayout() {
             isLoading={isLoading}
             data={chartData}
             year={year}
-            month={activeIndex}
             setYear={setYear}
             onSelect={setActiveIndex}
             disableChange={activeIndex > -1}
-          />
-        </Box>
-      )}
-      {activeIndex > -1 && (
-        <Box className={classes.card}>
-          <MonthDonut
-            data={selected}
-            year={year}
-            onNavigate={(dir) => setActiveIndex((v) => v + dir)}
-            onClose={() => setActiveIndex(-1)}
-            monthRange={[
-              data?.response.trend.at(0)?.month ?? 0,
-              data?.response.trend.at(-1)?.month ?? 0,
-            ]}
           />
         </Box>
       )}
