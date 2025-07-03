@@ -1,5 +1,6 @@
 import { useLocalStorage } from "@mantine/hooks";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import dayjs from "dayjs";
 import {
   Dispatch,
   PropsWithChildren,
@@ -13,7 +14,7 @@ import {
 import OverlayLoader from "../components/loaders/OverlayLoader";
 import { time20Min } from "../constants/app";
 import { useErrorHandler } from "../hooks/error-handler";
-import { getUserData } from "../services/user.service";
+import { getUserData, updateUserDetails } from "../services/user.service";
 import { getAuthToken } from "../utils";
 
 type UserCtx = {
@@ -38,13 +39,21 @@ export default function UserProvider({
   const [, setPrimaryColor] = useLocalStorage({ key: "primary-color" });
 
   useEffect(() => {
-    const listener = () => {
-      setLoggedIn(Boolean(getAuthToken()));
-    };
+    const listener = () => setLoggedIn(Boolean(getAuthToken()));
+
     setLoggedIn(Boolean(getAuthToken()));
     window.addEventListener("storage", listener);
     return () => window.removeEventListener("storage", listener);
   }, []);
+
+  const { mutate: logSession } = useMutation({
+    mutationFn: updateUserDetails,
+    onError,
+    onSuccess: (res) => {
+      setUserData(res.response);
+      sessionStorage.setItem("sessionTracked", "1");
+    },
+  });
 
   const { isFetching: loadingUser } = useQuery({
     queryKey: ["user-info"],
@@ -57,6 +66,8 @@ export default function UserProvider({
     onSuccess: (res) => {
       setUserData(res.response);
       setPrimaryColor(res.response.color);
+      if (!sessionStorage.getItem("sessionTracked"))
+        logSession({ lastActive: dayjs().toISOString() });
     },
   });
 
