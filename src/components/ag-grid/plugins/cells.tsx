@@ -2,6 +2,7 @@ import {
   ActionIcon,
   Badge,
   Group,
+  MantineColor,
   Menu,
   Popover,
   Text,
@@ -170,12 +171,20 @@ export function AmountCell({
   value,
 }: Readonly<ICellRendererParams<IExpense, number>>) {
   return (
-    <Text
-      sx={{ height: "100%", display: "flex", alignItems: "center" }}
-      color={!value ? "dimmed" : ""}
-      td={!value ? "line-through" : ""}
-    >
+    <Text component="span" fw="bold" color={amountColor(value)}>
       {formatCurrency(value)}
     </Text>
   );
+}
+
+function amountColor(num: number): MantineColor | "dimmed" {
+  const sign = Math.sign(num);
+  switch (sign) {
+    case 1:
+      return "red";
+    case -1:
+      return "green";
+    default:
+      return "dimmed";
+  }
 }
