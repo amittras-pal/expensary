@@ -20,7 +20,7 @@ import Changelog from "./Changelog";
 
 export default function AppInfo(
   props: Readonly<
-    GroupProps & { type: "menu" | "text"; onLinkClick: () => void }
+    GroupProps & { type: "menu" | "text"; onLinkClick?: () => void }
   >
 ) {
   const [showVersions, { open, close }] = useDisclosure(false);
