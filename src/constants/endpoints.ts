@@ -4,7 +4,7 @@ export const ENDPOINTS = Object.freeze({
   register: "/api/user/register",
   userInfo: "/api/user/details",
   updateUser: "/api/user/update",
-  changePassword: "/api/user/change-password",
+  changePassword: "/api/user/update-login-key",
   budget: "/api/budget",
   expenses: "/api/expenses",
   summary: "/api/expenses/summary",
