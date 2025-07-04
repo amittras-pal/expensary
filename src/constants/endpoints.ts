@@ -15,7 +15,7 @@ export const ENDPOINTS = Object.freeze({
   plans: "/api/expense-plan",
   planDetails: "/api/expense-plan/details",
   downloadReport: "/api/reports",
-  changelog: "/api/app-info/changelog",
-  contributor: "/api/app-info/contributor",
+  changelog: "/api/sys-info/changelog",
+  contributor: "/api/sys-info/contributor",
   yearStats: "/api/statistics/year-stats",
 });
