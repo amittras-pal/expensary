@@ -30,7 +30,7 @@ import {
 } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
-import { eqSanityRX, time20Min } from "../constants/app";
+import { _20Min, eqSanityRX } from "../constants/app";
 import { useCurrentUser } from "../context/user.context";
 import { useErrorHandler } from "../hooks/error-handler";
 import { expenseSchema, ExpenseForm as FormSchema } from "../schemas/schemas";
@@ -131,7 +131,7 @@ export default function ExpenseForm({
     queryKey: ["categories"],
     queryFn: getCategories,
     onError,
-    staleTime: time20Min,
+    staleTime: _20Min,
   });
 
   const { data: plansRes, isLoading: loadingPlans } = useQuery({

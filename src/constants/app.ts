@@ -1,16 +1,9 @@
 import { MantineColor } from "@mantine/core";
 
-export const APP_TITLE = "Expensary";
+export const APP_TITLE = import.meta.env.VITE_APP_TITLE;
 export const primaryColor: MantineColor = "indigo";
 export const planDetailsPath = /\/plans\/\w+/;
-export const time20Min = 20 * 60 * 1000;
-export const blinkColors: MantineColor[] = [
-  "lime",
-  "blue",
-  "green",
-  "yellow",
-  "cyan",
-];
+export const _20Min = 20 * 60 * 1000;
 
 export const eqSanityRX = /([^\d.()+\-*/])/g;
 export const urlRX =

@@ -18,7 +18,10 @@ const About = lazy(() => import("./components/app-info/About"));
 const StatsEngine = lazy(() => import("./modules/statistics"));
 
 const root = ReactDOM.createRoot(document.getElementById("root")!);
-const client = new QueryClient();
+const client = new QueryClient({
+  defaultOptions: { queries: { refetchOnWindowFocus: false } },
+});
+
 const router = createBrowserRouter([
   {
     path: "/",
