@@ -23,7 +23,7 @@ import {
   RowCountHeader,
 } from "../../components/ag-grid/plugins/headers";
 import OverlayLoader from "../../components/loaders/OverlayLoader";
-import { APP_TITLE } from "../../constants/app";
+import { _20Min, APP_TITLE } from "../../constants/app";
 import { useCurrentUser } from "../../context/user.context";
 import { useErrorHandler } from "../../hooks/error-handler";
 import { useMediaMatch } from "../../hooks/media-match";
@@ -50,6 +50,10 @@ export default function Expenses() {
   const [targetExpense, setTargetExpense] = useState<ExpenseAtRow | null>(null);
   const [filterTotal, setFilterTotal] = useState(0);
   const [grid, setGrid] = useState<GridApi<IExpense> | null>(null);
+  const [budgetPayload, setBudgetPayload] = useState({
+    month: dayjs().month(),
+    year: dayjs().year(),
+  });
   const [payload, setPayload] = useState({
     startDate: dayjs().startOf("month").toDate(),
     endDate: dayjs().endOf("month").toDate(),
@@ -67,7 +71,6 @@ export default function Expenses() {
   const { data: listRes, isLoading: loadingList } = useQuery({
     queryKey: ["list", payload],
     queryFn: () => getExpenseList(payload),
-    refetchOnWindowFocus: false,
     onSuccess: (res) => {
       clearFilters();
       const total =
@@ -78,13 +81,10 @@ export default function Expenses() {
   });
 
   const { data: budgetRes, isLoading: loadingBudget } = useQuery({
-    queryKey: ["budget", payload],
-    queryFn: () =>
-      getBudget({
-        month: dayjs(payload.startDate).month(),
-        year: dayjs(payload.startDate).year(),
-      }),
+    queryKey: ["budget", budgetPayload],
+    queryFn: () => getBudget(budgetPayload),
     onError,
+    staleTime: _20Min,
   });
 
   const handleClose = (refreshData: IExpense | boolean) => {
@@ -233,6 +233,10 @@ export default function Expenses() {
       endDate: dayjs(e).endOf("month").toDate(),
       sort: { date: -1 },
     }));
+    setBudgetPayload({
+      month: dayjs(e).month(),
+      year: dayjs(e).year(),
+    });
   };
 
   return (

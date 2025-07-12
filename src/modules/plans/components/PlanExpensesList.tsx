@@ -74,7 +74,6 @@ export default function PlanExpensesList({
   } = useQuery({
     queryKey: ["list", payload],
     queryFn: () => getExpenseList(payload),
-    refetchOnWindowFocus: false,
     onSuccess: () => {
       grid?.destroyFilter("category.group");
       grid?.destroyFilter("category._id");
