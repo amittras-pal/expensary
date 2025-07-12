@@ -2,7 +2,6 @@ import {
   ActionIcon,
   Badge,
   Group,
-  MantineColor,
   Menu,
   Popover,
   Text,
@@ -24,6 +23,7 @@ import { useCurrentUser } from "../../../context/user.context";
 import { formatCurrency } from "../../../utils";
 import ExpenseDescription from "../../ExpenseDescription";
 import { MenuCellProps, MetaCellProps } from "../interfaces";
+import { amountColor } from "./utils";
 
 export function MetaCell({ data, page }: Readonly<MetaCellProps>) {
   const { primaryColor } = useMantineTheme();
@@ -175,16 +175,4 @@ export function AmountCell({
       {formatCurrency(value)}
     </Text>
   );
-}
-
-function amountColor(num: number): MantineColor | "dimmed" {
-  const sign = Math.sign(num);
-  switch (sign) {
-    case 1:
-      return "red";
-    case -1:
-      return "green";
-    default:
-      return "dimmed";
-  }
 }
