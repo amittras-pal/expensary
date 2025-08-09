@@ -1,3 +1,4 @@
+// DEPRECATED: Marked for deletion.
 import { Box, createStyles, Group } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";

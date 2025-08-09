@@ -18,5 +18,6 @@ export const ENDPOINTS = Object.freeze({
   changelog: "/sys-info/changelog",
   contributor: "/sys-info/contributor",
   categories: "/categories/get-all",
+  categoryGroups: "/categories/get-groups",
   yearStats: "/statistics/year-stats",
 });
