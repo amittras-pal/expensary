@@ -19,6 +19,9 @@ import { useMediaMatch } from "../../../hooks/media-match";
 import { getCategoryGroups } from "../../../services/categories.service";
 import { getYearStats } from "../../../services/statistics.service";
 import { abbreviateNumber, formatCurrency } from "../../../utils";
+import { LegendSelection } from "../types";
+import CategoryConfig from "./CategoryConfig";
+import YearSummary from "./YearSummary";
 
 const Arr12 = [...Array(12).keys()];
 
@@ -162,16 +165,30 @@ export default function YearTrend() {
   // Update Chart when any API response changes.
   // This is to avoid re-rendering the whole chart component.
   useEffect(() => {
+    const legends = [
+      "Budget",
+      "Spent",
+      ...(categoryRes?.response ?? []).map((cat) => cat.name),
+    ];
+
+    const instance = chartRef.current?.getEchartsInstance();
+    const legend = (instance?.getOption().legend as any)[0]
+      ?.selected as LegendSelection;
+
     const chartOpts: EChartsOption = {
       ...chartConfig,
+      // Configure legends for categories.
       legend: {
         ...(chartConfig?.legend ?? {}),
-        data: [
-          "Budget",
-          "Spent",
-          ...(categoryRes?.response ?? []).map((cat) => cat.name),
-        ],
+        data: legends,
+        selected:
+          // Maintain the selection from previous alterations, if any.
+          legends?.reduce(
+            (acc, curr) => ({ ...acc, [curr]: legend?.[curr] ?? false }),
+            {}
+          ) ?? {},
       },
+      // Configure bar data and line data
       series: [
         {
           name: "Budget",
@@ -188,7 +205,7 @@ export default function YearTrend() {
           itemStyle: {
             color: colors.gray[6],
             borderWidth: 3,
-            borderColor: colors.dark[6], // TODO: use theme colors
+            borderColor: colors.dark[6],
           },
         },
         {
@@ -204,29 +221,25 @@ export default function YearTrend() {
           },
         },
         ...Object.entries(categoriesSeries).map(
-          ([name, data]): BarSeriesOption => {
-            console.log(name);
-
-            return {
-              name,
-              type: "bar",
-              data: data,
-              stack: "total",
-              barWidth: isMobile ? 15 : 35,
-              emphasis: {
-                itemStyle: {
-                  color: colors[categoryColorMap[name]][4] ?? colors.gray[4],
-                },
-              },
+          ([name, data]): BarSeriesOption => ({
+            name,
+            type: "bar",
+            data: data,
+            stack: "total",
+            barWidth: isMobile ? 15 : 35,
+            emphasis: {
               itemStyle: {
-                color: colors[categoryColorMap[name]][6] ?? colors.gray[6],
+                color: colors[categoryColorMap[name]][4] ?? colors.gray[4],
               },
-            };
-          }
+            },
+            itemStyle: {
+              color: colors[categoryColorMap[name]][6] ?? colors.gray[6],
+            },
+          })
         ),
       ],
     };
-    const instance = chartRef.current?.getEchartsInstance();
+    // Update the chart.
     instance?.setOption(chartOpts, { notMerge: true });
   }, [budgets, categoriesSeries, spends]);
 
@@ -234,7 +247,9 @@ export default function YearTrend() {
     <>
       <Group spacing="sm">
         <Select
-          sx={{ flexGrow: 0, flexShrink: 1, flexBasis: "90px" }}
+          variant="default"
+          size="xs"
+          sx={{ flexGrow: 0, flexShrink: 1, flexBasis: "75px" }}
           value={year}
           onChange={(e) => setYear(e ?? "")}
           data={yearOptions}
@@ -242,11 +257,17 @@ export default function YearTrend() {
           autoFocus
           // disabled={disableChange}
         />
+        <CategoryConfig chart={chartRef.current} />
+        <YearSummary
+          year={year}
+          spends={spends.map((v) => v.value)}
+          budgets={budgets.map((v) => v.value)}
+        />
       </Group>
       <ReactECharts
         option={chartConfig}
         ref={chartRef}
-        style={{ width: "100%", height: "calc(100% - 38px)" }}
+        style={{ width: "100%", height: "calc(100% - 35px)" }}
       />
     </>
   );
