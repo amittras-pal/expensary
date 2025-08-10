@@ -9,7 +9,7 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import { BarSeriesOption, type EChartsOption } from "echarts";
+import { BarSeriesOption, LineSeriesOption, type EChartsOption } from "echarts";
 import ReactECharts from "echarts-for-react";
 import {
   Fragment,
@@ -259,16 +259,26 @@ export default function YearTrend() {
 
   const handleChartClick = useCallback(
     (event: BarLineClickParams) => {
-      if (
-        statsRes?.response.budgets.find((b) => b.month === event.dataIndex + 1)
-      ) {
+      let isFocusable: boolean = false;
+      if (event.seriesName === "Budget") {
+        isFocusable = event.value > 0;
+      } else {
+        const series = getChart()?.getOption().series as LineSeriesOption[];
+        const bSeries = series.find((s) => s.name === "Budget");
+        const budgetValue = bSeries?.data?.[event.dataIndex]?.valueOf() as {
+          value: number;
+        };
+        isFocusable = budgetValue.value > 0;
+      }
+
+      if (isFocusable) {
         const instance = getChart();
         instance?.dispatchAction({ type: "hideTip" });
         setFocusMonth(event.dataIndex);
         open();
       }
     },
-    [open, statsRes]
+    [open]
   );
 
   const events = useMemo(
@@ -441,33 +451,38 @@ function tooltipFormatter(series: any) {
         {series[0].axisValueLabel}
       </Text>
       {renderDetails ? (
-        series.map((item: any, index: number) => (
-          <Fragment key={item.seriesName}>
-            <Group position="apart">
-              {index > 1 && (
-                <Box
-                  sx={{
-                    width: 12,
-                    height: 12,
-                    borderRadius: 6,
-                    backgroundColor: item.color,
-                  }}
-                />
-              )}
-              <Text mr="auto" color={index < 2 ? item.color : "gray"}>
-                {item.seriesName}
-              </Text>
-              <Text
-                color={index < 2 ? item.color : "white"}
-                fw={index < 2 ? "bold" : "normal"}
-              >
-                {formatCurrency(item.value)}
-              </Text>
-            </Group>
-            {/* CHECK: add back in when category stacking is allowed. */}
-            {/* {index === 1 && <Divider variant="dashed" my="xs" color="dark" />} */}
-          </Fragment>
-        ))
+        <>
+          {series.map((item: any, index: number) => (
+            <Fragment key={item.seriesName}>
+              <Group position="apart">
+                {index > 1 && (
+                  <Box
+                    sx={{
+                      width: 12,
+                      height: 12,
+                      borderRadius: 6,
+                      backgroundColor: item.color,
+                    }}
+                  />
+                )}
+                <Text mr="auto" color={index < 2 ? item.color : "gray"}>
+                  {item.seriesName}
+                </Text>
+                <Text
+                  color={index < 2 ? item.color : "white"}
+                  fw={index < 2 ? "bold" : "normal"}
+                >
+                  {formatCurrency(item.value)}
+                </Text>
+              </Group>
+              {/* CHECK: add back in when category stacking is allowed. */}
+              {/* {index === 1 && <Divider variant="dashed" my="xs" color="dark" />} */}
+            </Fragment>
+          ))}
+          <Text fz="xs" fs="italic" mt="sm">
+            Click on the dot to view details
+          </Text>
+        </>
       ) : (
         <Text color="gray">Data Not Available!</Text>
       )}

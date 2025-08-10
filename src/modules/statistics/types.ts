@@ -14,7 +14,7 @@ export type BarLineClickParams = {
   seriesName: string;
   seriesType: "line" | "bar";
   type: "click";
-  value: "number";
+  value: number;
   event: { event: PointerEvent };
 };
 
