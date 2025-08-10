@@ -1,6 +1,7 @@
 import { ActionIcon, Divider, Popover, Text } from "@mantine/core";
 import { IconSparkles } from "@tabler/icons-react";
 import dayjs from "dayjs";
+import { useMediaMatch } from "../../../hooks/media-match";
 import { abbreviateNumber, formatCurrency } from "../../../utils";
 
 type YearSummaryProps = {
@@ -14,6 +15,8 @@ export default function YearSummary({
   spends,
   budgets,
 }: Readonly<YearSummaryProps>) {
+  const isMobile = useMediaMatch();
+
   const totalSpent = spends.reduce((total, curr) => total + curr, 0);
   const exceeded = spends.reduce(
     (exc, curr, i) => exc + (curr > budgets[i] ? 1 : 0),
@@ -29,7 +32,7 @@ export default function YearSummary({
           <IconSparkles size={18} />
         </ActionIcon>
       </Popover.Target>
-      <Popover.Dropdown fz="sm" sx={{ maxWidth: 400 }}>
+      <Popover.Dropdown fz="sm" sx={{ maxWidth: isMobile ? 240 : 400 }}>
         <Text fw="bold">Your {year} spends at a glance.</Text>
         <Divider my="xs" />
         <Text>
@@ -37,7 +40,7 @@ export default function YearSummary({
           <Text fw="bold" component="span">
             ₹{abbreviateNumber(totalSpent)}
           </Text>{" "}
-          this year. Your average budget of{" "}
+          this year. Your average budget was{" "}
           <Text fw="bold" component="span">
             {formatCurrency(avgBudget)}
           </Text>

@@ -1,16 +1,24 @@
 import {
   Box,
-  Divider,
+  Drawer,
   Group,
   Select,
   Text,
   useMantineTheme,
 } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { BarSeriesOption, type EChartsOption } from "echarts";
 import ReactECharts from "echarts-for-react";
-import { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { renderToString } from "react-dom/server";
 import { _20Min } from "../../../constants/app";
 import { useCurrentUser } from "../../../context/user.context";
@@ -19,19 +27,28 @@ import { useMediaMatch } from "../../../hooks/media-match";
 import { getCategoryGroups } from "../../../services/categories.service";
 import { getYearStats } from "../../../services/statistics.service";
 import { abbreviateNumber, formatCurrency } from "../../../utils";
-import { LegendSelection } from "../types";
-import CategoryConfig from "./CategoryConfig";
+import { BarLineClickParams, LegendSelection } from "../types";
+import MonthBreakdown from "./MonthBreakdown";
 import YearSummary from "./YearSummary";
 
 const Arr12 = [...Array(12).keys()];
 
 export default function YearTrend() {
   const [year, setYear] = useState<string>(dayjs().year().toString());
+  const [focusMonth, setFocusMonth] = useState<number>(-1);
+  const [focusDrawerOpen, { open, close }] = useDisclosure(false, {
+    onClose: () => setFocusMonth(-1),
+  });
+
   const { onError } = useErrorHandler();
 
   const isMobile = useMediaMatch();
   const { colors } = useMantineTheme();
   const { userData } = useCurrentUser();
+
+  const chartConfig = useDefaultChartConfig();
+  const chartRef = useRef<ReactECharts>(null);
+  const getChart = () => chartRef.current?.getEchartsInstance();
 
   const { data: categoryRes } = useQuery({
     queryKey: ["categories"],
@@ -40,7 +57,7 @@ export default function YearTrend() {
     staleTime: _20Min,
   });
 
-  const { data: statsRes } = useQuery({
+  const { data: statsRes, isLoading: loadingStats } = useQuery({
     queryKey: ["stats", year],
     queryFn: () => getYearStats(year),
     onError,
@@ -151,9 +168,6 @@ export default function YearTrend() {
     return series;
   }, [statsRes?.response, categoryRes?.response]);
 
-  const chartConfig = useDefaultChartConfig();
-  const chartRef = useRef<ReactECharts>(null);
-
   const categoryColorMap = useMemo(() => {
     const map: Record<string, string> = {};
     categoryRes?.response.forEach((category) => {
@@ -171,7 +185,7 @@ export default function YearTrend() {
       ...(categoryRes?.response ?? []).map((cat) => cat.name),
     ];
 
-    const instance = chartRef.current?.getEchartsInstance();
+    const instance = getChart();
     const legend = (instance?.getOption().legend as any)[0]
       ?.selected as LegendSelection;
 
@@ -243,6 +257,25 @@ export default function YearTrend() {
     instance?.setOption(chartOpts, { notMerge: true });
   }, [budgets, categoriesSeries, spends]);
 
+  const handleChartClick = useCallback(
+    (event: BarLineClickParams) => {
+      if (
+        statsRes?.response.budgets.find((b) => b.month === event.dataIndex + 1)
+      ) {
+        const instance = getChart();
+        instance?.dispatchAction({ type: "hideTip" });
+        setFocusMonth(event.dataIndex);
+        open();
+      }
+    },
+    [open, statsRes]
+  );
+
+  const events = useMemo(
+    () => ({ click: handleChartClick }),
+    [handleChartClick]
+  );
+
   return (
     <>
       <Group spacing="sm">
@@ -257,7 +290,8 @@ export default function YearTrend() {
           autoFocus
           // disabled={disableChange}
         />
-        <CategoryConfig chart={chartRef.current} />
+        {/* CHECK: Is this going to be useful? */}
+        {/* <CategoryConfig chart={chartRef.current} /> */}
         <YearSummary
           year={year}
           spends={spends.map((v) => v.value)}
@@ -265,19 +299,51 @@ export default function YearTrend() {
         />
       </Group>
       <ReactECharts
+        showLoading={loadingStats}
+        loadingOption={{
+          maskColor: colors.dark[7],
+          textColor: colors.gray[2],
+        }}
         option={chartConfig}
         ref={chartRef}
-        style={{ width: "100%", height: "calc(100% - 35px)" }}
+        onEvents={events}
+        style={{
+          width: "100%",
+          height: "calc(100% - 35px)",
+        }}
       />
+      <Drawer
+        opened={focusDrawerOpen}
+        onClose={close}
+        position="right"
+        size={isMobile ? "100vw" : "50vw"}
+        title={`Breakdown for ${dayjs().month(focusMonth).format("MMMM")}, 
+            ${dayjs().year(parseInt(year)).format("YYYY")}`}
+      >
+        {focusMonth > -1 && (
+          <MonthBreakdown
+            month={focusMonth}
+            year={parseInt(year)}
+            budget={
+              statsRes?.response.budgets.find((b) => b.month === focusMonth + 1)
+                ?.amount ?? 0
+            }
+          />
+        )}
+      </Drawer>
     </>
   );
 }
 
 function useDefaultChartConfig(): EChartsOption {
   const { colors } = useMantineTheme();
+  const isMobile = useMediaMatch();
 
   return useMemo(
     () => ({
+      textStyle: {
+        fontFamily: window.getComputedStyle(document.body).fontFamily,
+      },
       dataZoom: { type: "inside", zoomLock: true },
       legend: {
         show: false,
@@ -290,6 +356,7 @@ function useDefaultChartConfig(): EChartsOption {
       },
       tooltip: {
         trigger: "axis",
+        show: !isMobile,
         // valueFormatter: formatCurrency,
         position: (
           _point: any,
@@ -397,7 +464,8 @@ function tooltipFormatter(series: any) {
                 {formatCurrency(item.value)}
               </Text>
             </Group>
-            {index === 1 && <Divider variant="dashed" my="xs" color="dark" />}
+            {/* CHECK: add back in when category stacking is allowed. */}
+            {/* {index === 1 && <Divider variant="dashed" my="xs" color="dark" />} */}
           </Fragment>
         ))
       ) : (
