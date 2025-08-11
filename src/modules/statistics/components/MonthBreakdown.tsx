@@ -50,7 +50,7 @@ export default function MonthBreakdown(props: Readonly<MonthDonutProps>) {
         data: conditioned.map(([category, breakdown]) => ({
           name: category,
           itemStyle: {
-            color: colors[breakdown.subCategories[0].color][6],
+            color: colors[breakdown.subCategories[0].color][7],
           },
           children: breakdown.subCategories.map((subc) => ({
             name: subc.label,
@@ -60,9 +60,9 @@ export default function MonthBreakdown(props: Readonly<MonthDonutProps>) {
             },
           })),
         })),
-        radius: [60, "90%"],
+        radius: [40, "90%"],
         itemStyle: {
-          borderRadius: 6,
+          borderRadius: 4,
           borderWidth: 2,
           borderColor: colors.gray[9],
         },
@@ -102,6 +102,9 @@ export default function MonthBreakdown(props: Readonly<MonthDonutProps>) {
           dataZoom: handleClick,
         }}
       />
+      <Text ta="right" fz="xs" fs="italic" color="dimmed">
+        Click on any segment to focus.
+      </Text>
       <Divider my="xs" />
       <Text color="dimmed">
         Set Budget:{" "}
