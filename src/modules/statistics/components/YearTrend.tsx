@@ -50,8 +50,8 @@ export default function YearTrend() {
   const chartRef = useRef<ReactECharts>(null);
   const getChart = () => chartRef.current?.getEchartsInstance();
 
-  const { data: categoryRes } = useQuery({
-    queryKey: ["categories"],
+  const { data: categoryGroupsRes } = useQuery({
+    queryKey: ["category-groups"],
     queryFn: getCategoryGroups,
     onError,
     staleTime: _20Min,
@@ -61,7 +61,7 @@ export default function YearTrend() {
     queryKey: ["stats", year],
     queryFn: () => getYearStats(year),
     onError,
-    enabled: !!categoryRes,
+    enabled: !!categoryGroupsRes,
   });
 
   const yearOptions = useMemo(() => {
@@ -108,10 +108,10 @@ export default function YearTrend() {
   );
 
   const categoriesSeries = useMemo(() => {
-    if (!categoryRes || !statsRes) return {};
+    if (!categoryGroupsRes || !statsRes) return {};
 
     const series: Record<string, { value: number }[]> = Object.fromEntries(
-      categoryRes?.response.map((c) => [c.name, []]) ?? []
+      categoryGroupsRes?.response.map((c) => [c.name, []]) ?? []
     );
     Arr12.forEach((k) => {
       const list = statsRes?.response.trend.find((m) => m.month === k + 1);
@@ -166,15 +166,15 @@ export default function YearTrend() {
       }
     });
     return series;
-  }, [statsRes?.response, categoryRes?.response]);
+  }, [statsRes?.response, categoryGroupsRes?.response]);
 
   const categoryColorMap = useMemo(() => {
     const map: Record<string, string> = {};
-    categoryRes?.response.forEach((category) => {
+    categoryGroupsRes?.response.forEach((category) => {
       map[category.name] = category.color;
     });
     return map;
-  }, [categoryRes?.response]);
+  }, [categoryGroupsRes?.response]);
 
   // Update Chart when any API response changes.
   // This is to avoid re-rendering the whole chart component.
@@ -182,7 +182,7 @@ export default function YearTrend() {
     const legends = [
       "Budget",
       "Spent",
-      ...(categoryRes?.response ?? []).map((cat) => cat.name),
+      ...(categoryGroupsRes?.response ?? []).map((cat) => cat.name),
     ];
 
     const instance = getChart();

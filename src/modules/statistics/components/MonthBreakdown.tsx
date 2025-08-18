@@ -1,21 +1,14 @@
 import { Box, Divider, Text, useMantineTheme } from "@mantine/core";
-import { IconArrowElbowRight, IconTriangleFilled } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { EChartsOption } from "echarts";
 import ReactECharts from "echarts-for-react";
-import {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useMemo, useRef } from "react";
 import { useErrorHandler } from "../../../hooks/error-handler";
 import { getSummary } from "../../../services/expense.service";
 import { formatCurrency } from "../../../utils";
-import { SunBurstClickParams, TreePathInfo } from "../types";
+import { SunBurstClickParams } from "../types";
+import ListDetails, { ListDetailsHandle } from "./MonthBreakdownDetails";
 
 type MonthDonutProps = {
   month: number;
@@ -117,68 +110,9 @@ export default function MonthBreakdown(props: Readonly<MonthDonutProps>) {
         ref={listDetails}
         defaultTotal={summary?.response.total ?? 0}
         budget={props.budget}
+        month={props.month}
+        year={props.year}
       />
     </Box>
   );
 }
-
-type ListDetailsHandle = {
-  update: (value: TreePathInfo[]) => void;
-};
-
-const ListDetails = forwardRef<
-  ListDetailsHandle,
-  { defaultTotal: number; budget: number }
->(function Details(props, ref) {
-  const { colors } = useMantineTheme();
-  const [path, setPath] = useState<TreePathInfo[]>([
-    { name: "", value: props.defaultTotal, dataIndex: 0 },
-  ]);
-
-  useEffect(() => {
-    setPath([{ name: "", value: props.defaultTotal, dataIndex: 0 }]);
-  }, [props.defaultTotal]);
-
-  useImperativeHandle(ref, () => ({
-    update: (treePath: TreePathInfo[]) => {
-      if (treePath.length === 1 && path.length === 3) {
-        setPath((v) => v.slice(0, 2));
-      } else setPath(treePath);
-    },
-  }));
-
-  return (
-    <Box fw="sm">
-      {path.map((segment, i, { length }) => (
-        <Text color="dimmed" key={segment.name || "Total"} ml={i * 8}>
-          {i > 0 && (
-            <IconArrowElbowRight
-              size={12}
-              style={{ transform: "rotate(45deg)", marginRight: 8 }}
-            />
-          )}
-          {segment.name || "Total Spent"}:{" "}
-          <Text
-            component="span"
-            color={i === length - 1 ? colors.gray[1] : "dimmed"}
-          >
-            {formatCurrency(segment.value)}
-          </Text>
-          {i === 0 && (
-            <IconTriangleFilled
-              size={12}
-              style={{
-                margin: "0px 8px",
-                transform: props.budget > path[0].value ? "rotate(180deg)" : "",
-                color:
-                  props.budget > path[0].value
-                    ? colors.green[6]
-                    : colors.red[6],
-              }}
-            />
-          )}
-        </Text>
-      ))}
-    </Box>
-  );
-});
