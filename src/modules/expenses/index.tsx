@@ -8,20 +8,8 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import DeleteExpense from "../../components/DeleteExpense";
 import ExpenseForm from "../../components/ExpenseForm";
 import AgGridMod from "../../components/ag-grid/AgGridMod";
-import {
-  AmountCell,
-  CategoryCell,
-  MetaCell,
-  RowMenuCell,
-} from "../../components/ag-grid/plugins/cells";
-import {
-  CategoryFilter,
-  SubCategoryFilter,
-} from "../../components/ag-grid/plugins/filters";
-import {
-  MetaHeader,
-  RowCountHeader,
-} from "../../components/ag-grid/plugins/headers";
+import { RowMenuCell } from "../../components/ag-grid/plugins/cells";
+import generateColDef from "../../components/ag-grid/utils/columns";
 import OverlayLoader from "../../components/loaders/OverlayLoader";
 import { _20Min, APP_TITLE } from "../../constants/app";
 import { useCurrentUser } from "../../context/user.context";
@@ -29,7 +17,7 @@ import { useErrorHandler } from "../../hooks/error-handler";
 import { useMediaMatch } from "../../hooks/media-match";
 import { getBudget } from "../../services/budget.service";
 import { getExpenseList } from "../../services/expense.service";
-import { dateFormatter, formatCurrency } from "../../utils";
+import { formatCurrency } from "../../utils";
 
 interface ExpenseAtRow extends IExpense {
   index: number;
@@ -143,79 +131,24 @@ export default function Expenses() {
   );
 
   const columns = useMemo((): ColDef[] => {
-    return [
-      {
-        headerName: "",
-        headerComponent: RowCountHeader,
-        cellRenderer: RowMenuCell,
-        cellRendererParams: {
-          onEditExpense: editExpense,
-          onDeleteExpense: deleteExpense,
+    return generateColDef([
+      [
+        "rowMenu",
+        {
+          cellRenderer: RowMenuCell,
+          cellRendererParams: {
+            onEditExpense: editExpense,
+            onDeleteExpense: deleteExpense,
+          },
         },
-        field: "_id",
-        pinned: "left",
-        maxWidth: 50,
-        headerClass: "no-pad",
-        cellStyle: {
-          paddingLeft: 0,
-          paddingRight: 0,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        },
-      },
-      {
-        headerName: "Description",
-        field: "description",
-        maxWidth: 50,
-        cellRenderer: MetaCell,
-        cellRendererParams: { page: "budget" },
-        headerComponent: MetaHeader,
-        headerClass: "no-pad",
-        cellStyle: {
-          paddingLeft: 0,
-          paddingRight: 0,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        },
-      },
-      {
-        headerName: "Title",
-        field: "title",
-        minWidth: isMobile ? 240 : 320,
-      },
-      {
-        headerName: "Category",
-        field: "category.group",
-        minWidth: 240,
-        cellRenderer: CategoryCell,
-        filter: CategoryFilter,
-      },
-      {
-        headerName: "Sub Category",
-        colId: "category._id",
-        field: "category.label",
-        minWidth: 240,
-        cellRenderer: CategoryCell,
-        filter: SubCategoryFilter,
-      },
-      {
-        headerName: "Amount",
-        field: "amount",
-        minWidth: 140,
-        sortable: true,
-        cellRenderer: AmountCell,
-      },
-      {
-        headerName: "Date",
-        field: "date",
-        sortable: true,
-        minWidth: 160,
-        initialSort: "desc",
-        valueFormatter: dateFormatter,
-      },
-    ];
+      ],
+      ["description", {}],
+      ["title", { minWidth: isMobile ? 240 : 320 }],
+      ["category", {}],
+      ["subCategory", {}],
+      ["amount", {}],
+      ["date", {}],
+    ]);
   }, [isMobile, deleteExpense, editExpense]);
 
   const updateFilterTotal = (grid: FilterChangedEvent<IExpense>) => {

@@ -11,18 +11,13 @@ import {
   useState,
 } from "react";
 import AgGridMod from "../../../components/ag-grid/AgGridMod";
-import {
-  AmountCell,
-  CategoryCell,
-  MetaCell,
-} from "../../../components/ag-grid/plugins/cells";
-import { MetaHeader } from "../../../components/ag-grid/plugins/headers";
+import generateColDef from "../../../components/ag-grid/utils/columns";
 import { _20Min } from "../../../constants/app";
 import { useErrorHandler } from "../../../hooks/error-handler";
 import { useMediaMatch } from "../../../hooks/media-match";
 import { getCategories } from "../../../services/categories.service";
 import { searchExpenses } from "../../../services/expense.service";
-import { dateFormatter, formatCurrency } from "../../../utils";
+import { formatCurrency } from "../../../utils";
 import { TreePathInfo } from "../types";
 
 export type ListDetailsHandle = {
@@ -108,72 +103,22 @@ export default forwardRef<ListDetailsHandle, ListDetailsProps>(
     };
 
     const columns = useMemo((): ColDef[] => {
-      return [
-        {
-          headerName: "",
-          valueFormatter: ({ node }) => ((node?.rowIndex ?? 0) + 1).toString(),
-          field: "_id",
-          pinned: "left",
-          maxWidth: 50,
-          headerClass: "no-pad",
-          cellStyle: {
-            paddingLeft: 0,
-            paddingRight: 0,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
+      return generateColDef([
+        [
+          "rowMenu",
+          {
+            headerComponent: undefined,
+            valueFormatter: ({ node }) =>
+              ((node?.rowIndex ?? 0) + 1).toString(),
           },
-        },
-        {
-          headerName: "Description",
-          field: "description",
-          maxWidth: 50,
-          cellRenderer: MetaCell,
-          cellRendererParams: { page: "budget" },
-          headerComponent: MetaHeader,
-          headerClass: "no-pad",
-          cellStyle: {
-            paddingLeft: 0,
-            paddingRight: 0,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          },
-        },
-        {
-          headerName: "Title",
-          field: "title",
-          minWidth: isMobile ? 240 : 320,
-        },
-        {
-          headerName: "Category",
-          field: "category.group",
-          minWidth: 240,
-          cellRenderer: CategoryCell,
-        },
-        {
-          headerName: "Sub Category",
-          colId: "category._id",
-          field: "category.label",
-          minWidth: 240,
-          cellRenderer: CategoryCell,
-        },
-        {
-          headerName: "Amount",
-          field: "amount",
-          minWidth: 140,
-          sortable: true,
-          cellRenderer: AmountCell,
-        },
-        {
-          headerName: "Date",
-          field: "date",
-          sortable: true,
-          minWidth: 160,
-          initialSort: "desc",
-          valueFormatter: dateFormatter,
-        },
-      ];
+        ],
+        ["description", {}],
+        ["title", { minWidth: isMobile ? 240 : 320 }],
+        ["category", { filter: undefined }],
+        ["subCategory", { filter: undefined }],
+        ["amount", {}],
+        ["date", {}],
+      ]);
     }, [isMobile]);
 
     return (
