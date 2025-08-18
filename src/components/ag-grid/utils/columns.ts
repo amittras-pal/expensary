@@ -105,10 +105,10 @@ const coloumnConfigMap = {
 };
 
 export default function generateColDef(
-  defs: [keyof typeof coloumnConfigMap, ColDef][]
+  defs: [keyof typeof coloumnConfigMap, ColDef?][]
 ): ColDef[] {
   return defs.map((def) => ({
-    ...coloumnConfigMap[def[0]],
-    ...def[1],
+    ...coloumnConfigMap[def[0]], // add the default properties defined for the given column.
+    ...(def[1] ?? {}), // override or add config using custom definitions.
   }));
 }

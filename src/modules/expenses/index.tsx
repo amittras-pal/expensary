@@ -142,12 +142,12 @@ export default function Expenses() {
           },
         },
       ],
-      ["description", {}],
+      ["description"],
       ["title", { minWidth: isMobile ? 240 : 320 }],
-      ["category", {}],
-      ["subCategory", {}],
-      ["amount", {}],
-      ["date", {}],
+      ["category"],
+      ["subCategory"],
+      ["amount"],
+      ["date"],
     ]);
   }, [isMobile, deleteExpense, editExpense]);
 

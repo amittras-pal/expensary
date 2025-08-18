@@ -298,10 +298,10 @@ export default function YearTrend() {
           data={yearOptions}
           mb={0}
           autoFocus
-          // disabled={disableChange}
         />
-        {/* CHECK: Is this going to be useful? */}
-        {/* <CategoryConfig chart={chartRef.current} /> */}
+        {/* CHECK: 
+            Use the 'CategoryConfig' here if category bars are required on the same chart. 
+            Computation is already implemented. */}
         <YearSummary
           year={year}
           spends={spends.map((v) => v.value)}
@@ -367,7 +367,6 @@ function useDefaultChartConfig(): EChartsOption {
       tooltip: {
         trigger: "axis",
         show: !isMobile,
-        // valueFormatter: formatCurrency,
         position: (
           _point: any,
           _params: any,
@@ -401,7 +400,7 @@ function useDefaultChartConfig(): EChartsOption {
           formatter: (v: number) => dayjs().month(v).format("MMM"),
           color: colors.gray[5],
           rotate: 90,
-          interval: 0, // set to 1 for mobile.
+          interval: 0,
         },
         splitLine: {
           lineStyle: {
@@ -475,8 +474,7 @@ function tooltipFormatter(series: any) {
                   {formatCurrency(item.value)}
                 </Text>
               </Group>
-              {/* CHECK: add back in when category stacking is allowed. */}
-              {/* {index === 1 && <Divider variant="dashed" my="xs" color="dark" />} */}
+              {/* CHECK: add a 'Divider' below when category data is included. */}
             </Fragment>
           ))}
           <Text fz="xs" fs="italic" mt="sm">

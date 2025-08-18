@@ -98,12 +98,12 @@ export default function PlanExpensesList({
           },
         },
       ],
-      ["description", {}],
+      ["description"],
       ["title", { minWidth: isMobile ? 240 : 320 }],
-      ["category", {}],
-      ["subCategory", {}],
-      ["amount", {}],
-      ["date", {}],
+      ["category"],
+      ["subCategory"],
+      ["amount"],
+      ["date"],
     ]);
   }, [isMobile, onExpenseAction, plan]);
 

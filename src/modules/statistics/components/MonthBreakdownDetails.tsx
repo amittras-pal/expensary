@@ -112,12 +112,12 @@ export default forwardRef<ListDetailsHandle, ListDetailsProps>(
               ((node?.rowIndex ?? 0) + 1).toString(),
           },
         ],
-        ["description", {}],
+        ["description"],
         ["title", { minWidth: isMobile ? 240 : 320 }],
         ["category", { filter: undefined }],
         ["subCategory", { filter: undefined }],
-        ["amount", {}],
-        ["date", {}],
+        ["amount"],
+        ["date"],
       ]);
     }, [isMobile]);
 
