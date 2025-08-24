@@ -13,27 +13,14 @@ import { ColDef, GridApi } from "ag-grid-community";
 import { useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import AgGridMod from "../../../components/ag-grid/AgGridMod";
-import {
-  AmountCell,
-  CategoryCell,
-  MetaCell,
-  RowMenuCell,
-} from "../../../components/ag-grid/plugins/cells";
-import {
-  CategoryFilter,
-  SubCategoryFilter,
-} from "../../../components/ag-grid/plugins/filters";
-import {
-  MetaHeader,
-  RowCountHeader,
-} from "../../../components/ag-grid/plugins/headers";
+import { RowMenuCell } from "../../../components/ag-grid/plugins/cells";
+import generateColDef from "../../../components/ag-grid/utils/columns";
 import OverlayLoader from "../../../components/loaders/OverlayLoader";
 import { useErrorHandler } from "../../../hooks/error-handler";
 import { useMediaMatch } from "../../../hooks/media-match";
 import { getExpenseList } from "../../../services/expense.service";
 import { copyExpensesToBudget } from "../../../services/plans.service";
 import { usePlanExpensesStyles } from "../../../theme/modules/plan.styles";
-import { dateFormatter } from "../../../utils";
 
 interface IPlanExpensesListProps {
   plan: IExpensePlan;
@@ -96,98 +83,28 @@ export default function PlanExpensesList({
   });
 
   const columns = useMemo((): ColDef[] => {
-    return [
-      {
-        headerName: "",
-        field: "_id",
-        maxWidth: 50,
-        hide: plan.open,
-        pinned: "left",
-        headerClass: "no-pad",
-        cellStyle: {
-          paddingLeft: 0,
-          paddingRight: 0,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
+    return generateColDef([
+      ["rowSelection", { hide: plan.open }],
+      [
+        "rowMenu",
+        {
+          hide: !plan.open,
+          cellRenderer: RowMenuCell,
+          cellRendererParams: {
+            onEditExpense: (data: IExpense) => onExpenseAction(data, "edit"),
+            onDeleteExpense: (data: IExpense) =>
+              onExpenseAction(data, "delete"),
+            plan: plan,
+          },
         },
-        checkboxSelection: true,
-        headerCheckboxSelection: true,
-      },
-      {
-        headerName: "",
-        headerComponent: RowCountHeader,
-        cellRenderer: RowMenuCell,
-        hide: !plan.open,
-        cellRendererParams: {
-          onEditExpense: (data: IExpense) => onExpenseAction(data, "edit"),
-          onDeleteExpense: (data: IExpense) => onExpenseAction(data, "delete"),
-          plan: plan,
-        },
-        field: "_id",
-        pinned: "left",
-        maxWidth: 50,
-        headerClass: "no-pad",
-        cellStyle: {
-          paddingLeft: 0,
-          paddingRight: 0,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        },
-      },
-      {
-        headerName: "Description",
-        field: "description",
-        maxWidth: 50,
-        cellRenderer: MetaCell,
-        cellRendererParams: { page: "plan" },
-        headerComponent: MetaHeader,
-        headerClass: "no-pad",
-        cellStyle: {
-          paddingLeft: 0,
-          paddingRight: 0,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        },
-      },
-      {
-        headerName: "Title",
-        field: "title",
-        minWidth: isMobile ? 240 : 320,
-      },
-      {
-        headerName: "Category",
-        field: "category.group",
-        minWidth: 240,
-        cellRenderer: CategoryCell,
-        filter: CategoryFilter,
-      },
-      {
-        headerName: "Sub Category",
-        colId: "category._id",
-        field: "category.label",
-        minWidth: 240,
-        cellRenderer: CategoryCell,
-        filter: SubCategoryFilter,
-      },
-      {
-        headerName: "Amount",
-        field: "amount",
-        minWidth: 140,
-        sortable: true,
-        cellRenderer: AmountCell,
-      },
-      {
-        headerName: "Date",
-        field: "date",
-        sortable: true,
-        minWidth: 160,
-        initialSort: "desc",
-        valueFormatter: dateFormatter,
-      },
-    ];
+      ],
+      ["description"],
+      ["title", { minWidth: isMobile ? 240 : 320 }],
+      ["category"],
+      ["subCategory"],
+      ["amount"],
+      ["date"],
+    ]);
   }, [isMobile, onExpenseAction, plan]);
 
   return (

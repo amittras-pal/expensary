@@ -5,7 +5,7 @@ import { ResponseBody } from "./response.type";
 export function loginUser(payload: {
   email: string;
   pin: string;
-}): Promise<ResponseBody<{ user: IUser; token: string }>> {
+}): Promise<ResponseBody<IUser>> {
   return axios.post(ENDPOINTS.login, payload).then((res) => res.data);
 }
 
@@ -34,4 +34,8 @@ export function changeUserPassword(payload: {
   return axios
     .post<ResponseBody<undefined>>(ENDPOINTS.changePassword, payload)
     .then((res) => res.data);
+}
+
+export function logoutUser() {
+  return axios.post<ResponseBody<undefined>>(ENDPOINTS.logout);
 }

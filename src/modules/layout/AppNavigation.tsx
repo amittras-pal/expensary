@@ -34,7 +34,7 @@ export default function AppNavigation({ onChange, ...rest }: SidebarProps) {
   const { classes: btnClasses } = useNavBtnStyle({ active: false });
   const isMobile = useMediaMatch();
 
-  const { logoutUser } = useLogoutHandler();
+  const { logout, loggingOut } = useLogoutHandler();
   const confirmLogout = () =>
     modals.openConfirmModal({
       title: "Confirm Logout",
@@ -48,9 +48,10 @@ export default function AppNavigation({ onChange, ...rest }: SidebarProps) {
       confirmProps: {
         variant: "filled",
         color: "red",
+        loading: loggingOut,
         leftIcon: <IconLogout />,
       },
-      onConfirm: logoutUser,
+      onConfirm: logout,
     });
   return (
     <Navbar
