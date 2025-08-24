@@ -36,11 +36,11 @@ export default function ChangePassword() {
     });
   };
 
-  const { logoutUser } = useLogoutHandler();
+  const { logout } = useLogoutHandler();
   const { mutate: updatePwd, isLoading } = useMutation({
     mutationFn: changeUserPassword,
     onError,
-    onSuccess: logoutUser,
+    onSuccess: () => logout(),
   });
 
   const submit: SubmitHandler<PwdChangeForm> = (values) => {

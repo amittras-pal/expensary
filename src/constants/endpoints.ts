@@ -5,6 +5,7 @@ export const ENDPOINTS = Object.freeze({
   userInfo: "/user/details",
   updateUser: "/user/update",
   changePassword: "/user/update-login-key",
+  logout: "/user/logout",
   budget: "/budget",
   expenses: "/expenses",
   summary: "/expenses/summary",
