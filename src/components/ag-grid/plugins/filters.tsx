@@ -9,7 +9,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { time20Min } from "../../../constants/app";
+import { _20Min } from "../../../constants/app";
 import { useErrorHandler } from "../../../hooks/error-handler";
 import { getCategories } from "../../../services/categories.service";
 import { useCategoryFilterStyles } from "../../../theme/modules/grid.styles";
@@ -25,7 +25,7 @@ function Category(props: IFilterParams<IExpense>, ref: any) {
     queryKey: ["categories"],
     queryFn: getCategories,
     onError,
-    staleTime: time20Min,
+    staleTime: _20Min,
   });
 
   const categoryOptions = useMemo(() => {
@@ -122,7 +122,7 @@ function SubCategory(props: IFilterParams<IExpense>, ref: any) {
     queryKey: ["categories"],
     queryFn: getCategories,
     onError,
-    staleTime: time20Min,
+    staleTime: _20Min,
   });
 
   const categoryOptions: SubCategoryOption[] = useMemo(() => {
