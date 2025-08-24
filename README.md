@@ -16,7 +16,6 @@ The application is paired with the corressponding backend application which can 
 
 ```
 VITE_API_BASE_URL=<local_port_of_your_backend>
-VITE_APP_TITLE=<app_title_for_header_title>
 NODE_ENV=development
 ```
 

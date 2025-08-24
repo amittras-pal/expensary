@@ -9,7 +9,11 @@ interface IAgGridModProps extends AgGridReactProps {
 
 type AgGridModProps = Omit<
   IAgGridModProps,
-  "animateRows" | "noRowsOverlayComponent" | "defaultColDef"
+  | "rowHeight"
+  | "headerHeight"
+  | "animateRows"
+  | "noRowsOverlayComponent"
+  | "defaultColDef"
 >;
 
 export default function AgGridMod({
@@ -18,13 +22,13 @@ export default function AgGridMod({
 }: Readonly<AgGridModProps>) {
   return (
     <div
-      className={`ag-theme-material mtrace-ag-mod ${props.className}`}
+      className="ag-theme-material mtrace-ag-mod"
       style={{ width: "100%", height }}
     >
       <AgGridReact
         {...props}
-        rowHeight={props.rowHeight ?? 60}
-        headerHeight={props.headerHeight ?? 60}
+        rowHeight={60}
+        headerHeight={60}
         animateRows={false}
         noRowsOverlayComponent={NoDataOverlay}
         defaultColDef={{

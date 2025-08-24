@@ -26,7 +26,7 @@ import {
 } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import BudgetItem from "../../components/BudgetItem";
 import ContainedLoader from "../../components/loaders/ContainedLoader";
@@ -38,7 +38,6 @@ import { getBudget } from "../../services/budget.service";
 import { getSummary } from "../../services/expense.service";
 import { useDashboardStyles } from "../../theme/modules/dashboard.styles";
 import { formatCurrency, getPercentage, getSeverityColor } from "../../utils";
-import { _20Min } from "../../constants/app";
 
 interface IBudgetBreakdownProps {
   showForm: () => void;
@@ -57,10 +56,6 @@ export default function BudgetBreakdown({
   const { onError } = useErrorHandler();
   const isMobile = useMediaMatch();
   const { classes } = useDashboardStyles();
-  const [budgetPayload, setBudgetPayload] = useState({
-    month: dayjs().month(),
-    year: dayjs().year(),
-  });
   const [payload, setPayload] = useState({
     startDate: dayjs().startOf("month").toDate(),
     endDate: dayjs().endOf("month").toDate(),
@@ -81,18 +76,30 @@ export default function BudgetBreakdown({
   ]);
 
   const { data: budgetRes } = useQuery({
-    queryKey: ["budget", budgetPayload],
-    queryFn: () => getBudget(budgetPayload),
+    queryKey: ["budget", payload],
+    queryFn: () =>
+      getBudget({
+        month: dayjs(payload.startDate).month(),
+        year: dayjs(payload.startDate).year(),
+      }),
     onError,
-    staleTime: _20Min,
   });
 
-  const { data: summary, isLoading } = useQuery({
+  const {
+    data: summary,
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["summary", payload],
     queryFn: () => getSummary(null, payload),
-    staleTime: 300 * 1000,
+    refetchOnWindowFocus: false,
+    staleTime: 120 * 1000,
     onError,
   });
+
+  useEffect(() => {
+    if (userData) refetch();
+  }, [refetch, userData]);
 
   const handleSelection: React.ChangeEventHandler<HTMLInputElement> = ({
     currentTarget,
@@ -128,10 +135,6 @@ export default function BudgetBreakdown({
       startDate: dayjs(e).startOf("month").toDate(),
       endDate: dayjs(e).endOf("month").toDate(),
     }));
-    setBudgetPayload({
-      month: dayjs(e).month(),
-      year: dayjs(e).year(),
-    });
   };
 
   if (isLoading)

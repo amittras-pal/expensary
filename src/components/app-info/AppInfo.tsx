@@ -19,9 +19,7 @@ import { useNavBtnStyle } from "../../theme/modules/layout.styles";
 import Changelog from "./Changelog";
 
 export default function AppInfo(
-  props: Readonly<
-    GroupProps & { type: "menu" | "text"; onLinkClick?: () => void }
-  >
+  props: Readonly<GroupProps & { type: "menu" | "text" }>
 ) {
   const [showVersions, { open, close }] = useDisclosure(false);
 
@@ -57,7 +55,6 @@ export default function AppInfo(
             td="underline"
             fz="xs"
             color="dimmed"
-            onClick={props.onLinkClick}
           >
             About
           </Text>

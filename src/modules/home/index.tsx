@@ -29,6 +29,7 @@ export default function Home() {
   const { isLoading, data: list } = useQuery({
     queryKey: ["recent-transactions", userData?.editWindow ?? 7],
     queryFn: () => getRecentTransactions(userData?.editWindow ?? 7),
+    refetchOnWindowFocus: false,
     onError,
   });
 

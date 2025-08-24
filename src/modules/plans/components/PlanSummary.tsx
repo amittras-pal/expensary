@@ -23,8 +23,9 @@ function PlanSummary() {
   const params = useParams();
 
   const { data: summary, isLoading: loadingSummary } = useQuery({
-    queryKey: ["plan-summary", params.id],
+    queryKey: ["summary", params.id],
     queryFn: () => getSummary(params.id ?? ""),
+    refetchOnWindowFocus: false,
     staleTime: 5 * 60 * 1000,
     onError,
   });

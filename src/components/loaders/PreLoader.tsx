@@ -18,7 +18,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { _20Min, APP_TITLE } from "../../constants/app";
+import { APP_TITLE, time20Min } from "../../constants/app";
 import { pingServer } from "../../services/server.service";
 import BrandLogo from "./logo-stroke.svg?react";
 import BrandLoader from "./LogoLoader";
@@ -45,7 +45,7 @@ export default function PreLoader(props: Readonly<PropsWithChildren>) {
   const { isLoading, isError } = useQuery({
     queryKey: ["wake-server"],
     queryFn: pingServer,
-    staleTime: _20Min,
+    staleTime: time20Min,
     refetchOnWindowFocus: true,
   });
 

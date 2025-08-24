@@ -13,8 +13,8 @@ export function getSummary(
   return axios
     .get(ENDPOINTS.summary, {
       params: {
-        startDate: plan ? null : payload?.startDate,
-        endDate: plan ? null : payload?.endDate,
+        firstDay: plan ? null : payload?.startDate,
+        lastDay: plan ? null : payload?.endDate,
         plan: plan,
       },
     })

@@ -8,16 +8,28 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import DeleteExpense from "../../components/DeleteExpense";
 import ExpenseForm from "../../components/ExpenseForm";
 import AgGridMod from "../../components/ag-grid/AgGridMod";
-import { RowMenuCell } from "../../components/ag-grid/plugins/cells";
-import generateColDef from "../../components/ag-grid/utils/columns";
+import {
+  AmountCell,
+  CategoryCell,
+  MetaCell,
+  RowMenuCell,
+} from "../../components/ag-grid/plugins/cells";
+import {
+  CategoryFilter,
+  SubCategoryFilter,
+} from "../../components/ag-grid/plugins/filters";
+import {
+  MetaHeader,
+  RowCountHeader,
+} from "../../components/ag-grid/plugins/headers";
 import OverlayLoader from "../../components/loaders/OverlayLoader";
-import { _20Min, APP_TITLE } from "../../constants/app";
+import { APP_TITLE } from "../../constants/app";
 import { useCurrentUser } from "../../context/user.context";
 import { useErrorHandler } from "../../hooks/error-handler";
 import { useMediaMatch } from "../../hooks/media-match";
 import { getBudget } from "../../services/budget.service";
 import { getExpenseList } from "../../services/expense.service";
-import { formatCurrency } from "../../utils";
+import { dateFormatter, formatCurrency } from "../../utils";
 
 interface ExpenseAtRow extends IExpense {
   index: number;
@@ -38,10 +50,6 @@ export default function Expenses() {
   const [targetExpense, setTargetExpense] = useState<ExpenseAtRow | null>(null);
   const [filterTotal, setFilterTotal] = useState(0);
   const [grid, setGrid] = useState<GridApi<IExpense> | null>(null);
-  const [budgetPayload, setBudgetPayload] = useState({
-    month: dayjs().month(),
-    year: dayjs().year(),
-  });
   const [payload, setPayload] = useState({
     startDate: dayjs().startOf("month").toDate(),
     endDate: dayjs().endOf("month").toDate(),
@@ -59,6 +67,7 @@ export default function Expenses() {
   const { data: listRes, isLoading: loadingList } = useQuery({
     queryKey: ["list", payload],
     queryFn: () => getExpenseList(payload),
+    refetchOnWindowFocus: false,
     onSuccess: (res) => {
       clearFilters();
       const total =
@@ -69,10 +78,13 @@ export default function Expenses() {
   });
 
   const { data: budgetRes, isLoading: loadingBudget } = useQuery({
-    queryKey: ["budget", budgetPayload],
-    queryFn: () => getBudget(budgetPayload),
+    queryKey: ["budget", payload],
+    queryFn: () =>
+      getBudget({
+        month: dayjs(payload.startDate).month(),
+        year: dayjs(payload.startDate).year(),
+      }),
     onError,
-    staleTime: _20Min,
   });
 
   const handleClose = (refreshData: IExpense | boolean) => {
@@ -131,24 +143,79 @@ export default function Expenses() {
   );
 
   const columns = useMemo((): ColDef[] => {
-    return generateColDef([
-      [
-        "rowMenu",
-        {
-          cellRenderer: RowMenuCell,
-          cellRendererParams: {
-            onEditExpense: editExpense,
-            onDeleteExpense: deleteExpense,
-          },
+    return [
+      {
+        headerName: "",
+        headerComponent: RowCountHeader,
+        cellRenderer: RowMenuCell,
+        cellRendererParams: {
+          onEditExpense: editExpense,
+          onDeleteExpense: deleteExpense,
         },
-      ],
-      ["description"],
-      ["title", { minWidth: isMobile ? 240 : 320 }],
-      ["category"],
-      ["subCategory"],
-      ["amount"],
-      ["date"],
-    ]);
+        field: "_id",
+        pinned: "left",
+        maxWidth: 50,
+        headerClass: "no-pad",
+        cellStyle: {
+          paddingLeft: 0,
+          paddingRight: 0,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        },
+      },
+      {
+        headerName: "Description",
+        field: "description",
+        maxWidth: 50,
+        cellRenderer: MetaCell,
+        cellRendererParams: { page: "budget" },
+        headerComponent: MetaHeader,
+        headerClass: "no-pad",
+        cellStyle: {
+          paddingLeft: 0,
+          paddingRight: 0,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        },
+      },
+      {
+        headerName: "Title",
+        field: "title",
+        minWidth: isMobile ? 240 : 320,
+      },
+      {
+        headerName: "Category",
+        field: "category.group",
+        minWidth: 240,
+        cellRenderer: CategoryCell,
+        filter: CategoryFilter,
+      },
+      {
+        headerName: "Sub Category",
+        colId: "category._id",
+        field: "category.label",
+        minWidth: 240,
+        cellRenderer: CategoryCell,
+        filter: SubCategoryFilter,
+      },
+      {
+        headerName: "Amount",
+        field: "amount",
+        minWidth: 140,
+        sortable: true,
+        cellRenderer: AmountCell,
+      },
+      {
+        headerName: "Date",
+        field: "date",
+        sortable: true,
+        minWidth: 160,
+        initialSort: "desc",
+        valueFormatter: dateFormatter,
+      },
+    ];
   }, [isMobile, deleteExpense, editExpense]);
 
   const updateFilterTotal = (grid: FilterChangedEvent<IExpense>) => {
@@ -166,10 +233,6 @@ export default function Expenses() {
       endDate: dayjs(e).endOf("month").toDate(),
       sort: { date: -1 },
     }));
-    setBudgetPayload({
-      month: dayjs(e).month(),
-      year: dayjs(e).year(),
-    });
   };
 
   return (

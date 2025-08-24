@@ -8,7 +8,6 @@ import { useErrorHandler } from "../../hooks/error-handler";
 import { BudgetForm, budgetFormSchema } from "../../schemas/schemas";
 import { createBudget, getBudget } from "../../services/budget.service";
 import { getAuthToken } from "../../utils";
-import { _20Min } from "../../constants/app";
 
 const BudgetMonitor = () => {
   const { onError } = useErrorHandler();
@@ -30,9 +29,9 @@ const BudgetMonitor = () => {
     queryKey: ["budget", payload],
     queryFn: () => getBudget(payload),
     retry: 1,
+    refetchOnWindowFocus: false,
     enabled: Boolean(getAuthToken()),
     onError,
-    staleTime: _20Min,
   });
 
   const { mutate: create, isLoading: creating } = useMutation({

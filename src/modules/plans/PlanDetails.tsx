@@ -1,19 +1,7 @@
-import {
-  ActionIcon,
-  Modal,
-  Tabs,
-  Tooltip,
-  useMantineTheme,
-} from "@mantine/core";
+import { ActionIcon, Modal, Tabs, useMantineTheme } from "@mantine/core";
 import { useDisclosure, useDocumentTitle, useHotkeys } from "@mantine/hooks";
-import { notifications } from "@mantine/notifications";
-import {
-  IconDownload,
-  IconInfoCircle,
-  IconPlus,
-  IconTableDown,
-} from "@tabler/icons-react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { IconInfoCircle, IconPlus } from "@tabler/icons-react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import DeleteExpense from "../../components/DeleteExpense";
@@ -21,9 +9,7 @@ import ExpenseForm from "../../components/ExpenseForm";
 import OverlayLoader from "../../components/loaders/OverlayLoader";
 import { APP_TITLE } from "../../constants/app";
 import { useErrorHandler } from "../../hooks/error-handler";
-import { exportPlan } from "../../services/export.service";
 import { getPlanDetails } from "../../services/plans.service";
-import { downloadFile } from "../../utils";
 import PlanDetailsPanel from "./components/PlanDetailsPanel";
 import PlanExpensesList from "./components/PlanExpensesList";
 import PlanSummary from "./components/PlanSummary";
@@ -62,7 +48,7 @@ export default function PlanDetails() {
 
     if (refreshData) {
       client.invalidateQueries(["list", payload]);
-      client.invalidateQueries(["plan-summary", params.id]);
+      client.invalidateQueries(["summary", params.id]);
       client.invalidateQueries(["plan-details", params.id]);
     }
 
@@ -86,20 +72,6 @@ export default function PlanDetails() {
   };
 
   useHotkeys([["N", formModal.open]]);
-
-  const { mutate: downloadPlan, isLoading: downloadingPlan } = useMutation({
-    mutationFn: exportPlan,
-    onSuccess: (res) => {
-      downloadFile(res, `Plan Export - ${params.id}.xlsx`);
-      notifications.show({
-        message: "",
-        title: "Plan Details Exported Successfully!",
-        color: "green",
-        icon: <IconDownload size={16} />,
-      });
-    },
-    onError,
-  });
 
   if (isLoading || !detailsRes) return <OverlayLoader visible />;
 
@@ -134,32 +106,17 @@ export default function PlanDetails() {
         </Tabs.Panel>
       </Tabs>
       {detailsRes?.response?.open && (
-        <Tooltip label="Add New Expense" position="left" color="dark">
-          <ActionIcon
-            size="xl"
-            radius="xl"
-            variant="filled"
-            color={primaryColor}
-            onClick={formModal.open}
-            sx={{ position: "fixed", bottom: "4.5rem", right: "1rem" }}
-          >
-            <IconPlus size={20} />
-          </ActionIcon>
-        </Tooltip>
-      )}
-      <Tooltip label="Export this plan" position="left" color="dark">
         <ActionIcon
           size="xl"
           radius="xl"
           variant="filled"
-          color={"green"}
-          onClick={() => downloadPlan({ plan: params.id ?? "" })}
-          loading={downloadingPlan}
+          color={primaryColor}
+          onClick={formModal.open}
           sx={{ position: "fixed", bottom: "1rem", right: "1rem" }}
         >
-          <IconTableDown size={20} />
+          <IconPlus size={24} />
         </ActionIcon>
-      </Tooltip>
+      )}
       <Modal
         opened={showForm || confirm}
         withCloseButton={false}

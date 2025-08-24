@@ -108,10 +108,3 @@
     color: var(--mantine-color-gray-2);
   }
 }
-
-.stats-table.mtrace-ag-mod .ag-root-wrapper .ag-cell {
-  line-height: min(
-    var(--ag-internal-calculated-line-height),
-    var(--ag-internal-padded-row-height)
-  );
-}

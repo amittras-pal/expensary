@@ -23,7 +23,6 @@ import { useCurrentUser } from "../../../context/user.context";
 import { formatCurrency } from "../../../utils";
 import ExpenseDescription from "../../ExpenseDescription";
 import { MenuCellProps, MetaCellProps } from "../interfaces";
-import { amountColor } from "./utils";
 
 export function MetaCell({ data, page }: Readonly<MetaCellProps>) {
   const { primaryColor } = useMantineTheme();
@@ -171,7 +170,11 @@ export function AmountCell({
   value,
 }: Readonly<ICellRendererParams<IExpense, number>>) {
   return (
-    <Text component="span" fw="bold" color={amountColor(value)}>
+    <Text
+      sx={{ height: "100%", display: "flex", alignItems: "center" }}
+      color={!value ? "dimmed" : ""}
+      td={!value ? "line-through" : ""}
+    >
       {formatCurrency(value)}
     </Text>
   );

@@ -9,7 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       VITE_API_BASE_URL: "${{ secrets.VITE_API_BASE_URL }}"
-      VITE_APP_TITLE: "${{ secrets.VITE_APP_TITLE }}"
     steps:
       - uses: actions/checkout@v3
       - run: npm i && npm run build
