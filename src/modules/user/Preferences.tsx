@@ -57,7 +57,7 @@ export default function Preferences() {
       });
 
       setTimeout(() => {
-        client.invalidateQueries({ queryKey: ["user-info"] });
+        client.clear();
       }, 1000);
     },
   });

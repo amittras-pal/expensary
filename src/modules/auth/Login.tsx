@@ -119,6 +119,9 @@ export default function Login() {
               <Chip variant="filled" size="xs" value="/expenses">
                 Transactions
               </Chip>
+              <Chip variant="filled" size="xs" value="/statistics">
+                Statistics
+              </Chip>
               <Chip variant="filled" size="xs" value="/search">
                 Search
               </Chip>
