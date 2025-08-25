@@ -5,7 +5,8 @@ export const useAppStyles = createStyles((theme) => ({
     display: "flex",
     alignItems: "flex-end",
     padding: theme.spacing.md,
-    boxShadow: theme.shadows.sm,
+    backgroundImage: `linear-gradient(85deg, var(--mantine-color-primary-9) 40%, var(--mantine-color-primary-4))`,
+    borderBottom: "none",
   },
   navigation: {
     boxShadow: theme.shadows.sm,

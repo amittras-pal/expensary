@@ -36,10 +36,10 @@ export default function Changelog() {
         <Accordion.Item key={version.tagName} value={version.tagName} mt="md">
           <Accordion.Control>
             <Group spacing="xs">
-              <Text component="h1" m={0} fz="lg" color="violet">
+              <Text component="h1" m={0} fz="lg">
                 {version.tagName}
               </Text>
-              <Badge color="violet" size="sm" variant="outline">
+              <Badge size="sm" variant="light">
                 {dayjs(version.publishedAt).format("DD MMM 'YY, hh:mm a")}
               </Badge>
               {version.isDraft && (

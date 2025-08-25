@@ -45,7 +45,7 @@ export default function AppHeader({
             opened={open}
             onClick={() => setOpen((o) => !o)}
             size="sm"
-            color={theme.colors.gray[6]}
+            color={theme.colors.gray[2]}
             mr={6}
           />
         </MediaQuery>
@@ -54,16 +54,27 @@ export default function AppHeader({
           mr={8}
           size={28}
           variant="outline"
-          sx={(theme) => ({ borderColor: theme.colors.dark[4] })}
+          sx={{ border: "none" }}
         >
           <Image src={logoPath} />
         </ThemeIcon>
-        <Text fw="bold" component={Link} to="/" sx={{ whiteSpace: "nowrap" }}>
+        <Text
+          fw="bold"
+          component={Link}
+          to="/"
+          sx={{ whiteSpace: "nowrap", color: theme.colors.gray[2] }}
+        >
           {title[0]}
         </Text>
         <IconTallymark1 size={24} stroke={1} />
         <Tooltip label={title[1]} disabled={!isMobile} color="dark">
-          <Text fz="sm" fw={400} color="dimmed" mr="auto" lineClamp={1}>
+          <Text
+            fz="sm"
+            fw={400}
+            mr="auto"
+            lineClamp={1}
+            sx={{ color: theme.colors.gray[2] }}
+          >
             {title[1]}
           </Text>
         </Tooltip>

@@ -10,6 +10,7 @@ import {
   List,
   Text,
   ThemeIcon,
+  useMantineTheme,
 } from "@mantine/core";
 import { IconBuilding, IconMapPin } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
@@ -207,7 +208,7 @@ const Anchor = (props: JSX.IntrinsicElements["a"] & ExtraProps) => {
       component="a"
       href={props.href}
       target="_black"
-      color="indigo"
+      sx={{ color: "var(--mantine-color-primary-5)" }}
       fw="bold"
     >
       {props.children}
@@ -218,10 +219,14 @@ const Anchor = (props: JSX.IntrinsicElements["a"] & ExtraProps) => {
 const QuoteBlock = (
   props: JSX.IntrinsicElements["blockquote"] & ExtraProps
 ) => {
+  const { primaryColor } = useMantineTheme();
   return (
     <Blockquote
-      color="indigo"
-      sx={(theme) => ({ borderLeft: `5px solid ${theme.colors.gray[9]}` })}
+      color={primaryColor}
+      sx={(theme) => ({
+        borderLeft: `5px solid ${theme.colors.gray[9]}`,
+        color: "var(--mantine-color-primary-5)",
+      })}
     >
       {props.children}
     </Blockquote>
