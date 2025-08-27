@@ -43,9 +43,28 @@ const BudgetMonitor = () => {
     },
   });
 
+  const { mutate: copyFromPrevious, isLoading: copyingFromPrevious } = useMutation({
+    mutationFn: () => {
+      const prevMonth = dayjs().subtract(1, 'month');
+      const previousMonthPayload = {
+        month: prevMonth.month(),
+        year: prevMonth.year(),
+      };
+      return getBudget(previousMonthPayload);
+    },
+    onError,
+    onSuccess: (data) => {
+      if (data.response) {
+        setValue('amount', data.response.amount);
+        setValue('remarks', data.response.remarks || '');
+      }
+    },
+  });
+
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isValid },
   } = useForm<BudgetForm>({
     mode: "onChange",
@@ -100,6 +119,16 @@ const BudgetMonitor = () => {
         />
         <Button type="submit" fullWidth disabled={!isValid} loading={creating}>
           Create Budget
+        </Button>
+        <Button 
+          variant="ghost" 
+          fullWidth 
+          disabled={copyingFromPrevious} 
+          loading={copyingFromPrevious}
+          onClick={() => copyFromPrevious()}
+          mt="sm"
+        >
+          Copy from {dayjs().subtract(1, 'month').format('MMMM')}
         </Button>
       </Box>
     </Modal>
