@@ -1,4 +1,5 @@
 import { MantineColor } from "@mantine/core";
+import { BudgetForm } from "../schemas/schemas";
 
 export type ResponseBody<T> = {
   message: string;
@@ -25,5 +26,5 @@ export type YearStatsItem = {
 
 export type YearStatsResponse = {
   trend: YearStatsItem[];
-  budgets: { month: number; amount: number }[];
+  budgets: BudgetForm[];
 };

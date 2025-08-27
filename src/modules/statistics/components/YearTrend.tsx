@@ -332,11 +332,11 @@ export default function YearTrend() {
       >
         {focusMonth > -1 && (
           <MonthBreakdown
-            month={focusMonth}
             year={parseInt(year)}
             budget={
-              statsRes?.response.budgets.find((b) => b.month === focusMonth + 1)
-                ?.amount ?? 0
+              statsRes?.response.budgets.find(
+                (b) => b.month === focusMonth + 1
+              ) ?? null
             }
           />
         )}

@@ -5,26 +5,31 @@ import { EChartsOption } from "echarts";
 import ReactECharts from "echarts-for-react";
 import { useMemo, useRef } from "react";
 import { useErrorHandler } from "../../../hooks/error-handler";
+import { BudgetForm } from "../../../schemas/schemas";
 import { getSummary } from "../../../services/expense.service";
 import { formatCurrency } from "../../../utils";
 import { SunBurstClickParams } from "../types";
 import ListDetails, { ListDetailsHandle } from "./MonthBreakdownDetails";
 
 type MonthDonutProps = {
-  month: number;
   year: number;
-  budget: number;
+  budget: BudgetForm | null;
 };
-export default function MonthBreakdown(props: Readonly<MonthDonutProps>) {
+export default function MonthBreakdown({
+  budget,
+  year,
+}: Readonly<MonthDonutProps>) {
   const { onError } = useErrorHandler();
   const { colors } = useMantineTheme();
   const payload = useMemo(() => {
-    const date = dayjs().month(props.month).year(props.year);
+    const date = dayjs()
+      .month((budget?.month ?? 0) - 1)
+      .year(year);
     return {
       startDate: date.startOf("month").toDate(),
       endDate: date.endOf("month").toDate(),
     };
-  }, [props]);
+  }, [budget]);
 
   const { data: summary, isLoading } = useQuery({
     queryKey: ["month-breakdown", payload],
@@ -102,16 +107,24 @@ export default function MonthBreakdown(props: Readonly<MonthDonutProps>) {
       <Text color="dimmed">
         Set Budget:{" "}
         <Text component="span" color={colors.gray[1]}>
-          {formatCurrency(props.budget)}
+          {formatCurrency(budget?.amount ?? 0)}
         </Text>
       </Text>
-
+      {budget?.remarks && (
+        <Text color="dimmed">
+          Remarks for budget:{" "}
+          <Text component="span" color={colors.gray[1]}>
+            {budget.remarks}
+          </Text>
+        </Text>
+      )}
+      <Divider my="sm" />
       <ListDetails
         ref={listDetails}
         defaultTotal={summary?.response.total ?? 0}
-        budget={props.budget}
-        month={props.month}
-        year={props.year}
+        budget={budget?.amount ?? 0}
+        month={budget?.month ?? 0}
+        year={year}
       />
     </Box>
   );
