@@ -14,7 +14,7 @@ import OverlayLoader from "../components/loaders/OverlayLoader";
 import { _20Min } from "../constants/app";
 import { useErrorHandler } from "../hooks/error-handler";
 import { getUserData } from "../services/user.service";
-import { getAuthToken } from "../utils";
+import { isLoggedIn } from "../utils";
 
 type UserCtx = {
   userData: IUser | null;
@@ -39,9 +39,9 @@ export default function UserProvider({
 
   useEffect(() => {
     const listener = () => {
-      setLoggedIn(Boolean(getAuthToken()));
+      setLoggedIn(Boolean(isLoggedIn()));
     };
-    setLoggedIn(Boolean(getAuthToken()));
+    setLoggedIn(Boolean(isLoggedIn()));
     window.addEventListener("storage", listener);
     return () => window.removeEventListener("storage", listener);
   }, []);
