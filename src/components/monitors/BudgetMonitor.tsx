@@ -1,14 +1,22 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Box, Button, Divider, Modal, Text, TextInput } from "@mantine/core";
+import {
+  Box,
+  Button,
+  Divider,
+  Group,
+  Modal,
+  Text,
+  TextInput,
+} from "@mantine/core";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { useMemo } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { _20Min } from "../../constants/app";
 import { useErrorHandler } from "../../hooks/error-handler";
 import { BudgetForm, budgetFormSchema } from "../../schemas/schemas";
 import { createBudget, getBudget } from "../../services/budget.service";
 import { isLoggedIn } from "../../utils";
-import { _20Min } from "../../constants/app";
 
 const BudgetMonitor = () => {
   const { onError } = useErrorHandler();
@@ -43,23 +51,29 @@ const BudgetMonitor = () => {
     },
   });
 
-  const { mutate: copyFromPrevious, isLoading: copyingFromPrevious } = useMutation({
-    mutationFn: () => {
-      const prevMonth = dayjs().subtract(1, 'month');
-      const previousMonthPayload = {
-        month: prevMonth.month(),
-        year: prevMonth.year(),
-      };
-      return getBudget(previousMonthPayload);
-    },
-    onError,
-    onSuccess: (data) => {
-      if (data.response) {
-        setValue('amount', data.response.amount);
-        setValue('remarks', data.response.remarks || '');
-      }
-    },
-  });
+  const { mutate: copyFromPrevious, isLoading: copyingFromPrevious } =
+    useMutation({
+      mutationFn: () => {
+        const prevMonth = dayjs().subtract(1, "month");
+        const previousMonthPayload = {
+          month: prevMonth.month(),
+          year: prevMonth.year(),
+        };
+        return getBudget(previousMonthPayload);
+      },
+      onError,
+      onSuccess: (data) => {
+        if (data.response) {
+          // Should ideally check if the user is at least older than a month to get this feature to work.
+          setValue("amount", data.response.amount);
+          setValue("remarks", data.response.remarks || "", {
+            shouldValidate: true,
+            shouldDirty: true,
+            shouldTouch: true,
+          });
+        }
+      },
+    });
 
   const {
     register,
@@ -109,27 +123,28 @@ const BudgetMonitor = () => {
           {...register("amount")}
           error={errors.amount?.message}
           autoFocus
+          required
         />
         <TextInput
-          label="Remarks (optional)"
+          label="Remarks"
           placeholder="Add any remarks for this budget"
           {...register("remarks")}
           error={errors.remarks?.message}
           mt="md"
         />
-        <Button type="submit" fullWidth disabled={!isValid} loading={creating}>
-          Create Budget
-        </Button>
-        <Button 
-          variant="ghost" 
-          fullWidth 
-          disabled={copyingFromPrevious} 
-          loading={copyingFromPrevious}
-          onClick={() => copyFromPrevious()}
-          mt="sm"
-        >
-          Copy from {dayjs().subtract(1, 'month').format('MMMM')}
-        </Button>
+        <Group grow sx={{ flexDirection: "row-reverse" }}>
+          <Button type="submit" disabled={!isValid} loading={creating}>
+            Save
+          </Button>
+          <Button
+            variant="outline"
+            disabled={copyingFromPrevious}
+            loading={copyingFromPrevious}
+            onClick={() => copyFromPrevious()}
+          >
+            Copy from {dayjs().subtract(1, "month").format("MMMM")}
+          </Button>
+        </Group>
       </Box>
     </Modal>
   );
