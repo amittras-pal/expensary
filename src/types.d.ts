@@ -47,6 +47,7 @@ interface IBudget {
   month: number;
   year: number;
   amount: number;
+  remarks?: string;
 }
 
 interface IExpense {

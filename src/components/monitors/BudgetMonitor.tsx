@@ -54,6 +54,7 @@ const BudgetMonitor = () => {
       amount: 0,
       month: dayjs().month(),
       year: dayjs().year(),
+      remarks: "",
     },
     resolver: yupResolver(budgetFormSchema),
   });
@@ -89,6 +90,13 @@ const BudgetMonitor = () => {
           {...register("amount")}
           error={errors.amount?.message}
           autoFocus
+        />
+        <TextInput
+          label="Remarks (optional)"
+          placeholder="Add any remarks for this budget"
+          {...register("remarks")}
+          error={errors.remarks?.message}
+          mt="md"
         />
         <Button type="submit" fullWidth disabled={!isValid} loading={creating}>
           Create Budget
