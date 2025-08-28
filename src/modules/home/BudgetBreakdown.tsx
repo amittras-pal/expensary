@@ -182,12 +182,7 @@ export default function BudgetBreakdown({
                   size="sm"
                   radius="xl"
                   variant="light"
-                  onClick={() => {
-                    setPayload({
-                      startDate: dayjs().startOf("month").toDate(),
-                      endDate: dayjs().endOf("month").toDate(),
-                    });
-                  }}
+                  onClick={() => handleMonthChange(dayjs().toDate())}
                 >
                   <IconCalendarRepeat size={16} />
                 </ActionIcon>

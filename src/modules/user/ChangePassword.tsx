@@ -36,11 +36,11 @@ export default function ChangePassword() {
     });
   };
 
-  const { logoutUser } = useLogoutHandler();
+  const { logout } = useLogoutHandler();
   const { mutate: updatePwd, isLoading } = useMutation({
     mutationFn: changeUserPassword,
     onError,
-    onSuccess: logoutUser,
+    onSuccess: () => logout(),
   });
 
   const submit: SubmitHandler<PwdChangeForm> = (values) => {
@@ -52,22 +52,13 @@ export default function ChangePassword() {
       <Text fz="sm" color="dimmed">
         Please provide the below details to change your pin.
       </Text>
-      <Text fz="sm">
+      <Text fz="sm" mb="sm">
         <Text component="span" fw="bold" c="red">
-          Note 1:{" "}
+          Note:{" "}
         </Text>
         <Text component="span">
           You will be logged out after changing the pin, and would need to login
           again with the new pin.{" "}
-        </Text>
-      </Text>
-      <Text fz="sm" mb="sm">
-        <Text component="span" fw="bold" c="red">
-          Note 2:{" "}
-        </Text>
-        <Text component="span">
-          If you don't remember your current pin, please logout and reset the
-          pin via the 'forgot pin' flow from the login page.
         </Text>
       </Text>
       <Divider mb="sm" />

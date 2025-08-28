@@ -1,37 +1,66 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Box, Button, Divider, Modal, Text, TextInput } from "@mantine/core";
+import {
+  Box,
+  Button,
+  Divider,
+  Group,
+  Modal,
+  Text,
+  TextInput,
+} from "@mantine/core";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { useMemo } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
+import { _20Min } from "../../constants/app";
 import { useErrorHandler } from "../../hooks/error-handler";
 import { BudgetForm, budgetFormSchema } from "../../schemas/schemas";
 import { createBudget, getBudget } from "../../services/budget.service";
-import { getAuthToken } from "../../utils";
-import { _20Min } from "../../constants/app";
+import { isLoggedIn } from "../../utils";
 
 const BudgetMonitor = () => {
   const { onError } = useErrorHandler();
 
-  const payload = useMemo(
+  const currentMonthPayload = useMemo(
     () => ({
       month: dayjs().month(),
       year: dayjs().year(),
     }),
     []
   );
+  const previousMonthPayload = useMemo(() => {
+    const prevMonth = dayjs().subtract(1, "month");
+    return {
+      month: prevMonth.month(),
+      year: prevMonth.year(),
+    };
+  }, []);
 
   const {
-    isError,
-    isLoading,
-    refetch,
-    data: budgetRes,
+    isError: currentMonthError,
+    isLoading: loadingCurrentMonth,
+    refetch: reloadCurrentMonth,
+    data: currentMonthRes,
   } = useQuery({
-    queryKey: ["budget", payload],
-    queryFn: () => getBudget(payload),
+    queryKey: ["budget", currentMonthPayload],
+    queryFn: () => getBudget(currentMonthPayload),
     retry: 1,
-    enabled: Boolean(getAuthToken()),
+    enabled: Boolean(isLoggedIn()),
     onError,
+    staleTime: _20Min,
+  });
+
+  const {
+    isError: previousMonthError,
+    isLoading: loadingPreviousMonth,
+    data: previousMonthRes,
+  } = useQuery({
+    queryKey: ["budget-previous", previousMonthPayload],
+    queryFn: () => getBudget(previousMonthPayload),
+    retry: 1,
+    enabled: Boolean(isLoggedIn()),
+    // onError,
     staleTime: _20Min,
   });
 
@@ -39,13 +68,14 @@ const BudgetMonitor = () => {
     mutationFn: createBudget,
     onError,
     onSuccess: () => {
-      refetch();
+      reloadCurrentMonth();
     },
   });
 
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isValid },
   } = useForm<BudgetForm>({
     mode: "onChange",
@@ -54,6 +84,7 @@ const BudgetMonitor = () => {
       amount: 0,
       month: dayjs().month(),
       year: dayjs().year(),
+      remarks: "",
     },
     resolver: yupResolver(budgetFormSchema),
   });
@@ -62,14 +93,23 @@ const BudgetMonitor = () => {
     create(values);
   };
 
+  const copyFromPrevious = () => {
+    setValue("amount", previousMonthRes?.response.amount ?? 0);
+    setValue("remarks", previousMonthRes?.response.remarks ?? "", {
+      shouldValidate: true,
+      shouldDirty: true,
+      shouldTouch: true,
+    });
+  };
+
   return (
     <Modal
       onClose={() => null}
       opened={Boolean(
-        getAuthToken() &&
-          !(budgetRes?.response?.amount ?? 0) &&
-          !isLoading &&
-          isError
+        isLoggedIn() &&
+          !(currentMonthRes?.response?.amount ?? 0) &&
+          !loadingCurrentMonth &&
+          currentMonthError
       )}
       lockScroll
       closeOnClickOutside={false}
@@ -78,8 +118,8 @@ const BudgetMonitor = () => {
     >
       <Box component="form" onSubmit={handleSubmit(handleCreateBudget)}>
         <Text mb="md">
-          Your budget for the {dayjs().format("MMM, 'YY")} is not set. Please
-          set a budget amount to proceed further.
+          Please create a budget for {dayjs().format("MMMM YYYY")} to continue
+          with the app.
         </Text>
         <Divider mb="md" />
         <TextInput
@@ -89,10 +129,45 @@ const BudgetMonitor = () => {
           {...register("amount")}
           error={errors.amount?.message}
           autoFocus
+          required
         />
-        <Button type="submit" fullWidth disabled={!isValid} loading={creating}>
-          Create Budget
-        </Button>
+        <TextInput
+          label="Remarks"
+          placeholder="Add any remarks for this budget"
+          {...register("remarks")}
+          error={errors.remarks?.message}
+          mt="md"
+        />
+        <Group grow sx={{ flexDirection: "row-reverse" }}>
+          <Button type="submit" disabled={!isValid} loading={creating}>
+            Save
+          </Button>
+          <Button
+            variant="outline"
+            onClick={copyFromPrevious}
+            disabled={previousMonthError || loadingPreviousMonth}
+          >
+            Copy from {dayjs().subtract(1, "month").format("MMMM")}
+          </Button>
+        </Group>
+        {(previousMonthError || !previousMonthRes?.response.amount) && (
+          <Text color="dimmed" fz="xs" fs="italic" mt="sm">
+            <Text component="span" color="red">
+              *{" "}
+            </Text>
+            <Text component="span" color="white">
+              No previous budget found.
+            </Text>
+            <br />
+            This may be your first month or last month&rsquo;s budget was not
+            created. If you missed a budget, contact the developer via the{" "}
+            <Text component={Link} to="/about-app" td="underline">
+              About page
+            </Text>{" "}
+            to get a dummy budget. Auto-creation isn&rsquo;t supported at this
+            time.
+          </Text>
+        )}
       </Box>
     </Modal>
   );

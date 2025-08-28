@@ -55,12 +55,12 @@ export default function Login() {
   const { mutate: login, isLoading: loggingIn } = useMutation({
     mutationFn: loginUser,
     onSuccess: (res) => {
-      localStorage.setItem("authToken", res.response?.token);
-      setPrimaryColor(res.response.user.color);
-      setUserData(res?.response?.user);
+      localStorage.setItem("isAuthenticated", "true");
+      setPrimaryColor(res.response.color);
+      setUserData(res?.response);
       notifications.show({
         title: res.message,
-        message: `Welcome, ${res.response?.user.userName}`,
+        message: `Welcome, ${res.response.userName}`,
         color: "green",
         icon: <IconCheck />,
       });
@@ -118,6 +118,9 @@ export default function Login() {
               </Chip>
               <Chip variant="filled" size="xs" value="/expenses">
                 Transactions
+              </Chip>
+              <Chip variant="filled" size="xs" value="/statistics">
+                Statistics
               </Chip>
               <Chip variant="filled" size="xs" value="/search">
                 Search

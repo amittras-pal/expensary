@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom";
-import { getAuthToken } from "../../utils";
+import { isLoggedIn } from "../../utils";
 
 export default function AuthGuard({ children }: GuardProps) {
-  return getAuthToken() ? children! : <Navigate to="/login" />;
+  return isLoggedIn() ? children : <Navigate to="/login" />;
 }

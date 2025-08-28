@@ -1,8 +1,8 @@
 import { MantineColor } from "@mantine/core";
 import dayjs from "dayjs";
 
-export function getAuthToken() {
-  return localStorage.getItem("authToken");
+export function isLoggedIn() {
+  return localStorage.getItem("isAuthenticated");
 }
 
 const currencyFormat = new Intl.NumberFormat("en-IN", {

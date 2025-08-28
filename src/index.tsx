@@ -6,7 +6,7 @@ import App from "./App";
 import Layout from "./modules/layout/Layout";
 
 const Login = lazy(() => import("./modules/auth/Login"));
-const Register = lazy(() => import("./modules/auth/Register"));
+const RegistrationHold = lazy(() => import("./modules/auth/RegistrationHold"));
 const Expenses = lazy(() => import("./modules/expenses"));
 const Home = lazy(() => import("./modules/home"));
 const Plans = lazy(() => import("./modules/plans/Plans"));
@@ -44,7 +44,7 @@ const router = createBrowserRouter([
         ],
       },
       { path: "/login", element: <Login /> },
-      { path: "/register", element: <Register /> },
+      { path: "/register", element: <RegistrationHold /> },
       { path: "/about", element: <About /> },
     ],
   },
