@@ -43,7 +43,7 @@ const BudgetMonitor = () => {
     refetch: reloadCurrentMonth,
     data: currentMonthRes,
   } = useQuery({
-    queryKey: ["budget-current", currentMonthPayload],
+    queryKey: ["budget", currentMonthPayload],
     queryFn: () => getBudget(currentMonthPayload),
     retry: 1,
     enabled: Boolean(isLoggedIn()),
@@ -144,7 +144,7 @@ const BudgetMonitor = () => {
           </Button>
           <Button
             variant="outline"
-            onClick={() => copyFromPrevious()}
+            onClick={copyFromPrevious}
             disabled={previousMonthError || loadingPreviousMonth}
           >
             Copy from {dayjs().subtract(1, "month").format("MMMM")}
