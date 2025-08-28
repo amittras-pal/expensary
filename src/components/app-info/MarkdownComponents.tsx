@@ -233,7 +233,7 @@ const HorizontalRule = (_props: JSX.IntrinsicElements["hr"] & ExtraProps) => {
 };
 
 const Img = (props: JSX.IntrinsicElements["img"] & ExtraProps) => {
-  return <Image src={props.src} alt={props.alt} />;
+  return <Image src={props.src} alt={props.alt} width={"95%"} />;
 };
 
 // Markdown component set.
