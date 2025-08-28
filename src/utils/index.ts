@@ -1,7 +1,7 @@
 import { MantineColor } from "@mantine/core";
 import dayjs from "dayjs";
 
-export function getAuthToken() {
+export function isLoggedIn() {
   return localStorage.getItem("isAuthenticated");
 }
 
