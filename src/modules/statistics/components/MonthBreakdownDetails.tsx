@@ -89,12 +89,12 @@ export default forwardRef<ListDetailsHandle, ListDetailsProps>(
       const payload: ISearchReqBody = {
         startDate: dayjs()
           .year(props.year)
-          .month(props.month)
+          .month(props.month - 1)
           .startOf("month")
           .toDate(),
         endDate: dayjs()
           .year(props.year)
-          .month(props.month)
+          .month(props.month - 1)
           .endOf("month")
           .toDate(),
         categories: [category?._id ?? ""],
