@@ -1,13 +1,13 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, Divider, Group, Text } from "@mantine/core";
+import { Button, Divider, Group, Paper, Text, Title } from "@mantine/core";
 import { useMutation } from "@tanstack/react-query";
 import { SubmitHandler, useForm } from "react-hook-form";
-import PinInput from "../../components/pin-input/PinInput";
-import { useCurrentUser } from "../../context/user.context";
-import { useErrorHandler } from "../../hooks/error-handler";
-import { useLogoutHandler } from "../../hooks/logout";
-import { PwdChangeForm, pwdChangeSchema } from "../../schemas/schemas";
-import { changeUserPassword } from "../../services/user.service";
+import PinInput from "../../../components/pin-input/PinInput";
+import { useCurrentUser } from "../../../context/user.context";
+import { useErrorHandler } from "../../../hooks/error-handler";
+import { useLogoutHandler } from "../../../hooks/logout";
+import { PwdChangeForm, pwdChangeSchema } from "../../../schemas/schemas";
+import { changeUserPassword } from "../../../services/user.service";
 
 export default function ChangePassword() {
   const { userData } = useCurrentUser();
@@ -48,7 +48,9 @@ export default function ChangePassword() {
   };
 
   return (
-    <form noValidate onSubmit={handleSubmit(submit)}>
+    <Paper withBorder p="md" radius="md" mb="lg">
+      <Title order={4} mb="md">Change Password</Title>
+      <form noValidate onSubmit={handleSubmit(submit)}>
       <Text fz="sm" color="dimmed">
         Please provide the below details to change your pin.
       </Text>
@@ -93,6 +95,7 @@ export default function ChangePassword() {
           Change Pin
         </Button>
       </Group>
-    </form>
+      </form>
+    </Paper>
   );
 }

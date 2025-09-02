@@ -5,8 +5,10 @@ import {
   ColorSwatch,
   Divider,
   Group,
+  Paper,
   Slider,
   Text,
+  Title,
   Tooltip,
   useMantineTheme,
 } from "@mantine/core";
@@ -15,9 +17,9 @@ import { IconCheck } from "@tabler/icons-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useCurrentUser } from "../../context/user.context";
-import { PreferenceForm, preferencesSchema } from "../../schemas/schemas";
-import { updateUserDetails } from "../../services/user.service";
+import { useCurrentUser } from "../../../context/user.context";
+import { PreferenceForm, preferencesSchema } from "../../../schemas/schemas";
+import { updateUserDetails } from "../../../services/user.service";
 
 export default function Preferences() {
   const { userData } = useCurrentUser();
@@ -63,17 +65,19 @@ export default function Preferences() {
   });
 
   return (
-    <Box
-      component="form"
-      onSubmit={handleSubmit((values) => {
-        updatePreferences(values);
-      })}
-      sx={(theme) => ({
-        display: "flex",
-        flexDirection: "column",
-        gap: theme.spacing.sm,
-      })}
-    >
+    <Paper withBorder p="md" radius="md" mb="lg">
+      <Title order={4} mb="md">Preferences</Title>
+      <Box
+        component="form"
+        onSubmit={handleSubmit((values) => {
+          updatePreferences(values);
+        })}
+        sx={(theme) => ({
+          display: "flex",
+          flexDirection: "column",
+          gap: theme.spacing.sm,
+        })}
+      >
       <Box>
         <Text fw="bold" fz="sm" mb="sm">
           Expense Editing Window
@@ -146,6 +150,7 @@ export default function Preferences() {
           Save
         </Button>
       </Group>
-    </Box>
+      </Box>
+    </Paper>
   );
 }

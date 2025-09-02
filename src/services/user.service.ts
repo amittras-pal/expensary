@@ -36,6 +36,14 @@ export function changeUserPassword(payload: {
     .then((res) => res.data);
 }
 
+export function deleteUserAccount(payload: {
+  pin: string;
+}): Promise<ResponseBody<undefined>> {
+  return axios
+    .delete(ENDPOINTS.deleteAccount, { data: payload })
+    .then((res) => res.data);
+}
+
 export function logoutUser() {
   return axios.post<ResponseBody<undefined>>(ENDPOINTS.logout);
 }
