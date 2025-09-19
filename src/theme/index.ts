@@ -1,12 +1,11 @@
-import { MantineThemeOverride } from "@mantine/core";
+import { createTheme } from "@mantine/core";
 import { primaryColor } from "../constants/app";
 
-const theme: MantineThemeOverride = {
-  colorScheme: "dark",
+const theme = createTheme({
   primaryColor,
   defaultRadius: "sm",
-  fontFamily: "'Montserrat', sans-serif;",
-  activeStyles: { transform: "scale(0.95)" },
+  fontFamily: "'Poppins', sans-serif",
+  fontFamilyMonospace: "Monaco, Courier, monospace",
   components: {
     TextInput: { defaultProps: { mb: "sm", variant: "filled" } },
     Textarea: { defaultProps: { mb: "sm", variant: "filled" } },
@@ -15,7 +14,6 @@ const theme: MantineThemeOverride = {
     DateTimePicker: { defaultProps: { mb: "sm", variant: "filled" } },
     DatePickerInput: { defaultProps: { mb: "sm", variant: "filled" } },
     PasswordInput: { defaultProps: { mb: "sm", variant: "filled" } },
-    Button: { defaultProps: { loaderPosition: "right" } },
     Divider: { defaultProps: { variant: "dashed" } },
     ScrollArea: { defaultProps: { scrollbarSize: 6 } },
     Tooltip: {
@@ -30,6 +28,6 @@ const theme: MantineThemeOverride = {
       },
     },
   },
-};
+});
 
 export default theme;

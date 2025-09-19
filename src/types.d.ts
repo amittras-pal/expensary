@@ -5,6 +5,16 @@ declare module "*.svg?react" {
 
 declare module "*.ttf";
 
+declare module "*.module.css" {
+  const classes: { [key: string]: string };
+  export default classes;
+}
+
+declare module "*.module.scss" {
+  const classes: { [key: string]: string };
+  export default classes;
+}
+
 interface RouteItem {
   icon: JSX.Element;
   label: string;
