@@ -54,7 +54,7 @@ export default function AppInfo(
             to={userData ? "/about-app" : "/about"}
             td="underline"
             fz="xs"
-            color="dimmed"
+            c="dimmed"
             onClick={props.onLinkClick}
           >
             About
@@ -64,7 +64,7 @@ export default function AppInfo(
             td="underline"
             style={{ cursor: "pointer" }}
             fz="xs"
-            color="dimmed"
+            c="dimmed"
             onClick={open}
           >
             What's New?

@@ -72,7 +72,7 @@ function BudgetItem({
               </ThemeIcon>
             </Tooltip>
           ))}
-          <Text color="dimmed" fz="xs" ml="auto" pt={1}>
+          <Text c="dimmed" fz="xs" ml="auto" pt={1}>
             {share < 1 ? "<1" : share} %
           </Text>
         </Group>

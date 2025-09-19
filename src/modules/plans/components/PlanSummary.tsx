@@ -81,7 +81,7 @@ function PlanSummary() {
               <ThemeIcon size={100} color={primaryColor} radius="xl">
                 <IconListCheck size={75} />
               </ThemeIcon>
-              <Text fz="lg" color="dimmed" mt="md">
+              <Text fz="lg" c="dimmed" mt="md">
                 No Expenses Added
               </Text>
             </Box>

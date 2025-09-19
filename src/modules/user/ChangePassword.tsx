@@ -49,7 +49,7 @@ export default function ChangePassword() {
 
   return (
     <form noValidate onSubmit={handleSubmit(submit)}>
-      <Text fz="sm" color="dimmed">
+      <Text fz="sm" c="dimmed">
         Please provide the below details to change your pin.
       </Text>
       <Text fz="sm" mb="sm">
@@ -88,7 +88,7 @@ export default function ChangePassword() {
         errorMsg={errors?.confirmNewPin?.message ?? ""}
         label="Re-Enter New Pin"
       />
-      <Group position="right">
+      <Group justify="flex-end">
         <Button type="submit" disabled={!isValid} loading={isLoading}>
           Change Pin
         </Button>

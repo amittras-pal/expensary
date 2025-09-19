@@ -138,9 +138,9 @@ export default function PlanExpensesList({
             title={`Copy ${selection.length} expenses to monthly budget.`}
             onClose={clearSelection}
           >
-            <Group justify="space-between" gap={8} noWrap>
+            <Group justify="space-between" gap={8} style={{ flexWrap: "nowrap" }}>
               <Text>
-                <Text size="xs" color="dimmed" mt={6} component="span">
+                <Text size="xs" c="dimmed" mt={6} component="span">
                   Expenses will be copied to monthly budget at creation date.{" "}
                 </Text>
                 {!isMobile && <br />}

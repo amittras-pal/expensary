@@ -78,7 +78,7 @@ export default function Preferences() {
         <Text fw="bold" fz="sm" mb="sm">
           Expense Editing Window
         </Text>
-        <Text fz="sm" color="dimmed">
+        <Text fz="sm" c="dimmed">
           The Edit Window determines how far behind the current date expenses
           can be added/edited in your record. This will impact the expense
           adding/editing window.
@@ -110,12 +110,12 @@ export default function Preferences() {
         <Text fw="bold" fz="sm" mb="sm">
           Color Theme
         </Text>
-        <Text fz="sm" color="dimmed" mb="md">
+        <Text fz="sm" c="dimmed" mb="md">
           Set the colors of action buttons and certain other aspects of the
           application to your preference.
         </Text>
         <Divider my="sm" />
-        <Group position="center" gap="xs">
+        <Group justify="center" gap="xs">
           {Object.keys(colors).map((color) => (
             <Tooltip position="top" label={color} key={color}>
               <ColorSwatch
@@ -137,7 +137,7 @@ export default function Preferences() {
           ))}
         </Group>
       </Box>
-      <Group position="right">
+      <Group justify="flex-end">
         <Button
           type="submit"
           loading={isLoading}

@@ -103,7 +103,7 @@ export default function Home() {
               <Text fw="bold" fz="sm">
                 {list?.response?.length ?? 0} Recent Transactions
               </Text>
-              <Text color="dimmed" fz="xs" fs="italic" ml="md">
+              <Text c="dimmed" fz="xs" fs="italic" ml="md">
                 Since{" "}
                 {dayjs()
                   .subtract(userData?.editWindow ?? 7, "days")

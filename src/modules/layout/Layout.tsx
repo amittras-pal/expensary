@@ -97,7 +97,7 @@ export default function Layout() {
           </Text>
           <IconTallymark1 size={24} stroke={1} />
           <Tooltip label={title[1]} disabled={!isMobile} color="dark">
-            <Text fz="sm" fw={400} color="dimmed" mr="auto" lineClamp={1}>
+            <Text fz="sm" fw={400} c="dimmed" mr="auto" lineClamp={1}>
               {title[1]}
             </Text>
           </Tooltip>

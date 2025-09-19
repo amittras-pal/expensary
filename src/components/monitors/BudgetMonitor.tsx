@@ -151,7 +151,7 @@ const BudgetMonitor = () => {
           </Button>
         </Group>
         {(previousMonthError || !previousMonthRes?.response.amount) && (
-          <Text color="dimmed" fz="xs" fs="italic" mt="sm">
+          <Text c="dimmed" fz="xs" fs="italic" mt="sm">
             <Text component="span" color="red">
               *{" "}
             </Text>

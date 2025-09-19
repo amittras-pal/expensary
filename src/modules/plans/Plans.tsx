@@ -163,7 +163,7 @@ export default function Plans() {
           <Text my="sm" align="center">
             No plans have been created!
           </Text>
-          <Text size="sm" align="center" color="dimmed" mb="sm">
+          <Text size="sm" align="center" c="dimmed" mb="sm">
             Plans help you organize expenses which need to be tracked outside of
             your general monthly budget.
           </Text>

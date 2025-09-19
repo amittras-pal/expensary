@@ -41,7 +41,7 @@ export default function RecentTransactions({
         <Text fw="bold">
           {list?.length > 0 ? list.length : "No"} Recent Transactions
         </Text>
-        <Text color="dimmed" fz="xs" fs="italic">
+        <Text c="dimmed" fz="xs" fs="italic">
           Since{" "}
           {dayjs()
             .subtract(userData?.editWindow ?? 7, "days")

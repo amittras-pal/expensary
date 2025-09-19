@@ -58,7 +58,7 @@ export default function ExpensePlan({
             </Text>
           )}
 
-          <Text size="xs" color="dimmed" style={{ whiteSpace: "pre-wrap" }}>
+          <Text size="xs" c="dimmed" style={{ whiteSpace: "pre-wrap" }}>
             {data.description}
           </Text>
         </Box>

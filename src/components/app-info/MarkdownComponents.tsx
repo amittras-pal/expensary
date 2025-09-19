@@ -135,7 +135,7 @@ const UserCard = (props: Readonly<{ username: string }>) => {
                 >
                   {user?.name}
                 </Text>
-                <Text fz="xs" color="dimmed">
+                <Text fz="xs" c="dimmed">
                   {user?.bio}
                 </Text>
               </Box>

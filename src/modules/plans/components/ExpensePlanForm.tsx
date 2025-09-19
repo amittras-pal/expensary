@@ -108,7 +108,7 @@ export default function ExpensePlanForm({
           minRows={5}
           required
         />
-        <Text size="xs" color="dimmed" ta="right">
+        <Text size="xs" c="dimmed" ta="right">
           {watch("description")?.length} / 400
         </Text>
       </Box>

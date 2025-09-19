@@ -18,7 +18,7 @@ export const ROUTES: RouteItem[] = [
   },
   {
     icon: <IconArrowsDoubleSwNe size={16} />,
-    label: "Expenses List",
+    label: "All Transactions",
     path: "/expenses",
     exactMatch: true,
     shortcut: "L",

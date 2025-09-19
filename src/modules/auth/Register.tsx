@@ -123,7 +123,7 @@ export default function Register() {
             required
           />
           <Text fz="sm" mb="md" align="center">
-            <Text component="span" color="dimmed">
+            <Text component="span" c="dimmed">
               Detected Time Zone:
             </Text>{" "}
             <Text component="span" fw="bold">

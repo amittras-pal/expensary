@@ -25,7 +25,7 @@ export default function PlanDetailsPanel({
       <Text style={{ whiteSpace: "pre-wrap" }}>{data.description}</Text>
       <Divider my="lg" />
       <Text fz="sm" display="flex" style={{ alignItems: "center" }}>
-        <Text component="span" color="dimmed">
+        <Text component="span" c="dimmed">
           Status:{" "}
         </Text>
         <Badge
@@ -38,7 +38,7 @@ export default function PlanDetailsPanel({
         </Badge>
       </Text>
       <Text fz="sm">
-        <Text component="span" color="dimmed">
+        <Text component="span" c="dimmed">
           Created:{" "}
         </Text>
         <Text component="span" fw="bold">
@@ -46,7 +46,7 @@ export default function PlanDetailsPanel({
         </Text>
       </Text>
       <Text fz="sm">
-        <Text component="span" color="dimmed">
+        <Text component="span" c="dimmed">
           Last Updated:{" "}
         </Text>
         <Text component="span" fw="bold">
@@ -54,7 +54,7 @@ export default function PlanDetailsPanel({
         </Text>
       </Text>
       <Text fz="sm">
-        <Text component="span" color="dimmed">
+        <Text component="span" c="dimmed">
           Last Action:{" "}
         </Text>
         <Text component="span" fw="bold">

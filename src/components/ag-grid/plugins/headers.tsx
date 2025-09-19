@@ -93,7 +93,7 @@ export function MetaHeader() {
         </ActionIcon>
       </Popover.Target>
       <Popover.Dropdown p={8}>
-        <Text color="dimmed" fz="xs">
+        <Text c="dimmed" fz="xs">
           Expense Description
         </Text>
       </Popover.Dropdown>

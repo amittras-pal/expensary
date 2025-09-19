@@ -62,7 +62,7 @@ export function MetaCell({ data, page }: Readonly<MetaCellProps>) {
             >
               <IconCalendarCode size={14} stroke={1.5} />
             </ThemeIcon>
-            <Text component="span" fz="xs" color="dimmed">
+            <Text component="span" fz="xs" c="dimmed">
               {page === "budget" ? "Created in a plan." : "Copied to Budget."}
             </Text>
           </Group>
@@ -77,7 +77,7 @@ export function MetaCell({ data, page }: Readonly<MetaCellProps>) {
             >
               <IconBookmark size={14} stroke={1.5} />
             </ThemeIcon>
-            <Text component="span" size="xs" color="dimmed">
+            <Text component="span" size="xs" c="dimmed">
               Created to keep record; no money spent.
             </Text>
           </Group>
@@ -135,7 +135,8 @@ export function RowMenuCell({
         <ActionIcon
           size="sm"
           radius="xl"
-          variant="light"
+          variant="transparent"
+          color="gray"
           disabled={!availableActions.length}
         >
           <IconDotsVertical size={16} />
@@ -145,7 +146,7 @@ export function RowMenuCell({
       <Menu.Dropdown>
         {availableActions.includes("edit") && (
           <Menu.Item
-            icon={<IconEdit size={14} />}
+            leftSection={<IconEdit size={14} />}
             onClick={() => onEditExpense(data, rowIndex)}
             disabled={Boolean(data?.linked)}
           >
@@ -155,7 +156,7 @@ export function RowMenuCell({
         {availableActions.includes("delete") && (
           <Menu.Item
             color="red"
-            icon={<IconTrash size={14} />}
+            leftSection={<IconTrash size={14} />}
             onClick={() => onDeleteExpense(data)}
           >
             Delete
