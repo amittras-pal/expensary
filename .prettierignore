@@ -68,3 +68,5 @@ public/robots.txt
 static/
 *.min.js
 *.min.css
+
+PreLoader.json
