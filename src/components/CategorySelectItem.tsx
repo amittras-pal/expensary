@@ -1,33 +1,33 @@
-import { Group, Text, ThemeIcon } from "@mantine/core";
-import { forwardRef, useMemo } from "react";
+import {
+  ComboboxItem,
+  Group,
+  SelectProps,
+  Text,
+  ThemeIcon,
+} from "@mantine/core";
 import { Icons } from "../constants/categories";
+import { IconCheck } from "@tabler/icons-react";
 
-interface ItemProps extends React.ComponentPropsWithoutRef<"div"> {
-  image: string;
-  value: string;
-  icon: string;
-  label: string;
-  description: string;
-}
+type Option = ComboboxItem & { meta: string };
 
-function CategorySelectItem(
-  { label, value, icon, color, ...rest }: ItemProps,
-  ref: React.ForwardedRef<HTMLDivElement>
-) {
-  const Icon = useMemo(() => Icons[icon], [icon]);
+const CategorySelectItem: SelectProps["renderOption"] = ({
+  option,
+  checked,
+}) => {
+  const [icon, color] = (option as Option).meta.split("::");
+  const Icon = Icons[icon];
+
   return (
-    <div ref={ref} {...rest}>
-      <Group noWrap gap="xs">
-        <ThemeIcon color={color} variant="light">
-          <Icon size={16} />
-        </ThemeIcon>
-
-        <div>
-          <Text size="sm">{label}</Text>
-        </div>
-      </Group>
-    </div>
+    <Group gap={6} align="center" style={{ width: "100%" }}>
+      <ThemeIcon variant={checked ? "light" : "transparent"} color={color}>
+        <Icon size={16} />
+      </ThemeIcon>
+      <Text fz="sm" mr={"auto"}>
+        {option.label.split("::").at(-1)}
+      </Text>
+      {checked && <IconCheck size={16} />}
+    </Group>
   );
-}
+};
 
-export default forwardRef<HTMLDivElement, ItemProps>(CategorySelectItem);
+export default CategorySelectItem;

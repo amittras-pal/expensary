@@ -209,6 +209,28 @@ export default function ExpenseForm({
     } else if (!errors.amount) setAmount(watch("amount")?.toString() ?? "0");
   };
 
+  const categoryOptions = useMemo(() => {
+    if (!categoryRes?.response) return [];
+
+    const groups: Record<
+      string,
+      { group: string; items: { value: string; label: string; meta: string }[] }
+    > = {};
+
+    (categoryRes?.response ?? []).forEach((category) => {
+      const grp = category.group || "Other";
+      if (!groups[grp]) groups[grp] = { group: grp, items: [] };
+      groups[grp].items.push({
+        value: category._id ?? "",
+        label: category.label,
+        meta: `${category.icon}::${category.color}`,
+      });
+    });
+    return Object.values(groups).sort((a, b) => a.group.localeCompare(b.group));
+  }, [categoryRes?.response]);
+
+  console.log(categoryOptions);
+
   return (
     <Box
       component="form"
@@ -244,44 +266,45 @@ export default function ExpenseForm({
           error={errors?.amount?.message}
           placeholder="Enter number or calculation"
           label="Amount"
-          icon={<IconCurrencyRupee size={18} />}
+          leftSection={<IconCurrencyRupee size={18} />}
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
           onBlur={onAmountBlur}
           description={
             <>
-              <Text fz="xs" color="dimmed">
+              <Text fz="xs" c="dimmed" component="span">
                 <IconChevronRight size={8} /> Enter number or calculation. E.g.:
                 (a+b*c)/d.
               </Text>
-              <Text fz="xs" color="dimmed">
+              <br />
+              <Text fz="xs" c="dimmed" component="span">
                 <IconChevronRight size={8} /> Keeping '0' indicates an expense
                 where money wasn't spent.
               </Text>
             </>
           }
         />
-        <Select
-          searchable
-          required
-          label="Category"
-          placeholder={
-            loadingCategories ? "Loading Categories" : "Pick a category"
-          }
-          disabled={loadingCategories}
-          value={watch("categoryId")}
-          error={errors.categoryId?.message}
-          onChange={(e) => setFieldValue("categoryId", e ?? "")}
-          itemComponent={CategorySelectItem}
-          data={
-            categoryRes?.response?.map((cat) => ({
-              ...cat,
-              value: cat._id ?? "",
-            })) ?? []
-          }
-        />
+        {categoryRes?.response && (
+          <Select
+            searchable
+            required
+            comboboxProps={{ zIndex: 1000 }}
+            label="Category"
+            placeholder={
+              loadingCategories ? "Loading Categories" : "Pick a category"
+            }
+            disabled={loadingCategories}
+            value={watch("categoryId")}
+            error={errors.categoryId?.message}
+            onChange={(e) => setFieldValue("categoryId", e ?? "")}
+            renderOption={CategorySelectItem}
+            data={categoryOptions}
+          />
+        )}
         <DateTimePicker
           label="Expense Date"
+          dropdownType="popover"
+          popoverProps={{ withinPortal: true, zIndex: 1000 }}
           placeholder="Select Date"
           minDate={minDate}
           maxDate={dayjs().add(5, "minutes").toDate()}
@@ -305,11 +328,12 @@ export default function ExpenseForm({
           <Select
             label="Select Plan"
             required
+            comboboxProps={{ zIndex: 1000 }}
             placeholder={loadingPlans ? "Loading plans" : "Select Plan"}
             disabled={loadingPlans || !!params.id}
             value={watch("plan")}
             error={errors.plan?.message}
-            nothingFound={"No Open Plans..."}
+            nothingFoundMessage={"No Open Plans..."}
             onChange={(e) => setFieldValue("plan", e ?? "")}
             data={
               plansRes?.response?.map((plan) => ({
@@ -320,12 +344,12 @@ export default function ExpenseForm({
           />
         )}
       </Box>
-      <Group grow>
-        <Button type="reset" variant="outline" disabled={creating || editing}>
-          Cancel
-        </Button>
+      <Group grow style={{ flexDirection: "row-reverse" }}>
         <Button type="submit" loading={creating || editing} disabled={!isValid}>
           Save
+        </Button>
+        <Button type="reset" variant="outline" disabled={creating || editing}>
+          Cancel
         </Button>
       </Group>
     </Box>
