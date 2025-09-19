@@ -72,7 +72,7 @@ function ExpenseCard({
         style={{ height: "100%" }}
       >
         <Group
-          gap={"xs"}
+          gap={6}
           style={{
             flexGrow: 1,
             height: "100%",
@@ -103,18 +103,17 @@ function ExpenseCard({
               />
             </Text>
           )}
-          <Badge
-            variant="light"
-            size="xs"
-            color={data.category?.color}
-            leftSection={<Icon size={12} style={{ marginBottom: -2 }} />}
-            mt={4}
-          >
-            {data.category?.group}{" "}
-            <IconChevronRight size={12} style={{ marginBottom: -2 }} />{" "}
-            {data.category?.label}
-          </Badge>
-          <Group justify="space-between" align="center" mt={4}>
+          <Group gap={6}>
+            <Badge
+              variant="light"
+              size="xs"
+              color={data.category?.color}
+              leftSection={<Icon size={12} style={{ marginBottom: -2 }} />}
+            >
+              {data.category?.group}{" "}
+              <IconChevronRight size={12} style={{ marginBottom: -2 }} />{" "}
+              {data.category?.label}
+            </Badge>
             <Tooltip
               position="top"
               disabled={hideMenu}
@@ -124,16 +123,21 @@ function ExpenseCard({
                 </Text>
               }
             >
-              <Badge color="dark" size="sm" variant="filled">
+              <Badge
+                size="sm"
+                variant="dot"
+                color="dark"
+                style={{ color: "var(--mantine-color-gray-5)" }}
+              >
                 {hideMenu
                   ? dayjs(data.date).format("DD MMM 'YY hh:mm a")
                   : dayjs(data.date).fromNow()}
               </Badge>
             </Tooltip>
-            <Text fz="lg" fw="bold" mt="auto">
-              {formatCurrency(data.amount)}
-            </Text>
           </Group>
+          <Text fz="lg" fw="bold" mt="auto">
+            {formatCurrency(data.amount)}
+          </Text>
         </Group>
         <Group style={{ flexDirection: "column" }} gap={"xs"}>
           {!hideMenu && (

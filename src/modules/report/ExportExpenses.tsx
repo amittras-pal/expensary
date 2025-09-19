@@ -46,6 +46,31 @@ export default function DownloadReport() {
   const { onError } = useErrorHandler();
   const isMobile = useMediaMatch();
 
+  // Handle different picker onChange types for Mantine v8
+  const handleDatePickerChange = (value: any) => {
+    if (Array.isArray(value)) {
+      if (typeof value[0] === 'string') {
+        // Handle string array - convert to Date array
+        setSelection([
+          value[0] ? new Date(value[0]) : null,
+          value[1] ? new Date(value[1]) : null
+        ]);
+      } else {
+        // Handle Date array
+        setSelection([value[0] || null, value[1] || null]);
+      }
+    } else if (typeof value === 'string') {
+      // Handle single string value
+      setSelection([new Date(value), null]);
+    } else if (value instanceof Date) {
+      // Handle single Date value
+      setSelection([value, null]);
+    } else {
+      // Handle null
+      setSelection([null, null]);
+    }
+  };
+
   const pickerProps = useMemo(
     (): CommonPickerProps => ({
       className: classes.wrapper,
@@ -145,14 +170,14 @@ export default function DownloadReport() {
         <DatePicker
           {...pickerProps}
           value={selection}
-          onChange={setSelection}
+          onChange={handleDatePickerChange}
         />
       )}
       {view === "month" && (
         <MonthPicker
           {...pickerProps}
           value={selection}
-          onChange={setSelection}
+          onChange={handleDatePickerChange}
         />
       )}
       {view === "plan" && (

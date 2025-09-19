@@ -243,7 +243,7 @@ export default function ExpenseForm({
           placeholder="Expense Description"
           label="Expense Description"
           error={errors.description?.message}
-          minRows={5}
+          rows={6}
         />
         <TextInput
           error={errors?.amount?.message}
@@ -253,6 +253,7 @@ export default function ExpenseForm({
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
           onBlur={onAmountBlur}
+          required
           description={
             <>
               <Text fz="xs" c="dimmed" component="span">

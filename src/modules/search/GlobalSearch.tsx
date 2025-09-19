@@ -98,6 +98,31 @@ export default function GlobalSearch2() {
     resolver: yupResolver(gSearchSchema),
   });
 
+  // Handle date picker change for Mantine v8 compatibility
+  const handleDateRangeChange = (value: any) => {
+    if (Array.isArray(value)) {
+      if (typeof value[0] === 'string') {
+        // Handle string array - convert to Date array
+        setValue("dateRange", [
+          value[0] ? new Date(value[0]) : null,
+          value[1] ? new Date(value[1]) : null
+        ], { shouldDirty: true });
+      } else {
+        // Handle Date array
+        setValue("dateRange", [value[0] || null, value[1] || null], { shouldDirty: true });
+      }
+    } else if (typeof value === 'string') {
+      // Handle single string value
+      setValue("dateRange", [new Date(value), null], { shouldDirty: true });
+    } else if (value instanceof Date) {
+      // Handle single Date value
+      setValue("dateRange", [value, null], { shouldDirty: true });
+    } else {
+      // Handle null
+      setValue("dateRange", [null, null], { shouldDirty: true });
+    }
+  };
+
   const handleSearch: SubmitHandler<GlobalSearchForm> = (values) => {
     setShowFilter(null);
     const payload: ISearchReqBody = {};
@@ -170,9 +195,7 @@ export default function GlobalSearch2() {
                   mb={0}
                   placeholder="Select Date Range"
                   defaultDate={watch("dateRange")[0] ?? new Date()}
-                  onChange={(e) =>
-                    setValue("dateRange", e, { shouldDirty: true })
-                  }
+                  onChange={handleDateRangeChange}
                   value={[watch("dateRange")[0]!, watch("dateRange")[1]!]}
                   rightSection={
                     <ClearField

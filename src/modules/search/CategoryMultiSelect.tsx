@@ -57,31 +57,6 @@ export default function CategoryMultiSelect(
   }, [props.options, props.value, search]);
 
   const { colors } = useMantineTheme();
-  const values = props.value.map((item) => {
-    const option = flattenedOptions.find((o) => o.value === item);
-    const [icon, color] = option?.meta.split("::") ?? [];
-    const Icon = Icons[icon];
-
-    return (
-      <Tooltip label={option?.label ?? ""}>
-        <Pill
-          key={item}
-          withRemoveButton
-          onRemove={() => handleValueRemove(item)}
-          style={{
-            border: "1px solid",
-            borderColor: colors[color][9],
-            backgroundColor: "transparent",
-          }}
-        >
-          <Icon
-            size={14}
-            style={{ marginBottom: -1, color: colors[color][5] }}
-          />
-        </Pill>
-      </Tooltip>
-    );
-  });
 
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
@@ -102,7 +77,30 @@ export default function CategoryMultiSelect(
           }
         >
           <Pill.Group>
-            {values}
+            {props.value.map((item) => {
+              const option = flattenedOptions.find((o) => o.value === item);
+              const [icon, color] = option?.meta.split("::") ?? [];
+              const Icon = Icons[icon];
+
+              return (
+                <Tooltip label={option?.label ?? ""} key={option?.value}>
+                  <Pill
+                    withRemoveButton
+                    onRemove={() => handleValueRemove(item)}
+                    style={{
+                      border: "1px solid",
+                      borderColor: colors[color][9],
+                      backgroundColor: "transparent",
+                    }}
+                  >
+                    <Icon
+                      size={14}
+                      style={{ marginBottom: -1, color: colors[color][5] }}
+                    />
+                  </Pill>
+                </Tooltip>
+              );
+            })}
             <Combobox.EventsTarget>
               <PillsInput.Field
                 onFocus={() => combobox.openDropdown()}

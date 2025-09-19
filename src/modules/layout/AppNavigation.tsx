@@ -90,12 +90,7 @@ export default function AppNavigation(props: Readonly<AppNavigationProps>) {
             {isMobile && <Text size="sm">Log Out</Text>}
           </UnstyledButton>
         </Tooltip>
-        <AppInfo
-          onLinkClick={() => {
-            console.log("Not Implemented.");
-          }}
-          type={isMobile ? "text" : "menu"}
-        />
+        <AppInfo type={isMobile ? "text" : "menu"} />
       </AppShell.Section>
     </>
   );
