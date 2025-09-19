@@ -4,7 +4,7 @@ import ExpenseCard from "../../components/ExpenseCard";
 import ExpenseListSkeleton from "../../components/ExpenseListSkeleton";
 import { useCurrentUser } from "../../context/user.context";
 import { useMediaMatch } from "../../hooks/media-match";
-import { useDashboardStyles } from "../../theme/modules/dashboard.styles";
+import classes from "../../theme/modules/dashboard.module.css";
 
 interface IRecentTransactionsProps {
   list: IExpense[];
@@ -20,7 +20,6 @@ export default function RecentTransactions({
   onDeleteExpense,
 }: Readonly<IRecentTransactionsProps>) {
   const isMobile = useMediaMatch();
-  const { classes } = useDashboardStyles();
   const { userData } = useCurrentUser();
 
   return isMobile ? (
@@ -33,7 +32,7 @@ export default function RecentTransactions({
   ) : (
     <Box className={classes.listWrapper}>
       <Box
-        sx={{
+        style={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",

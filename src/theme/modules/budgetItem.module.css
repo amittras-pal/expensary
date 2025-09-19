@@ -1,0 +1,27 @@
+/* Converted from budgetItem.styles.ts (useBudgetItemStyles) */
+
+.item {
+  padding: 8px;
+  border-radius: var(--mantine-radius-sm);
+  box-shadow: var(--mantine-shadow-md);
+  background-color: var(--mantine-color-dark-7);
+  border: 1px solid transparent;
+  transition: all 1s ease-out;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 8px;
+  position: relative;
+}
+
+.elevate { z-index: 1; }
+
+.share {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  opacity: 0.1;
+  border-radius: var(--mantine-radius-sm);
+  z-index: 0;
+}

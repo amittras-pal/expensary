@@ -56,7 +56,7 @@ export default function Home() {
 
   return (
     <>
-      <SimpleGrid cols={isMobile ? 1 : 2} sx={{ height: "100%" }}>
+      <SimpleGrid cols={isMobile ? 1 : 2} style={{ height: "100%" }}>
         <BudgetBreakdown
           showForm={formModal.open}
           showRecent={listDrawer.open}
@@ -93,7 +93,7 @@ export default function Home() {
           zIndex={199}
           title={
             <Box
-              sx={{
+              style={{
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "flex-end",

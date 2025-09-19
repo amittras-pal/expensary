@@ -1,0 +1,28 @@
+/* Converted from dashboard.styles.ts (useDashboardStyles) */
+
+.budgetWrapper,
+.listWrapper {
+  border-radius: var(--mantine-radius-md);
+  background-color: var(--mantine-color-dark-6);
+  box-shadow: var(--mantine-shadow-md);
+  padding: var(--mantine-spacing-sm);
+  display: flex;
+  flex-direction: column;
+  /* height: 100%; */
+}
+
+.noInfo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: var(--mantine-radius-md);
+  background-color: var(--mantine-color-gray-8);
+  height: 100%;
+}
+
+.badge {
+  display: flex;
+  gap: var(--mantine-spacing-xs);
+  align-items: center;
+  margin-right: auto;
+}
