@@ -147,7 +147,13 @@ export default function ShortcutsList() {
 function YouAreHere() {
   const { primaryColor } = useMantineTheme();
   return (
-    <ThemeIcon c={primaryColor} variant="light" size="sm" radius="lg">
+    <ThemeIcon
+      c={primaryColor}
+      variant="light"
+      size="sm"
+      radius="lg"
+      component="span"
+    >
       <IconMapPinFilled size={12} />
     </ThemeIcon>
   );
