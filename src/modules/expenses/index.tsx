@@ -192,7 +192,7 @@ export default function Expenses() {
           ta="right"
           fw="bold"
           fz="xs"
-          style={{ flexGrow: 3, whiteSpace: "nowrap" }}
+          style={{ flexGrow: isMobile ? 3 : 4, whiteSpace: "nowrap" }}
         >
           Total: {filterTotal > 0 ? formatCurrency(filterTotal) : "N.A."} of{" "}
           {formatCurrency(budgetRes?.response?.amount ?? 0)}

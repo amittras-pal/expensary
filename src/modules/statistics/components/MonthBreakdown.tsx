@@ -100,18 +100,18 @@ export default function MonthBreakdown({
           dataZoom: handleClick,
         }}
       />
-      <Text ta="right" fz="xs" fs="italic" color="dimmed">
+      <Text ta="right" fz="xs" fs="italic" c="dimmed">
         Click on any segment to focus.
       </Text>
       <Divider my="xs" />
-      <Text color="dimmed">
+      <Text c="dimmed">
         Set Budget:{" "}
         <Text component="span" color={colors.gray[1]}>
           {formatCurrency(budget?.amount ?? 0)}
         </Text>
       </Text>
       {budget?.remarks && (
-        <Text color="dimmed">
+        <Text c="dimmed">
           Remarks for budget:{" "}
           <Text component="span" color={colors.gray[1]}>
             {budget.remarks}

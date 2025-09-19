@@ -124,7 +124,7 @@ export default forwardRef<ListDetailsHandle, ListDetailsProps>(
     return (
       <Box fw="sm" pb="sm">
         {path.map((segment, i, { length }) => (
-          <Text color="dimmed" key={segment.name || "Total"} ml={i * 8}>
+          <Text c="dimmed" key={segment.name || "Total"} ml={i * 8}>
             {i > 0 && (
               <IconArrowElbowRight
                 size={12}
@@ -134,7 +134,7 @@ export default forwardRef<ListDetailsHandle, ListDetailsProps>(
             {segment.name || "Total Spent"}:{" "}
             <Text
               component="span"
-              color={i === length - 1 ? colors.gray[1] : "dimmed"}
+              c={i === length - 1 ? colors.gray[1] : "dimmed"}
             >
               {formatCurrency(segment.value)}
             </Text>
@@ -155,11 +155,10 @@ export default forwardRef<ListDetailsHandle, ListDetailsProps>(
             {i === 2 && (
               <Button
                 size="xs"
-                variant="link"
+                variant="transparent"
                 onClick={handleLoadExpenses}
                 loading={searching}
-                loaderPosition="right"
-                ml="sm"
+                color="gray"
                 disabled={loadingCategories}
               >
                 {showExpenses ? "Hide" : "Show"} Expenses
