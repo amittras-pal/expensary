@@ -24,11 +24,10 @@ import { useCurrentUser } from "../../context/user.context";
 import { useErrorHandler } from "../../hooks/error-handler";
 import { LoginForm, loginSchema } from "../../schemas/schemas";
 import { loginUser } from "../../services/user.service";
-import { useAuthStyles } from "../../theme/modules/auth.styles";
+import classes from "../../theme/modules/auth.module.css";
 import PublicGuard from "../guards/PublicGuard";
 
 export default function Login() {
-  const { classes } = useAuthStyles();
   const { setUserData } = useCurrentUser();
   const navigate = useNavigate();
   const [target, setTarget] = useState("/");
@@ -111,8 +110,11 @@ export default function Login() {
           <Text fw="bold" mb="sm">
             Login To:{" "}
           </Text>
-          <Chip.Group onChange={(e: string) => setTarget(e)} value={target}>
-            <Group position="center" spacing="6px" mb="md">
+          <Chip.Group
+            onChange={(e) => setTarget(Array.isArray(e) ? e[0] : e)}
+            value={target}
+          >
+            <Group justify="center" gap="xs" mb="md">
               <Chip variant="filled" size="xs" value="/">
                 Home
               </Chip>

@@ -20,11 +20,10 @@ import { APP_TITLE } from "../../constants/app";
 import { useErrorHandler } from "../../hooks/error-handler";
 import { RegisterForm, registerSchema } from "../../schemas/schemas";
 import { registerUser } from "../../services/user.service";
-import { useAuthStyles } from "../../theme/modules/auth.styles";
+import classes from "../../theme/modules/auth.module.css";
 import PublicGuard from "../guards/PublicGuard";
 
 export default function Register() {
-  const { classes } = useAuthStyles();
   const navigate = useNavigate();
   useDocumentTitle(`${APP_TITLE} | Register`);
   const { onError } = useErrorHandler();
@@ -84,9 +83,9 @@ export default function Register() {
       <Box
         component="form"
         onSubmit={handleSubmit(handleCreate)}
-        className={classes.wrapper}
+  className={classes.wrapper}
       >
-        <Container size="lg" className={classes.paper}>
+  <Container size="lg" className={classes.paper}>
           <Text fz="lg" fw="bold" mb="sm">
             Create a new {APP_TITLE} Account
           </Text>
