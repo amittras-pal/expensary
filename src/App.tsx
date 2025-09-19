@@ -1,9 +1,16 @@
+// mantine styles.
+import '@mantine/core/styles.css';
+import '@mantine/dates/styles.css';
+// mantine components.
 import { MantineProvider } from "@mantine/core";
-import { useLocalStorage } from "@mantine/hooks";
 import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
+// mantine hooks.
+import { useLocalStorage } from "@mantine/hooks";
+// react & core libs
 import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
+// custom components
 import OverlayLoader from "./components/loaders/OverlayLoader";
 import PreLoader from "./components/loaders/PreLoader";
 import BudgetMonitor from "./components/monitors/BudgetMonitor";
@@ -22,18 +29,18 @@ export default function App() {
 
   return (
     <MantineProvider
-      withGlobalStyles
-      withNormalizeCSS
-      withCSSVariables
-      theme={{ ...theme, primaryColor: color }}
+      defaultColorScheme="dark"
+      cssVariablesSelector="html"
+      withCssVariables
+      theme={{ ...theme, primaryColor: color ?? "indigo" }}
     >
+      <ThemeMonitor />
       <PreLoader>
         <ModalsProvider>
           <UserProvider>
             <Notifications position="top-center" autoClose={3500} />
             {/* Monitors */}
             <BudgetMonitor />
-            <ThemeMonitor />
             <TimezoneMonitor />
             <NetworkMonitor />
             {/* Main App */}
