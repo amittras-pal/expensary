@@ -170,7 +170,7 @@ export function AmountCell({
   value,
 }: Readonly<ICellRendererParams<IExpense, number>>) {
   return (
-    <Text component="span" fw="bold" color={amountColor(value)}>
+    <Text component="span" fw="bold" c={amountColor(value)} fz="sm">
       {formatCurrency(value)}
     </Text>
   );

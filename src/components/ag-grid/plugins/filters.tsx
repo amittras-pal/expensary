@@ -12,12 +12,11 @@ import {
 import { _20Min } from "../../../constants/app";
 import { useErrorHandler } from "../../../hooks/error-handler";
 import { getCategories } from "../../../services/categories.service";
-import { useCategoryFilterStyles } from "../../../theme/modules/grid.styles";
+import classes from "../../../theme/modules/grid.module.scss";
 import ContainedLoader from "../../loaders/ContainedLoader";
 import { SubCategoryOption } from "../interfaces";
 
 function Category(props: IFilterParams<IExpense>, ref: any) {
-  const { classes } = useCategoryFilterStyles();
   const { onError } = useErrorHandler();
   const [selection, setSelection] = useState<string[]>([]);
 
@@ -77,7 +76,7 @@ function Category(props: IFilterParams<IExpense>, ref: any) {
 
   return (
     <Box className={classes.wrapper}>
-      <Text fw="bold" mb="sm">
+      <Text fw="bold" mb="sm" fz="sm">
         Filter Categories
       </Text>
       <Checkbox.Group value={selection} onChange={setSelection}>
@@ -115,7 +114,6 @@ function Category(props: IFilterParams<IExpense>, ref: any) {
 
 function SubCategory(props: IFilterParams<IExpense>, ref: any) {
   const [selection, setSelection] = useState<string[]>([]);
-  const { classes } = useCategoryFilterStyles();
   const { onError } = useErrorHandler();
 
   const { isLoading, data: catRes } = useQuery({
@@ -183,7 +181,7 @@ function SubCategory(props: IFilterParams<IExpense>, ref: any) {
 
   return (
     <Box className={classes.wrapper}>
-      <Text fw="bold" mb="sm">
+      <Text fw="bold" mb="sm" fz="sm">
         Filter Sub Categories
       </Text>
       <ScrollArea h={categoryOptions.length > 0 ? 200 : 75}>
@@ -211,7 +209,7 @@ function SubCategory(props: IFilterParams<IExpense>, ref: any) {
             </Group>
           </Checkbox.Group>
         ) : (
-          <Text ta="center" color="dimmed">
+          <Text ta="center" c="dimmed" fz="sm">
             Please select one or more categories first to filter by
             subcategories.
           </Text>

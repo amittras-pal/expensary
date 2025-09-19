@@ -1,5 +1,5 @@
 import { Box, Divider, Group, Modal, Text } from "@mantine/core";
-import { MonthPickerInput } from "@mantine/dates";
+import { DateValue, MonthPickerInput } from "@mantine/dates";
 import { useDisclosure, useDocumentTitle, useHotkeys } from "@mantine/hooks";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ColDef, FilterChangedEvent, GridApi } from "ag-grid-community";
@@ -159,7 +159,7 @@ export default function Expenses() {
     setFilterTotal(total);
   };
 
-  const handleMonthChange = (e: Date) => {
+  const handleMonthChange = (e: DateValue) => {
     setPayload((prev) => ({
       ...prev,
       startDate: dayjs(e).startOf("month").toDate(),
@@ -174,53 +174,46 @@ export default function Expenses() {
 
   return (
     <>
-      <Group
-        gap={0}
-        style={{ flexDirection: "column", height: "100%" }}
-        position="left"
-        align="flex-start"
-      >
-        <Group gap="xs" style={{ width: "100%" }}>
-          <MonthPickerInput
-            size="xs"
-            style={{ flexGrow: 1, textAlign: "center" }}
-            placeholder="Select month"
-            variant="filled"
-            value={payload.startDate}
-            valueFormat="MMM 'YY"
-            onChange={handleMonthChange}
-            maxDate={dayjs().toDate()}
-            minDate={
-              userData ? dayjs(userData?.createdAt).toDate() : dayjs().toDate()
-            }
-          />
-          <Text
-            ta="right"
-            fw="bold"
-            fz="xs"
-            style={{ flexGrow: 3, whiteSpace: "nowrap" }}
-          >
-            Total: {filterTotal > 0 ? formatCurrency(filterTotal) : "N.A."} of{" "}
-            {formatCurrency(budgetRes?.response?.amount ?? 0)}
-          </Text>
-        </Group>
-        <Divider my="sm" style={{ width: "100%" }} />
-        <Box style={{ flexGrow: 1, width: "100%" }} ref={ref}>
-          <AgGridMod
-            columnDefs={columns}
-            popupParent={document.body}
-            onFilterChanged={updateFilterTotal}
-            height={ref.current?.clientHeight ?? 0}
-            rowData={listRes?.response ?? []}
-            onGridReady={({ api }) => setGrid(api)}
-            noRowsOverlayComponentParams={{
-              message: `No expenses recorded for ${dayjs(
-                payload.startDate
-              ).format("MMM, 'YY")}`,
-            }}
-          />
-        </Box>
+      <Group gap="xs" style={{ width: "100%" }}>
+        <MonthPickerInput
+          size="xs"
+          style={{ flexGrow: 1, textAlign: "center" }}
+          placeholder="Select month"
+          variant="filled"
+          value={payload.startDate}
+          valueFormat="MMM 'YY"
+          onChange={handleMonthChange}
+          maxDate={dayjs().toDate()}
+          minDate={
+            userData ? dayjs(userData?.createdAt).toDate() : dayjs().toDate()
+          }
+        />
+        <Text
+          ta="right"
+          fw="bold"
+          fz="xs"
+          style={{ flexGrow: 3, whiteSpace: "nowrap" }}
+        >
+          Total: {filterTotal > 0 ? formatCurrency(filterTotal) : "N.A."} of{" "}
+          {formatCurrency(budgetRes?.response?.amount ?? 0)}
+        </Text>
       </Group>
+      <Divider my="sm" style={{ width: "100%" }} />
+      <Box style={{ width: "100%", height: "calc(100vh - 150px)" }} ref={ref}>
+        <AgGridMod
+          columnDefs={columns}
+          popupParent={document.body}
+          onFilterChanged={updateFilterTotal}
+          height={ref.current?.clientHeight ?? 0}
+          rowData={listRes?.response ?? []}
+          onGridReady={({ api }) => setGrid(api)}
+          noRowsOverlayComponentParams={{
+            message: `No expenses recorded for ${dayjs(
+              payload.startDate
+            ).format("MMM, 'YY")}`,
+          }}
+        />
+      </Box>
       <Modal
         opened={showForm || confirm}
         withCloseButton={false}
