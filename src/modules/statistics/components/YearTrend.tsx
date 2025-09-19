@@ -434,7 +434,7 @@ function tooltipFormatter(series: any) {
     (series.find((o: any) => o.seriesName === "Budget")?.value ?? 0) > 0;
 
   let html = '<div style="padding:4px 6px;width:240px;font-family:inherit;">';
-  html += `<div style=\"font-weight:700;color:#fff;margin-bottom:4px;\">${series[0].axisValueLabel}</div>`;
+  html += `<div style="font-weight:700;color:#fff;margin-bottom:4px;">${series[0].axisValueLabel}</div>`;
 
   if (hasBudget) {
     series.forEach((item: any, index: number) => {
@@ -443,10 +443,10 @@ function tooltipFormatter(series: any) {
       html +=
         '<div style="display:flex;align-items:center;gap:6px;justify-content:space-between;">';
       if (index > 1) {
-        html += `<span style=\"width:12px;height:12px;border-radius:6px;background:${item.color};display:inline-block;\"></span>`;
+        html += `<span style="width:12px;height:12px;border-radius:6px;background:${item.color};display:inline-block;"></span>`;
       }
-      html += `<span style=\"flex:1;color:${nameColor};\">${item.seriesName}</span>`;
-      html += `<span style=\"color:${valueColor};${index < 2 ? "font-weight:700;" : ""}\">${formatCurrency(item.value)}</span>`;
+      html += `<span style="flex:1;color:${nameColor};">${item.seriesName}</span>`;
+      html += `<span style="color:${valueColor};${index < 2 ? "font-weight:700;" : ""}">${formatCurrency(item.value)}</span>`;
       html += "</div>";
     });
     html +=

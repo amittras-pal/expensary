@@ -38,8 +38,6 @@ export default function PreLoader(props: Readonly<PropsWithChildren>) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const points: MutableRefObject<COORDS[]> = useRef([]);
 
-  // const { classes } = usePreloaderStyles();
-
   const { isLoading, isError } = useQuery({
     queryKey: ["wake-server"],
     queryFn: pingServer,
