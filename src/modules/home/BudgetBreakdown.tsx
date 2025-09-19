@@ -36,7 +36,7 @@ import { useMediaMatch } from "../../hooks/media-match";
 import EmptyState from "../../resources/empty-state.svg?react";
 import { getBudget } from "../../services/budget.service";
 import { getSummary } from "../../services/expense.service";
-import classes from "../../theme/modules/dashboard.module.css";
+import classes from "../../theme/modules/dashboard.module.scss";
 import { formatCurrency, getPercentage, getSeverityColor } from "../../utils";
 import { _20Min } from "../../constants/app";
 

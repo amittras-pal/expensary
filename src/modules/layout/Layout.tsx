@@ -25,7 +25,7 @@ import OverlayLoader from "../../components/loaders/OverlayLoader";
 import { useMediaMatch } from "../../hooks/media-match";
 import { useTitleMonitor } from "../../hooks/title";
 import logoPath from "../../resources/app-logo.svg";
-import styles from "../../theme/modules/Layout.module.css";
+import classes from "../../theme/modules/Layout.module.scss";
 import AuthGuard from "../guards/AuthGuard";
 import ShortcutsList from "./ShortcutsList";
 import { ROUTES } from "../../constants/routes";
@@ -68,7 +68,7 @@ export default function Layout() {
         navbar={{ width: 60, breakpoint: "sm", collapsed: { mobile: !open } }}
         padding="md"
       >
-        <AppShell.Header className={styles.header}>
+        <AppShell.Header className={classes.header}>
           {/* <MediaQuery largerThan="sm" styles={{ display: "none" }}>
           <Burger
             opened={open}
@@ -182,7 +182,7 @@ export default function Layout() {
               disabled={isMobile}
               offset={10}
             >
-              <UnstyledButton onClick={confirmLogout} className={styles.navBtn}>
+              <UnstyledButton onClick={confirmLogout} className={classes.navBtn}>
                 <ThemeIcon variant={"light"} color="red" size={36}>
                   <IconPower size={20} />
                 </ThemeIcon>
@@ -255,7 +255,7 @@ function NavLink({ onChange, ...route }: NavLinkProps) {
         onClick={() => onChange(false)}
         to={route.path}
         className={
-          active ? `${styles.navBtn} ${styles.navBtnActive}` : styles.navBtn
+          active ? `${classes.navBtn} ${classes.navBtnActive}` : classes.navBtn
         }
       >
         <ThemeIcon variant={active ? "filled" : "light"} size={36}>

@@ -3,7 +3,7 @@ import { useDocumentTitle } from "@mantine/hooks";
 import { Link } from "react-router-dom";
 import AppInfo from "../../components/app-info/AppInfo";
 import { APP_TITLE } from "../../constants/app";
-import classes from "../../theme/modules/auth.module.css";
+import classes from "../../theme/modules/auth.module.scss";
 import PublicGuard from "../guards/PublicGuard";
 
 export default function RegistrationHold() {

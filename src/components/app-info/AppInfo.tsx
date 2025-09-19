@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 import { useCurrentUser } from "../../context/user.context";
 import { useMediaMatch } from "../../hooks/media-match";
 import { updateUserDetails } from "../../services/user.service";
-import classes from "../../theme/modules/Layout.module.css";
+import classes from "../../theme/modules/Layout.module.scss";
 import Changelog from "./Changelog";
 
 export default function AppInfo(

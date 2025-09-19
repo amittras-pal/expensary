@@ -100,7 +100,7 @@ export default function PreLoader(props: Readonly<PropsWithChildren>) {
           <canvas ref={canvasRef} />
         </Box>
         <Box className={classes.logoContainer}>
-          <Text align="center" fw="bold" fz="lg" pt="md">
+          <Text ta="center" fw="bold" fz="lg" pt="md">
             {APP_TITLE}
           </Text>
           <Divider variant="dashed" my="sm" />
@@ -127,15 +127,15 @@ export default function PreLoader(props: Readonly<PropsWithChildren>) {
               position="top-end"
               label={
                 <>
-                  <Text fz="xs" fw="bold" align="left" fs="italic">
+                  <Text fz="xs" fw="bold" ta="left" fs="italic">
                     Why is it taking so long to load?
                   </Text>
-                  <Text fz="xs" align="left" mt="sm">
+                  <Text fz="xs" ta="left" mt="sm">
                     Our compute engine is hosted on a free-tier platform to save
                     cost. It may take a about a minute to restart after being
                     inactive for a while.
                   </Text>
-                  <Text fz="xs" align="left" mt="sm" fs="italic">
+                  <Text fz="xs" ta="left" mt="sm" fs="italic">
                     Thank you for your patience!!
                   </Text>
                 </>
@@ -146,15 +146,14 @@ export default function PreLoader(props: Readonly<PropsWithChildren>) {
               </ThemeIcon>
             </Tooltip>
           </Box>
-          <Progress.Root size="sm">
-            <Progress.Section
-              aria-label="Connection Progress"
-              color={isError ? "red" : "indigo"}
-              value={progress}
-            />
-          </Progress.Root>
+          <Progress
+            size="sm"
+            value={progress}
+            color={isError ? "red" : "indigo"}
+            aria-label="Connection Progress"
+          />
           {isError && (
-            <Text fz="sm" color="red" fs="italic" mt="xs">
+            <Text fz="sm" c="red" fs="italic" mt="xs">
               Failed to connect,
               <Text
                 component="span"

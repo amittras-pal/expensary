@@ -4,7 +4,7 @@ import ExpenseCard from "../../components/ExpenseCard";
 import ExpenseListSkeleton from "../../components/ExpenseListSkeleton";
 import { useCurrentUser } from "../../context/user.context";
 import { useMediaMatch } from "../../hooks/media-match";
-import classes from "../../theme/modules/dashboard.module.css";
+import classes from "../../theme/modules/dashboard.module.scss";
 
 interface IRecentTransactionsProps {
   list: IExpense[];

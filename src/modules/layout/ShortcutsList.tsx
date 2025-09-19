@@ -14,7 +14,7 @@ import {
 } from "@tabler/icons-react";
 import { useLocation } from "react-router-dom";
 import { planDetailsPath } from "../../constants/app";
-import classes from "../../theme/modules/Layout.module.css";
+import classes from "../../theme/modules/Layout.module.scss";
 
 export default function ShortcutsList() {
   const { pathname } = useLocation();

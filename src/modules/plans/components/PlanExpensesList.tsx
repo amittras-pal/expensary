@@ -20,7 +20,7 @@ import { useErrorHandler } from "../../../hooks/error-handler";
 import { useMediaMatch } from "../../../hooks/media-match";
 import { getExpenseList } from "../../../services/expense.service";
 import { copyExpensesToBudget } from "../../../services/plans.service";
-import classes from "../../../theme/modules/planExpenses.module.css";
+import classes from "../../../theme/modules/planExpenses.module.scss";
 
 interface IPlanExpensesListProps {
   plan: IExpensePlan;

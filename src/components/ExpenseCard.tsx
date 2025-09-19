@@ -26,7 +26,7 @@ import Highlighter from "react-highlight-words";
 import { Icons } from "../constants/categories";
 import { useCurrentUser } from "../context/user.context";
 import { formatCurrency } from "../utils";
-import classes from "../theme/modules/expenseCard.module.css";
+import classes from "../theme/modules/expenseCard.module.scss";
 dayjs.extend(relativeTime);
 
 type ExpenseAction = (e: IExpense) => void;

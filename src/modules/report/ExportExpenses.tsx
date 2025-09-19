@@ -20,7 +20,7 @@ import { useErrorHandler } from "../../hooks/error-handler";
 import { useMediaMatch } from "../../hooks/media-match";
 import { exportPlan, exportRange } from "../../services/export.service";
 import { getPlans } from "../../services/plans.service";
-import classes from "../../theme/modules/report.module.css";
+import classes from "../../theme/modules/report.module.scss";
 import { downloadFile } from "../../utils";
 
 interface CommonPickerProps extends PickerBaseProps<"range"> {
@@ -112,7 +112,7 @@ export default function DownloadReport() {
 
   return (
     <Group
-      position="center"
+      justify="center"
       style={{
         maxWidth: isMobile ? "95%" : 400,
         flexDirection: "column",
@@ -154,7 +154,7 @@ export default function DownloadReport() {
           value={plan}
           onChange={setPlan}
           disabled={loadingPlans}
-          nothingFound="No Plans to Export"
+          nothingFoundMessage="No Plans to Export"
           data={
             plans?.response.map((plan) => ({
               label: `${plan.name} (${plan.open ? "Active" : "Closed"})`,

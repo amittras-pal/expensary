@@ -8,7 +8,7 @@ import {
 import dayjs from "dayjs";
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
-import classes from "../../../theme/modules/plan.module.css";
+import classes from "../../../theme/modules/plan.module.scss";
 
 type PlanAction = (
   data: IExpensePlan,

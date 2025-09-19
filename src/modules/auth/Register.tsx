@@ -20,7 +20,7 @@ import { APP_TITLE } from "../../constants/app";
 import { useErrorHandler } from "../../hooks/error-handler";
 import { RegisterForm, registerSchema } from "../../schemas/schemas";
 import { registerUser } from "../../services/user.service";
-import classes from "../../theme/modules/auth.module.css";
+import classes from "../../theme/modules/auth.module.scss";
 import PublicGuard from "../guards/PublicGuard";
 
 export default function Register() {
