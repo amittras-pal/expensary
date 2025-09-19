@@ -1,4 +1,11 @@
 import {
+  MutableRefObject,
+  PropsWithChildren,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import {
   Box,
   Divider,
   Progress,
@@ -9,18 +16,11 @@ import {
 } from "@mantine/core";
 import { IconHelp } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
-import {
-  MutableRefObject,
-  PropsWithChildren,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import { _20Min, APP_TITLE } from "../../constants/app";
+import { APP_TITLE, _20Min } from "../../constants/app";
 import { pingServer } from "../../services/server.service";
-import BrandLogo from "./logo-stroke.svg?react";
 import BrandLoader from "./LogoLoader";
 import classes from "./PreLoader.module.scss";
+import BrandLogo from "./logo-stroke.svg?react";
 import {
   COORDS,
   createPoints,
@@ -108,7 +108,11 @@ export default function PreLoader(props: Readonly<PropsWithChildren>) {
             {isLoading ? (
               <BrandLoader size={200} brand />
             ) : (
-              <BrandLogo width={200} height={200} className={classes.logoError} />
+              <BrandLogo
+                width={200}
+                height={200}
+                className={classes.logoError}
+              />
             )}
           </Box>
         </Box>

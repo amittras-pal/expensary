@@ -1,5 +1,5 @@
-import BrandLogo from "./logo-stroke.svg?react";
 import "./LogoLoader.scss";
+import BrandLogo from "./logo-stroke.svg?react";
 
 export type BrandLoaderProps = { size: number; brand?: boolean };
 

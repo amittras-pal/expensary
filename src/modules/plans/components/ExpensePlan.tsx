@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { ActionIcon, Box, Divider, Menu, Text, TextProps } from "@mantine/core";
 import {
   IconDotsVertical,
@@ -6,7 +7,6 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import dayjs from "dayjs";
-import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import classes from "../../../theme/modules/plan.module.scss";
 
@@ -66,7 +66,12 @@ export default function ExpensePlan({
             {data?.open ? (
               <Menu shadow="md" position="bottom-end">
                 <Menu.Target>
-                  <ActionIcon size="sm" radius="xl" variant="transparent" color="gray">
+                  <ActionIcon
+                    size="sm"
+                    radius="xl"
+                    variant="transparent"
+                    color="gray"
+                  >
                     <IconDotsVertical size={16} />
                   </ActionIcon>
                 </Menu.Target>

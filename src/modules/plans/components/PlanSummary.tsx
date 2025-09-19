@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
   Box,
   Divider,
@@ -9,14 +10,13 @@ import {
 } from "@mantine/core";
 import { IconListCheck } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 import BudgetItem from "../../../components/BudgetItem";
 import ContainedLoader from "../../../components/loaders/ContainedLoader";
 import { useErrorHandler } from "../../../hooks/error-handler";
+import { useMediaMatch } from "../../../hooks/media-match";
 import { getSummary } from "../../../services/expense.service";
 import { formatCurrency } from "../../../utils";
-import { useMediaMatch } from "../../../hooks/media-match";
 
 function PlanSummary() {
   const { onError } = useErrorHandler();

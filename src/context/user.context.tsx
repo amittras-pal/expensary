@@ -1,5 +1,3 @@
-import { useLocalStorage } from "@mantine/hooks";
-import { useQuery } from "@tanstack/react-query";
 import {
   Dispatch,
   PropsWithChildren,
@@ -10,6 +8,8 @@ import {
   useMemo,
   useState,
 } from "react";
+import { useLocalStorage } from "@mantine/hooks";
+import { useQuery } from "@tanstack/react-query";
 import OverlayLoader from "../components/loaders/OverlayLoader";
 import { _20Min } from "../constants/app";
 import { useErrorHandler } from "../hooks/error-handler";

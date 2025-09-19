@@ -32,6 +32,5 @@
     "^../(.*)$",
     "^./(.*)$"
   ],
-  "importOrderSeparation": true,
   "importOrderSortSpecifiers": true
 }

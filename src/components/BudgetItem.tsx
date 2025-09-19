@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
   Badge,
   Box,
@@ -7,7 +8,6 @@ import {
   ThemeIcon,
   Tooltip,
 } from "@mantine/core";
-import { useMemo } from "react";
 import { Icons } from "../constants/categories";
 import classes from "../theme/modules/budgetItem.module.scss";
 import { formatCurrency, getPercentage } from "../utils";
@@ -54,7 +54,12 @@ function BudgetItem({
       )}
       <Box className={classes.elevate} style={{ width: "100%" }}>
         <Group align="center" mb={2} justify="space-between">
-          <Badge variant="light" color={subCategories[0].color} size="sm" radius="sm">
+          <Badge
+            variant="light"
+            color={subCategories[0].color}
+            size="sm"
+            radius="sm"
+          >
             {category}
           </Badge>
           <Text fw="bold">{formatCurrency(total)} </Text>

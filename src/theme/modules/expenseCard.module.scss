@@ -17,6 +17,10 @@
   /* Color tokens approximating theme primary shades */
   color: var(--mantine-color-primary-2, var(--mantine-primary-color-filled));
   /* Approximate rgba(primary[9], 0.4) using color-mix if supported */
-  background-color: color-mix(in srgb, var(--mantine-color-primary-9, var(--mantine-primary-color-filled)) 40%, transparent);
+  background-color: color-mix(
+    in srgb,
+    var(--mantine-color-primary-9, var(--mantine-primary-color-filled)) 40%,
+    transparent
+  );
   border-radius: var(--mantine-radius-xs);
 }

@@ -1,10 +1,9 @@
-.logoError  {
+.logoError {
   & :global(.body),
   & :global(.head),
-  & :global(.leg){
+  & :global(.leg) {
     fill: var(--mantine-color-red-7);
   }
-
 }
 
 .backdrop {

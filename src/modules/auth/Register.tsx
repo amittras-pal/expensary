@@ -1,4 +1,3 @@
-import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Box,
   Button,
@@ -11,6 +10,7 @@ import {
 import { useDocumentTitle } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation } from "@tanstack/react-query";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
@@ -83,9 +83,9 @@ export default function Register() {
       <Box
         component="form"
         onSubmit={handleSubmit(handleCreate)}
-  className={classes.wrapper}
+        className={classes.wrapper}
       >
-  <Container size="lg" className={classes.paper}>
+        <Container size="lg" className={classes.paper}>
           <Text fz="lg" fw="bold" mb="sm">
             Create a new {APP_TITLE} Account
           </Text>

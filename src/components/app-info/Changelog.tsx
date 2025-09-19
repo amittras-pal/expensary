@@ -1,7 +1,7 @@
+import { useMemo } from "react";
 import { Accordion, Badge, Box, Group, Text } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import { useMemo } from "react";
 import Markdown from "react-markdown";
 import { useErrorHandler } from "../../hooks/error-handler";
 import { getChangelog } from "../../services/app-info.service";

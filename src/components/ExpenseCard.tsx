@@ -1,3 +1,4 @@
+import { memo, useMemo } from "react";
 import {
   ActionIcon,
   Badge,
@@ -20,13 +21,13 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-import { memo, useMemo } from "react";
 import Highlighter from "react-highlight-words";
+import relativeTime from "dayjs/plugin/relativeTime";
 import { Icons } from "../constants/categories";
 import { useCurrentUser } from "../context/user.context";
-import { formatCurrency } from "../utils";
 import classes from "../theme/modules/expenseCard.module.scss";
+import { formatCurrency } from "../utils";
+
 dayjs.extend(relativeTime);
 
 type ExpenseAction = (e: IExpense) => void;

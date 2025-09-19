@@ -1,4 +1,4 @@
-import { yupResolver } from "@hookform/resolvers/yup";
+import { useMemo, useState } from "react";
 import {
   Accordion,
   Box,
@@ -9,13 +9,13 @@ import {
   SimpleGrid,
   Text,
   TextInput,
-  useMantineTheme
+  useMantineTheme,
 } from "@mantine/core";
 import { DatePickerInput, PickerBaseProps } from "@mantine/dates";
 import { useDocumentTitle } from "@mantine/hooks";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import { useMemo, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import ExpenseCard from "../../components/ExpenseCard";
 import ContainedLoader from "../../components/loaders/ContainedLoader";
@@ -189,7 +189,7 @@ export default function GlobalSearch2() {
                 />
                 <div></div>
                 <div></div>
-                <Group grow style={{flexDirection: 'row-reverse'}}>
+                <Group grow style={{ flexDirection: "row-reverse" }}>
                   <Button type="submit" disabled={!isDirty || !isValid}>
                     Search
                   </Button>
@@ -241,5 +241,3 @@ export default function GlobalSearch2() {
     </>
   );
 }
-
-

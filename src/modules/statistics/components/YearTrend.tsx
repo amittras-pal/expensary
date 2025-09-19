@@ -1,10 +1,10 @@
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Divider, Drawer, Group, Select, useMantineTheme } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import { BarSeriesOption, LineSeriesOption, type EChartsOption } from "echarts";
+import { BarSeriesOption, type EChartsOption, LineSeriesOption } from "echarts";
 import ReactECharts from "echarts-for-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { _20Min } from "../../../constants/app";
 import { useCurrentUser } from "../../../context/user.context";
 import { useErrorHandler } from "../../../hooks/error-handler";
@@ -430,27 +430,30 @@ function useDefaultChartConfig(): EChartsOption {
 }
 
 function tooltipFormatter(series: any) {
-  const hasBudget = (series.find((o: any) => o.seriesName === "Budget")?.value ?? 0) > 0;
+  const hasBudget =
+    (series.find((o: any) => o.seriesName === "Budget")?.value ?? 0) > 0;
 
   let html = '<div style="padding:4px 6px;width:240px;font-family:inherit;">';
   html += `<div style=\"font-weight:700;color:#fff;margin-bottom:4px;\">${series[0].axisValueLabel}</div>`;
-  
+
   if (hasBudget) {
     series.forEach((item: any, index: number) => {
-      const nameColor = index < 2 ? item.color : '#adb5bd';
-      const valueColor = index < 2 ? item.color : '#ffffff';
-      html += '<div style="display:flex;align-items:center;gap:6px;justify-content:space-between;">';
+      const nameColor = index < 2 ? item.color : "#adb5bd";
+      const valueColor = index < 2 ? item.color : "#ffffff";
+      html +=
+        '<div style="display:flex;align-items:center;gap:6px;justify-content:space-between;">';
       if (index > 1) {
         html += `<span style=\"width:12px;height:12px;border-radius:6px;background:${item.color};display:inline-block;\"></span>`;
       }
       html += `<span style=\"flex:1;color:${nameColor};\">${item.seriesName}</span>`;
-      html += `<span style=\"color:${valueColor};${index < 2 ? 'font-weight:700;' : ''}\">${formatCurrency(item.value)}</span>`;
-      html += '</div>';
+      html += `<span style=\"color:${valueColor};${index < 2 ? "font-weight:700;" : ""}\">${formatCurrency(item.value)}</span>`;
+      html += "</div>";
     });
-    html += '<div style="font-size:10px;font-style:italic;margin-top:6px;">Click on the dot to view details</div>';
+    html +=
+      '<div style="font-size:10px;font-style:italic;margin-top:6px;">Click on the dot to view details</div>';
   } else {
     html += '<div style="color:#adb5bd;">Budget missing for the month.</div>';
   }
-  html += '</div>';
+  html += "</div>";
   return html;
 }

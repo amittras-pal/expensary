@@ -9,19 +9,22 @@ svg.logo-loader {
   }
 
   .body {
-    animation: body 3s ease-in-out alternate infinite,
+    animation:
+      body 3s ease-in-out alternate infinite,
       fill 3s ease-in-out alternate infinite;
     stroke-dasharray: 2573.875732421875;
   }
 
   .leg {
-    animation: leg 3s ease-in-out alternate infinite,
+    animation:
+      leg 3s ease-in-out alternate infinite,
       fill 3s ease-in-out alternate infinite;
     stroke-dasharray: 705.975341796875;
   }
 
   .head {
-    animation: head 3s ease-in-out alternate infinite,
+    animation:
+      head 3s ease-in-out alternate infinite,
       fill 3s ease-in-out alternate infinite;
     stroke-dasharray: 470.79998779296875;
   }
@@ -33,17 +36,20 @@ svg.logo-loader {
       stroke: var(--mantine-color-indigo-3);
     }
     .body {
-      animation: body 3s ease-in-out alternate infinite,
+      animation:
+        body 3s ease-in-out alternate infinite,
         fill-brand 3s ease-in-out alternate infinite;
     }
 
     .leg {
-      animation: leg 3s ease-in-out alternate infinite,
+      animation:
+        leg 3s ease-in-out alternate infinite,
         fill-brand 3s ease-in-out alternate infinite;
     }
 
     .head {
-      animation: head 3s ease-in-out alternate infinite,
+      animation:
+        head 3s ease-in-out alternate infinite,
         fill-brand 3s ease-in-out alternate infinite;
     }
   }

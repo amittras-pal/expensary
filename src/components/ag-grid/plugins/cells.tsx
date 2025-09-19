@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
   ActionIcon,
   Badge,
@@ -16,9 +17,8 @@ import {
   IconInfoCircle,
   IconTrash,
 } from "@tabler/icons-react";
-import { ICellRendererParams } from "ag-grid-community";
 import dayjs from "dayjs";
-import { useMemo } from "react";
+import { ICellRendererParams } from "ag-grid-community";
 import { useCurrentUser } from "../../../context/user.context";
 import { formatCurrency } from "../../../utils";
 import { MenuCellProps, MetaCellProps } from "../interfaces";
@@ -47,7 +47,13 @@ export function MetaCell({ data, page }: Readonly<MetaCellProps>) {
             >
               <IconInfoCircle size={14} stroke={1.5} />
             </ThemeIcon>
-            <Text component="p" c="dimmed" fz="xs" style={{ whiteSpace: "pre-wrap" }} m={0}>
+            <Text
+              component="p"
+              c="dimmed"
+              fz="xs"
+              style={{ whiteSpace: "pre-wrap" }}
+              m={0}
+            >
               {data?.description}
             </Text>
           </Group>

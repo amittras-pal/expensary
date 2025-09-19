@@ -1,16 +1,11 @@
-// mantine styles.
-import '@mantine/core/styles.css';
-import '@mantine/dates/styles.css';
-// mantine components.
+import { Suspense } from "react";
 import { MantineProvider } from "@mantine/core";
+import "@mantine/core/styles.css";
+import "@mantine/dates/styles.css";
+import { useLocalStorage } from "@mantine/hooks";
 import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
-// mantine hooks.
-import { useLocalStorage } from "@mantine/hooks";
-// react & core libs
-import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
-// custom components
 import OverlayLoader from "./components/loaders/OverlayLoader";
 import PreLoader from "./components/loaders/PreLoader";
 import BudgetMonitor from "./components/monitors/BudgetMonitor";

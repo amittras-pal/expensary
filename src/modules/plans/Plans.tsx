@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import {
   ActionIcon,
   Alert,
@@ -15,15 +16,14 @@ import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import { IconCheck, IconChecklist, IconPlus, IconX } from "@tabler/icons-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
 import ContainedLoader from "../../components/loaders/ContainedLoader";
 import { APP_TITLE } from "../../constants/app";
 import { useErrorHandler } from "../../hooks/error-handler";
+import { useMediaMatch } from "../../hooks/media-match";
 import { getPlans, updatePlan } from "../../services/plans.service";
 import DeletePlan from "./components/DeletePlan";
 import ExpensePlan from "./components/ExpensePlan";
 import ExpensePlanForm from "./components/ExpensePlanForm";
-import { useMediaMatch } from "../../hooks/media-match";
 
 interface PlanSegregation {
   active: IExpensePlan[];

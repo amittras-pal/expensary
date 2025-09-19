@@ -5,8 +5,8 @@ import {
   Text,
   ThemeIcon,
 } from "@mantine/core";
-import { Icons } from "../constants/categories";
 import { IconCheck } from "@tabler/icons-react";
+import { Icons } from "../constants/categories";
 
 type Option = ComboboxItem & { meta: string };
 

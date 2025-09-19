@@ -1,3 +1,4 @@
+import { Fragment, PropsWithChildren, useMemo, useState } from "react";
 import {
   Avatar,
   Blockquote,
@@ -13,7 +14,6 @@ import {
 } from "@mantine/core";
 import { IconBuilding, IconMapPin } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
-import { Fragment, PropsWithChildren, useMemo, useState } from "react";
 import { Components, ExtraProps } from "react-markdown";
 import { getContributor } from "../../services/app-info.service";
 import ContainedLoader from "../loaders/ContainedLoader";

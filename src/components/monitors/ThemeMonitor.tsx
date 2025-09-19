@@ -1,5 +1,5 @@
-import { useMantineTheme } from "@mantine/core";
 import { useEffect } from "react";
+import { useMantineTheme } from "@mantine/core";
 
 const ThemeMonitor = (): null => {
   const { primaryColor, colors } = useMantineTheme();

@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import {
   Combobox,
   Pill,
@@ -7,7 +8,6 @@ import {
   useCombobox,
   useMantineTheme,
 } from "@mantine/core";
-import { useMemo, useState } from "react";
 import { Icons } from "../../constants/categories";
 import ClearField from "./ClearField";
 

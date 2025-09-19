@@ -1,3 +1,4 @@
+import { Suspense, useMemo, useRef, useState } from "react";
 import {
   ActionIcon,
   AppShell,
@@ -13,6 +14,7 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useDisclosure, useHotkeys } from "@mantine/hooks";
+import { modals } from "@mantine/modals";
 import {
   IconKeyboard,
   IconLogout,
@@ -20,19 +22,17 @@ import {
   IconSearch,
   IconTallymark1,
 } from "@tabler/icons-react";
-import { Suspense, useMemo, useRef, useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
+import AppInfo from "../../components/app-info/AppInfo";
 import OverlayLoader from "../../components/loaders/OverlayLoader";
+import { ROUTES } from "../../constants/routes";
+import { useLogoutHandler } from "../../hooks/logout";
 import { useMediaMatch } from "../../hooks/media-match";
 import { useTitleMonitor } from "../../hooks/title";
 import logoPath from "../../resources/app-logo.svg";
 import classes from "../../theme/modules/Layout.module.scss";
 import AuthGuard from "../guards/AuthGuard";
 import ShortcutsList from "./ShortcutsList";
-import { ROUTES } from "../../constants/routes";
-import { modals } from "@mantine/modals";
-import AppInfo from "../../components/app-info/AppInfo";
-import { useLogoutHandler } from "../../hooks/logout";
 
 export default function Layout() {
   const [open, setOpen] = useState(false);

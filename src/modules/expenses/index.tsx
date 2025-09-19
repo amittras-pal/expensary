@@ -1,17 +1,17 @@
+import { useCallback, useMemo, useRef, useState } from "react";
 import { Box, Divider, Group, Modal, Text } from "@mantine/core";
 import { DateValue, MonthPickerInput } from "@mantine/dates";
 import { useDisclosure, useDocumentTitle, useHotkeys } from "@mantine/hooks";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { ColDef, FilterChangedEvent, GridApi } from "ag-grid-community";
 import dayjs from "dayjs";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { ColDef, FilterChangedEvent, GridApi } from "ag-grid-community";
 import DeleteExpense from "../../components/DeleteExpense";
 import ExpenseForm from "../../components/ExpenseForm";
 import AgGridMod from "../../components/ag-grid/AgGridMod";
 import { RowMenuCell } from "../../components/ag-grid/plugins/cells";
 import generateColDef from "../../components/ag-grid/utils/columns";
 import OverlayLoader from "../../components/loaders/OverlayLoader";
-import { _20Min, APP_TITLE } from "../../constants/app";
+import { APP_TITLE, _20Min } from "../../constants/app";
 import { useCurrentUser } from "../../context/user.context";
 import { useErrorHandler } from "../../hooks/error-handler";
 import { useMediaMatch } from "../../hooks/media-match";
@@ -221,7 +221,7 @@ export default function Expenses() {
         onClose={() => handleClose(false)}
       >
         {showForm && (
-        <ExpenseForm data={targetExpense} onComplete={handleClose} />
+          <ExpenseForm data={targetExpense} onComplete={handleClose} />
         )}
         {confirm && (
           <DeleteExpense data={targetExpense} onComplete={handleClose} />

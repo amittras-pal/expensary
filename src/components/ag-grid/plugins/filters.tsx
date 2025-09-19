@@ -1,7 +1,3 @@
-import { Box, Button, Checkbox, Group, ScrollArea, Text } from "@mantine/core";
-import { useQuery } from "@tanstack/react-query";
-import { IFilterParams } from "ag-grid-community";
-import { IFilterReactComp } from "ag-grid-react";
 import {
   Fragment,
   forwardRef,
@@ -9,6 +5,10 @@ import {
   useMemo,
   useState,
 } from "react";
+import { Box, Button, Checkbox, Group, ScrollArea, Text } from "@mantine/core";
+import { useQuery } from "@tanstack/react-query";
+import { IFilterParams } from "ag-grid-community";
+import { IFilterReactComp } from "ag-grid-react";
 import { _20Min } from "../../../constants/app";
 import { useErrorHandler } from "../../../hooks/error-handler";
 import { getCategories } from "../../../services/categories.service";

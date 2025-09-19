@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
   Group,
   GroupProps,
@@ -10,7 +11,6 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { IconInfoCircle, IconPoint } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useCurrentUser } from "../../context/user.context";
 import { useMediaMatch } from "../../hooks/media-match";

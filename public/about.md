@@ -1,6 +1,6 @@
 # Expensary
 
-A simple-yet-powerful personal expense tracker. 
+A simple-yet-powerful personal expense tracker.
 
 The application brings forth a simple budget based model of adding expenses across multiple categories to keep track of them. We are inspired from a stadalone no-distractions based approach to logging and managing expenses. It's minimal, and straightforward.
 
@@ -24,7 +24,7 @@ _The stats views are planned to be upgraded in the future with more powerful fea
 
 #### 4. Listing and Archival
 
-The listing page offers powerful sorting and filtering controls for all expenses listed-by-month right from the first expense to the latest one in a calendar month. You can go back to the very first expense you created. 
+The listing page offers powerful sorting and filtering controls for all expenses listed-by-month right from the first expense to the latest one in a calendar month. You can go back to the very first expense you created.
 
 #### 5. Search
 

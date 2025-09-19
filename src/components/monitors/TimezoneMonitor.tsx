@@ -1,8 +1,8 @@
+import { useEffect } from "react";
 import { Box, Button, Group, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { IconClockCheck, IconClockExclamation } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
-import { useEffect } from "react";
 import { useCurrentUser } from "../../context/user.context";
 import { useErrorHandler } from "../../hooks/error-handler";
 import { updateUserDetails } from "../../services/user.service";

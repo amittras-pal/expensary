@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import {
   Button,
   Checkbox,
@@ -7,13 +8,17 @@ import {
   Text,
   useMantineTheme,
 } from "@mantine/core";
-import { DatePicker, DatesRangeValue, MonthPicker, PickerBaseProps } from "@mantine/dates";
+import {
+  DatePicker,
+  DatesRangeValue,
+  MonthPicker,
+  PickerBaseProps,
+} from "@mantine/dates";
 import { useDocumentTitle } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import { IconDownload, IconTableDown } from "@tabler/icons-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import dayjs, { OpUnitType } from "dayjs";
-import { useMemo, useState } from "react";
 import { APP_TITLE } from "../../constants/app";
 import { useCurrentUser } from "../../context/user.context";
 import { useErrorHandler } from "../../hooks/error-handler";
@@ -35,10 +40,7 @@ export default function DownloadReport() {
   const [view, setView] = useState<string>("day");
   const [includeList, setIncludeList] = useState(false);
   const [plan, setPlan] = useState<string | null>(null);
-  const [selection, setSelection] = useState<DatesRangeValue>([
-    null,
-    null,
-  ]);
+  const [selection, setSelection] = useState<DatesRangeValue>([null, null]);
 
   const { userData } = useCurrentUser();
   const { onError } = useErrorHandler();

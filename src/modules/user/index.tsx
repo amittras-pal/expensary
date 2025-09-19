@@ -1,11 +1,4 @@
-import {
-  Container,
-  Divider,
-  Group,
-  Paper,
-  Text,
-  Title
-} from "@mantine/core";
+import { Container, Divider, Group, Paper, Text, Title } from "@mantine/core";
 import { useDocumentTitle } from "@mantine/hooks";
 import dayjs from "dayjs";
 import { APP_TITLE } from "../../constants/app";
