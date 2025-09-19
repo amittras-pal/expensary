@@ -1,0 +1,44 @@
+/* Migrated from layout.styles.ts (createStyles -> CSS Modules) */
+
+.header {
+	display: flex;
+	align-items: flex-end;
+	padding: var(--mantine-spacing-md);
+	box-shadow: var(--mantine-shadow-sm);
+}
+
+.navigation {
+	box-shadow: var(--mantine-shadow-sm);
+}
+
+.shortcutBlock {
+	padding: var(--mantine-spacing-sm);
+	border-radius: var(--mantine-radius-md);
+}
+
+.shortcutHighlight {
+	background-color: var(--mantine-color-dark-8);
+}
+
+/* nav button */
+.navBtn {
+	display: flex;
+	align-items: center;
+	gap: var(--mantine-spacing-sm);
+	width: 100%;
+	border-radius: var(--mantine-radius-sm);
+	color: var(--mantine-color-dark-0);
+	font-weight: 400;
+	text-decoration: none;
+	background: transparent;
+	cursor: pointer;
+	transition: background-color 120ms ease;  
+}
+
+.navBtnActive {
+	font-weight: 700;
+}
+
+.navBtn:hover {
+	background-color: var(--mantine-color-dark-5);
+}
