@@ -1,27 +1,22 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Accordion,
-  ActionIcon,
   Box,
   Button,
   Divider,
   Group,
-  MultiSelect,
   ScrollArea,
   SimpleGrid,
   Text,
   TextInput,
-  useMantineTheme,
+  useMantineTheme
 } from "@mantine/core";
 import { DatePickerInput, PickerBaseProps } from "@mantine/dates";
 import { useDocumentTitle } from "@mantine/hooks";
-import { IconX } from "@tabler/icons-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import CategoryMultiSelectValue from "../../components/CategoryMultiSelectValue";
-import CategorySelectItem from "../../components/CategorySelectItem";
 import ExpenseCard from "../../components/ExpenseCard";
 import ContainedLoader from "../../components/loaders/ContainedLoader";
 import { APP_TITLE, _20Min } from "../../constants/app";
@@ -31,6 +26,9 @@ import { useMediaMatch } from "../../hooks/media-match";
 import { GlobalSearchForm, gSearchSchema } from "../../schemas/schemas";
 import { getCategories } from "../../services/categories.service";
 import { searchExpenses } from "../../services/expense.service";
+import { groupCategories } from "../../utils";
+import CategoryMultiSelect from "./CategoryMultiSelect";
+import ClearField from "./ClearField";
 
 interface CommonPickerProps extends PickerBaseProps<"range"> {
   minDate: Date;
@@ -119,8 +117,13 @@ export default function GlobalSearch2() {
     reset();
   };
 
+  const categoryOptions = useMemo(() => {
+    if (!categoryRes?.response) return [];
+    return groupCategories(categoryRes);
+  }, [categoryRes?.response]);
+
   return (
-    <Box>
+    <>
       <Accordion
         variant="separated"
         value={showFilter}
@@ -136,7 +139,7 @@ export default function GlobalSearch2() {
               onSubmit={handleSubmit(handleSearch)}
               onReset={handleClear}
             >
-              <SimpleGrid cols={isMobile ? 1 : 3} gap="sm">
+              <SimpleGrid cols={isMobile ? 1 : 3} spacing="sm">
                 <TextInput
                   mb={0}
                   rightSection={
@@ -149,35 +152,17 @@ export default function GlobalSearch2() {
                   {...register("q")}
                   autoFocus
                 />
-                <MultiSelect
-                  searchable
-                  mb={0}
+                <CategoryMultiSelect
+                  options={categoryOptions}
+                  value={watch("categories") ?? []}
                   disabled={loadingCategories}
-                  value={watch("categories")}
-                  disableSelectedItemFiltering
-                  onChange={(e) =>
-                    setValue("categories", e, { shouldDirty: true })
-                  }
-                  itemComponent={CategorySelectItem}
-                  valueComponent={CategoryMultiSelectValue}
-                  rightSection={
-                    <ClearField
-                      onClick={() =>
-                        setValue("categories", [], { shouldDirty: true })
-                      }
-                      disabled={!watch("categories")?.length}
-                    />
-                  }
                   placeholder={
                     loadingCategories
                       ? "Loading Categories"
                       : "Select Categories"
                   }
-                  data={
-                    categoryRes?.response?.map((cat) => ({
-                      ...cat,
-                      value: cat._id ?? "",
-                    })) ?? []
+                  onChange={(e) =>
+                    setValue("categories", e, { shouldDirty: true })
                   }
                 />
                 <DatePickerInput
@@ -204,12 +189,12 @@ export default function GlobalSearch2() {
                 />
                 <div></div>
                 <div></div>
-                <Group grow>
-                  <Button type="reset" variant="outline">
-                    Clear All
-                  </Button>
+                <Group grow style={{flexDirection: 'row-reverse'}}>
                   <Button type="submit" disabled={!isDirty || !isValid}>
                     Search
+                  </Button>
+                  <Button type="reset" variant="outline">
+                    Clear All
                   </Button>
                 </Group>
               </SimpleGrid>
@@ -241,7 +226,7 @@ export default function GlobalSearch2() {
         }
       />
       <ScrollArea h="calc(100vh - 190px)" style={{ paddingBottom: "1px" }}>
-        <SimpleGrid cols={isMobile ? 1 : 2} gap="xs">
+        <SimpleGrid cols={isMobile ? 1 : 2} spacing="xs">
           {expenses?.response.map((ex) => (
             <ExpenseCard
               hideMenu
@@ -253,21 +238,8 @@ export default function GlobalSearch2() {
           ))}
         </SimpleGrid>
       </ScrollArea>
-    </Box>
+    </>
   );
 }
 
-function ClearField(
-  props: Readonly<{
-    onClick?: React.MouseEventHandler<HTMLButtonElement>;
-    disabled?: boolean;
-  }>
-) {
-  if (props.disabled) return null;
 
-  return (
-    <ActionIcon size="sm" color="red" variant="light" onClick={props.onClick}>
-      <IconX size={16} />
-    </ActionIcon>
-  );
-}

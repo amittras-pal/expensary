@@ -147,3 +147,12 @@ interface IContributorInfo {
     url: string;
   };
 }
+
+type SelectOptionsGrouped = {
+  group: string;
+  items: {
+    value: string;
+    label: string;
+    meta: string;
+  }[];
+}[];

@@ -1,5 +1,6 @@
 import { MantineColor } from "@mantine/core";
 import dayjs from "dayjs";
+import { ResponseBody } from "../services/response.type";
 
 export function isLoggedIn() {
   return localStorage.getItem("isAuthenticated");
@@ -64,3 +65,23 @@ export const randomNumber = () => {
   const random = window.crypto.getRandomValues(new Uint8Array(1));
   return random[0] / Math.pow(2, 8);
 };
+
+export function groupCategories(
+  categoryRes: ResponseBody<ICategory[]>
+): SelectOptionsGrouped {
+  const groups: Record<
+    string,
+    { group: string; items: { value: string; label: string; meta: string }[] }
+  > = {};
+
+  (categoryRes?.response ?? []).forEach((category) => {
+    const grp = category.group || "Other";
+    if (!groups[grp]) groups[grp] = { group: grp, items: [] };
+    groups[grp].items.push({
+      value: category._id ?? "",
+      label: category.label,
+      meta: `${category.icon}::${category.color}`,
+    });
+  });
+  return Object.values(groups).sort((a, b) => a.group.localeCompare(b.group));
+}

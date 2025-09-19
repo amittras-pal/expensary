@@ -38,7 +38,7 @@ import { getCategories } from "../services/categories.service";
 import { createExpense, editExpense } from "../services/expense.service";
 import { getPlans } from "../services/plans.service";
 import { ResponseBody } from "../services/response.type";
-import { roundOff } from "../utils";
+import { groupCategories, roundOff } from "../utils";
 import CategorySelectItem from "./CategorySelectItem";
 
 interface IExpenseFormProps {
@@ -211,25 +211,8 @@ export default function ExpenseForm({
 
   const categoryOptions = useMemo(() => {
     if (!categoryRes?.response) return [];
-
-    const groups: Record<
-      string,
-      { group: string; items: { value: string; label: string; meta: string }[] }
-    > = {};
-
-    (categoryRes?.response ?? []).forEach((category) => {
-      const grp = category.group || "Other";
-      if (!groups[grp]) groups[grp] = { group: grp, items: [] };
-      groups[grp].items.push({
-        value: category._id ?? "",
-        label: category.label,
-        meta: `${category.icon}::${category.color}`,
-      });
-    });
-    return Object.values(groups).sort((a, b) => a.group.localeCompare(b.group));
+    return groupCategories(categoryRes);
   }, [categoryRes?.response]);
-
-  console.log(categoryOptions);
 
   return (
     <Box
