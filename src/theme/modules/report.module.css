@@ -1,0 +1,8 @@
+/* Converted from report.styles.ts (useReportStyles) */
+
+.wrapper {
+  border-radius: var(--mantine-radius-md);
+  box-shadow: var(--mantine-shadow-lg);
+  border: 1px solid var(--mantine-color-gray-8);
+  padding: var(--mantine-spacing-md);
+}

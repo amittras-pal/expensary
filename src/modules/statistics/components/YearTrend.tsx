@@ -288,11 +288,11 @@ export default function YearTrend() {
 
   return (
     <>
-      <Group spacing="sm">
+      <Group gap="sm">
         <Select
           variant="default"
           size="xs"
-          sx={{ flexGrow: 0, flexShrink: 1, flexBasis: "75px" }}
+          style={{ flexGrow: 0, flexShrink: 1, flexBasis: "75px" }}
           value={year}
           onChange={(e) => setYear(e ?? "")}
           data={yearOptions}
@@ -445,7 +445,7 @@ function tooltipFormatter(series: any) {
     (series.find((o: any) => o.seriesName === "Budget")?.value ?? 0) > 0;
 
   return renderToString(
-    <Box sx={{ padding: "sm", width: 240 }}>
+    <Box style={{ padding: "sm", width: 240 }}>
       <Text fw="bold" color="white">
         {series[0].axisValueLabel}
       </Text>
@@ -453,10 +453,10 @@ function tooltipFormatter(series: any) {
         <>
           {series.map((item: any, index: number) => (
             <Fragment key={item.seriesName}>
-              <Group position="apart">
+              <Group justify="space-between">
                 {index > 1 && (
                   <Box
-                    sx={{
+                    style={{
                       width: 12,
                       height: 12,
                       borderRadius: 6,

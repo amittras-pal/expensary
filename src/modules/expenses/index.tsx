@@ -175,15 +175,15 @@ export default function Expenses() {
   return (
     <>
       <Group
-        spacing={0}
-        sx={{ flexDirection: "column", height: "100%" }}
+        gap={0}
+        style={{ flexDirection: "column", height: "100%" }}
         position="left"
         align="flex-start"
       >
-        <Group spacing="xs" sx={{ width: "100%" }}>
+        <Group gap="xs" style={{ width: "100%" }}>
           <MonthPickerInput
             size="xs"
-            sx={{ flexGrow: 1, textAlign: "center" }}
+            style={{ flexGrow: 1, textAlign: "center" }}
             placeholder="Select month"
             variant="filled"
             value={payload.startDate}
@@ -198,14 +198,14 @@ export default function Expenses() {
             ta="right"
             fw="bold"
             fz="xs"
-            sx={{ flexGrow: 3, whiteSpace: "nowrap" }}
+            style={{ flexGrow: 3, whiteSpace: "nowrap" }}
           >
             Total: {filterTotal > 0 ? formatCurrency(filterTotal) : "N.A."} of{" "}
             {formatCurrency(budgetRes?.response?.amount ?? 0)}
           </Text>
         </Group>
-        <Divider my="sm" sx={{ width: "100%" }} />
-        <Box sx={{ flexGrow: 1, width: "100%" }} ref={ref}>
+        <Divider my="sm" style={{ width: "100%" }} />
+        <Box style={{ flexGrow: 1, width: "100%" }} ref={ref}>
           <AgGridMod
             columnDefs={columns}
             popupParent={document.body}

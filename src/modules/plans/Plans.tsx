@@ -134,7 +134,7 @@ export default function Plans() {
   if (isLoading)
     return (
       <Box
-        sx={{
+        style={{
           height: "100%",
           width: "100%",
           display: "flex",
@@ -150,7 +150,7 @@ export default function Plans() {
     return (
       <>
         <Box
-          sx={{
+          style={{
             height: "100%",
             width: "100%",
             display: "flex",
@@ -204,7 +204,7 @@ export default function Plans() {
           />
           <SimpleGrid
             cols={2}
-            spacing="lg"
+            gap="lg"
             mb="sm"
             breakpoints={[
               { maxWidth: "md", cols: 2, spacing: "sm", verticalSpacing: "sm" },
@@ -233,7 +233,7 @@ export default function Plans() {
           />
           <SimpleGrid
             cols={2}
-            spacing="lg"
+            gap="lg"
             mb="sm"
             breakpoints={[
               { maxWidth: "md", cols: 2, spacing: "sm", verticalSpacing: "sm" },
@@ -258,7 +258,7 @@ export default function Plans() {
           variant="filled"
           color={primaryColor}
           onClick={formModal.open}
-          sx={{ position: "fixed", bottom: "1rem", right: "1rem" }}
+          style={{ position: "fixed", bottom: "1rem", right: "1rem" }}
         >
           <IconPlus size={24} />
         </ActionIcon>

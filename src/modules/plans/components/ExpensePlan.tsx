@@ -8,7 +8,7 @@ import {
 import dayjs from "dayjs";
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { usePlanStyles } from "../../../theme/modules/plan.styles";
+import classes from "../../../theme/modules/plan.module.css";
 
 type PlanAction = (
   data: IExpensePlan,
@@ -32,7 +32,6 @@ export default function ExpensePlan({
   onPlanAction,
   hideMenu,
 }: ActionableCard | ReadOnlyCard) {
-  const { classes } = usePlanStyles();
 
   const textProps = useMemo(
     (): Partial<TextProps> => ({
@@ -46,8 +45,8 @@ export default function ExpensePlan({
   );
 
   return (
-    <Box className={classes.wrapper}>
-      <Box className={classes.details}>
+  <Box className={classes.wrapper}>
+  <Box className={classes.details}>
         <Box>
           {hideMenu ? (
             <Text {...textProps} component={"p"}>
@@ -59,7 +58,7 @@ export default function ExpensePlan({
             </Text>
           )}
 
-          <Text size="xs" color="dimmed" sx={{ whiteSpace: "pre-wrap" }}>
+          <Text size="xs" color="dimmed" style={{ whiteSpace: "pre-wrap" }}>
             {data.description}
           </Text>
         </Box>

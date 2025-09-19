@@ -36,7 +36,7 @@ function PlanSummary() {
   if (loadingSummary)
     return (
       <Box
-        sx={{
+        style={{
           height: "100%",
           width: "100%",
           display: "flex",
@@ -50,7 +50,7 @@ function PlanSummary() {
 
   return (
     <Box
-      sx={(theme) => ({
+      style={(theme) => ({
         height: "100%",
         backgroundColor: theme.colors.dark[6],
         padding: theme.spacing.sm,
@@ -60,8 +60,8 @@ function PlanSummary() {
       <ScrollArea w="100%" h="calc(100% - 50px)">
         <SimpleGrid
           cols={summaryData.length > 0 ? 2 : 1}
-          spacing="xs"
-          verticalSpacing="xs"
+          gap="xs"
+          verticalgap="xs"
           breakpoints={[
             { maxWidth: "md", cols: 2, spacing: "sm", verticalSpacing: "sm" },
             { maxWidth: "sm", cols: 1, spacing: "sm", verticalSpacing: "sm" },
@@ -69,7 +69,7 @@ function PlanSummary() {
         >
           {summaryData.length === 0 && (
             <Box
-              sx={{
+              style={{
                 height: "200px",
                 width: "100%",
                 display: "flex",

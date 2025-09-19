@@ -21,7 +21,6 @@ import dayjs from "dayjs";
 import { useMemo } from "react";
 import { useCurrentUser } from "../../../context/user.context";
 import { formatCurrency } from "../../../utils";
-import ExpenseDescription from "../../ExpenseDescription";
 import { MenuCellProps, MetaCellProps } from "../interfaces";
 import { amountColor } from "./utils";
 
@@ -39,7 +38,7 @@ export function MetaCell({ data, page }: Readonly<MetaCellProps>) {
       </Popover.Target>
       <Popover.Dropdown p={8}>
         {data?.description && (
-          <Group spacing={6} sx={{ alignItems: "flex-start" }}>
+          <Group gap={6} style={{ alignItems: "flex-start" }}>
             <ThemeIcon
               radius="sm"
               size="sm"
@@ -48,13 +47,13 @@ export function MetaCell({ data, page }: Readonly<MetaCellProps>) {
             >
               <IconInfoCircle size={14} stroke={1.5} />
             </ThemeIcon>
-            <ExpenseDescription color="dimmed">
+            <Text component="p" c="dimmed" fz="xs" style={{ whiteSpace: "pre-wrap" }} m={0}>
               {data?.description}
-            </ExpenseDescription>
+            </Text>
           </Group>
         )}
         {data?.linked && (
-          <Group spacing={6} sx={{ alignItems: "flex-start" }} mt={6}>
+          <Group gap={6} style={{ alignItems: "flex-start" }} mt={6}>
             <ThemeIcon
               radius="sm"
               size="sm"
@@ -69,7 +68,7 @@ export function MetaCell({ data, page }: Readonly<MetaCellProps>) {
           </Group>
         )}
         {!data?.amount && (
-          <Group spacing={6} sx={{ alignItems: "flex-start" }} mt={6}>
+          <Group gap={6} style={{ alignItems: "flex-start" }} mt={6}>
             <ThemeIcon
               radius="sm"
               size="sm"

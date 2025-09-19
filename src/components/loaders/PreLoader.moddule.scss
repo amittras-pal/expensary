@@ -1,0 +1,41 @@
+.logoError  {
+  & :global(.body),
+  & :global(.head),
+  & :global(.leg){
+    fill: var(--mantine-color-red-7);
+  }
+
+}
+
+.backdrop {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: var(--mantine-color-dark-9);
+}
+
+.logoContainer {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -60%);
+  background-color: var(--mantine-color-dark-7);
+  border-radius: var(--mantine-radius-lg);
+  box-shadow: var(--mantine-shadow-lg);
+  color: var(--mantine-color-gray-2);
+}
+
+.progressContainer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  z-index: 1000;
+  background-color: var(--mantine-color-dark-7);
+  border-radius: var(--mantine-radius-sm);
+  box-shadow: var(--mantine-shadow-lg);
+  padding: var(--mantine-spacing-sm);
+  color: var(--mantine-color-gray-2);
+}

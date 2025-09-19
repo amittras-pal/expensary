@@ -35,7 +35,7 @@ export default function CategoryConfig(
         <Button
           variant="default"
           size="xs"
-          rightIcon={<IconChevronDown size={14} />}
+          rightSection={<IconChevronDown size={14} />}
         >
           Categories
         </Button>

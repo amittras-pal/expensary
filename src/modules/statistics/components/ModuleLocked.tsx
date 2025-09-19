@@ -9,7 +9,7 @@ export default function ModuleLocked() {
     <Stack
       justify="center"
       align="center"
-      sx={{ height: "100%", textAlign: "center" }}
+      style={{ height: "100%", textAlign: "center" }}
     >
       <EmptyState height={275} />
       <Text fz="xl" fw="bold">

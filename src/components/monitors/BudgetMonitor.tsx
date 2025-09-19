@@ -138,7 +138,7 @@ const BudgetMonitor = () => {
           error={errors.remarks?.message}
           mt="md"
         />
-        <Group grow sx={{ flexDirection: "row-reverse" }}>
+        <Group grow style={{ flexDirection: "row-reverse" }}>
           <Button type="submit" disabled={!isValid} loading={creating}>
             Save
           </Button>

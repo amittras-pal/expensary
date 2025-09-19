@@ -32,7 +32,7 @@ export default function YearSummary({
           <IconSparkles size={18} />
         </ActionIcon>
       </Popover.Target>
-      <Popover.Dropdown fz="sm" sx={{ maxWidth: isMobile ? 240 : 400 }}>
+      <Popover.Dropdown fz="sm" style={{ maxWidth: isMobile ? 240 : 400 }}>
         <Text fw="bold">Your {year} spends at a glance.</Text>
         <Divider my="xs" />
         <Text>

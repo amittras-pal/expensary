@@ -26,7 +26,7 @@ export function ColumnHeader({
 }: Readonly<IHeaderParams<IExpense>>) {
   const { primaryColor } = useMantineTheme();
   return (
-    <Group position="left" sx={{ width: "100%" }} spacing="xs">
+    <Group position="left" style={{ width: "100%" }} gap="xs">
       <Text fw="bold" mr="auto">
         {displayName}
       </Text>

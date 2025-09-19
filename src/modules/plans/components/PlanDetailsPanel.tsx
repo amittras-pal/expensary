@@ -10,7 +10,7 @@ export default function PlanDetailsPanel({
 }: Readonly<IPlanDetailsPanelProps>) {
   return (
     <Box
-      sx={(theme) => ({
+      style={(theme) => ({
         display: "flex",
         flexDirection: "column",
         backgroundColor: theme.colors.dark[6],
@@ -22,9 +22,9 @@ export default function PlanDetailsPanel({
       <Text fz="lg" fw="bold">
         {data.name}
       </Text>
-      <Text sx={{ whiteSpace: "pre-wrap" }}>{data.description}</Text>
+      <Text style={{ whiteSpace: "pre-wrap" }}>{data.description}</Text>
       <Divider my="lg" />
-      <Text fz="sm" display="flex" sx={{ alignItems: "center" }}>
+      <Text fz="sm" display="flex" style={{ alignItems: "center" }}>
         <Text component="span" color="dimmed">
           Status:{" "}
         </Text>

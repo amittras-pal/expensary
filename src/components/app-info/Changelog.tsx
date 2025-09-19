@@ -35,7 +35,7 @@ export default function Changelog() {
       {versions.map((version) => (
         <Accordion.Item key={version.tagName} value={version.tagName} mt="md">
           <Accordion.Control>
-            <Group spacing="xs">
+            <Group gap="xs">
               <Text component="h1" m={0} fz="lg" color="violet">
                 {version.tagName}
               </Text>

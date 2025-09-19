@@ -20,7 +20,7 @@ import { useErrorHandler } from "../../hooks/error-handler";
 import { useMediaMatch } from "../../hooks/media-match";
 import { exportPlan, exportRange } from "../../services/export.service";
 import { getPlans } from "../../services/plans.service";
-import { useReportStyles } from "../../theme/modules/report.styles";
+import classes from "../../theme/modules/report.module.css";
 import { downloadFile } from "../../utils";
 
 interface CommonPickerProps extends PickerBaseProps<"range"> {
@@ -40,21 +40,20 @@ export default function DownloadReport() {
     null,
   ]);
 
-  const { classes } = useReportStyles();
   const { userData } = useCurrentUser();
   const { onError } = useErrorHandler();
   const isMobile = useMediaMatch();
 
   const pickerProps = useMemo(
     (): CommonPickerProps => ({
-      className: classes.wrapper,
+  className: classes.wrapper,
       type: "range",
       maxDate: dayjs().toDate(),
       minDate: userData
         ? dayjs(userData?.createdAt).toDate()
         : dayjs().toDate(),
     }),
-    [classes.wrapper, userData]
+  [userData]
   );
 
   const { mutate: downloadRange, isLoading: downloadingRange } = useMutation({
@@ -114,7 +113,7 @@ export default function DownloadReport() {
   return (
     <Group
       position="center"
-      sx={{
+      style={{
         maxWidth: isMobile ? "95%" : 400,
         flexDirection: "column",
         margin: "auto",
@@ -126,7 +125,7 @@ export default function DownloadReport() {
         value={view}
         color={primaryColor}
         onChange={(mode: "day" | "month" | "plan") => setView(mode)}
-        sx={{ width: "100%" }}
+        style={{ width: "100%" }}
         data={[
           { label: "Dates Range", value: "day" },
           { label: "Months Range", value: "month" },

@@ -136,7 +136,7 @@ export default function GlobalSearch2() {
               onSubmit={handleSubmit(handleSearch)}
               onReset={handleClear}
             >
-              <SimpleGrid cols={isMobile ? 1 : 3} spacing="sm">
+              <SimpleGrid cols={isMobile ? 1 : 3} gap="sm">
                 <TextInput
                   mb={0}
                   rightSection={
@@ -240,8 +240,8 @@ export default function GlobalSearch2() {
           </>
         }
       />
-      <ScrollArea h="calc(100vh - 190px)" sx={{ paddingBottom: "1px" }}>
-        <SimpleGrid cols={isMobile ? 1 : 2} spacing="xs">
+      <ScrollArea h="calc(100vh - 190px)" style={{ paddingBottom: "1px" }}>
+        <SimpleGrid cols={isMobile ? 1 : 2} gap="xs">
           {expenses?.response.map((ex) => (
             <ExpenseCard
               hideMenu

@@ -14,11 +14,11 @@ import {
 } from "@tabler/icons-react";
 import { useLocation } from "react-router-dom";
 import { planDetailsPath } from "../../constants/app";
-import { useShortcutBlockStyles } from "../../theme/modules/layout.styles";
+import classes from "../../theme/modules/Layout.module.css";
 
 export default function ShortcutsList() {
   const { pathname } = useLocation();
-  const { classes, cx } = useShortcutBlockStyles();
+  const cx = (...classes: (string | false | undefined)[]) => classes.filter(Boolean).join(" ");
   const { primaryColor } = useMantineTheme();
 
   return (
@@ -32,7 +32,7 @@ export default function ShortcutsList() {
       <Divider my="sm" />
       <SimpleGrid
         cols={2}
-        spacing="sm"
+        gap="sm"
         mb="sm"
         breakpoints={[
           { maxWidth: "md", cols: 2, spacing: "sm", verticalSpacing: "sm" },
@@ -40,9 +40,10 @@ export default function ShortcutsList() {
         ]}
       >
         <Box
-          className={cx(classes.block, {
-            [classes.highlight]: pathname === "/",
-          })}
+          className={cx(
+            classes.shortcutBlock,
+            pathname === "/" && classes.shortcutHighlight
+          )}
         >
           <Text
             fz="md"
@@ -60,9 +61,10 @@ export default function ShortcutsList() {
           </Text>
         </Box>
         <Box
-          className={cx(classes.block, {
-            [classes.highlight]: pathname === "/expenses",
-          })}
+          className={cx(
+            classes.shortcutBlock,
+            pathname === "/expenses" && classes.shortcutHighlight
+          )}
         >
           <Text
             fz="md"
@@ -77,9 +79,10 @@ export default function ShortcutsList() {
           </Text>
         </Box>
         <Box
-          className={cx(classes.block, {
-            [classes.highlight]: pathname === "/plans",
-          })}
+          className={cx(
+            classes.shortcutBlock,
+            pathname === "/plans" && classes.shortcutHighlight
+          )}
         >
           <Text
             fz="md"
@@ -94,9 +97,10 @@ export default function ShortcutsList() {
           </Text>
         </Box>
         <Box
-          className={cx(classes.block, {
-            [classes.highlight]: RegExp(planDetailsPath).exec(pathname),
-          })}
+          className={cx(
+            classes.shortcutBlock,
+            !!RegExp(planDetailsPath).exec(pathname) && classes.shortcutHighlight
+          )}
         >
           <Text
             fz="md"
@@ -112,9 +116,10 @@ export default function ShortcutsList() {
           </Text>
         </Box>
         <Box
-          className={cx(classes.block, {
-            [classes.highlight]: pathname === "/statistics",
-          })}
+          className={cx(
+            classes.shortcutBlock,
+            pathname === "/statistics" && classes.shortcutHighlight
+          )}
         >
           <Text
             fz="md"

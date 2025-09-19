@@ -17,7 +17,7 @@ function CategorySelectItem(
   const Icon = useMemo(() => Icons[icon], [icon]);
   return (
     <div ref={ref} {...rest}>
-      <Group noWrap spacing="xs">
+      <Group noWrap gap="xs">
         <ThemeIcon color={color} variant="light">
           <Icon size={16} />
         </ThemeIcon>

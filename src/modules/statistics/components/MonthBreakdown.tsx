@@ -86,7 +86,7 @@ export default function MonthBreakdown({
   };
 
   return (
-    <Box sx={{ height: "calc(100vh - 75px)" }} fz="sm">
+    <Box style={{ height: "calc(100vh - 75px)" }} fz="sm">
       <ReactECharts
         option={config}
         style={{ width: "100%", height: "50%" }}

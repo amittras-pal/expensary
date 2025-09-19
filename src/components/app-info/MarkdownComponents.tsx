@@ -114,7 +114,7 @@ const UserCard = (props: Readonly<{ username: string }>) => {
       onClose={() => setOpen(false)}
     >
       <HoverCard.Target>
-        <Text component="span" sx={{ cursor: "pointer" }} color="yellow">
+        <Text component="span" style={{ cursor: "pointer" }} color="yellow">
           {props.username + " "}
         </Text>
       </HoverCard.Target>
@@ -142,7 +142,7 @@ const UserCard = (props: Readonly<{ username: string }>) => {
             </Group>
             <Divider my="xs" />
             {user?.location && (
-              <Group align="center" spacing="xs">
+              <Group align="center" gap="xs">
                 <ThemeIcon size="sm" variant="light" radius="xl" color="gray">
                   <IconMapPin />
                 </ThemeIcon>
@@ -152,7 +152,7 @@ const UserCard = (props: Readonly<{ username: string }>) => {
               </Group>
             )}
             {user?.company && (
-              <Group align="center" spacing="xs" mt="xs">
+              <Group align="center" gap="xs" mt="xs">
                 <ThemeIcon size="sm" variant="light" radius="xl" color="gray">
                   <IconBuilding />
                 </ThemeIcon>
@@ -221,7 +221,7 @@ const QuoteBlock = (
   return (
     <Blockquote
       color="indigo"
-      sx={(theme) => ({ borderLeft: `5px solid ${theme.colors.gray[9]}` })}
+      style={(theme) => ({ borderLeft: `5px solid ${theme.colors.gray[9]}` })}
     >
       {props.children}
     </Blockquote>

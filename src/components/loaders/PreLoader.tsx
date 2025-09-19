@@ -1,8 +1,6 @@
 import {
   Box,
-  createStyles,
   Divider,
-  Flex,
   Progress,
   Text,
   ThemeIcon,
@@ -22,7 +20,7 @@ import { _20Min, APP_TITLE } from "../../constants/app";
 import { pingServer } from "../../services/server.service";
 import BrandLogo from "./logo-stroke.svg?react";
 import BrandLoader from "./LogoLoader";
-import "./PreLoader.scss";
+import classes from "./PreLoader.module.scss";
 import {
   COORDS,
   createPoints,
@@ -40,7 +38,7 @@ export default function PreLoader(props: Readonly<PropsWithChildren>) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const points: MutableRefObject<COORDS[]> = useRef([]);
 
-  const { classes } = usePreloaderStyles();
+  // const { classes } = usePreloaderStyles();
 
   const { isLoading, isError } = useQuery({
     queryKey: ["wake-server"],
@@ -98,7 +96,7 @@ export default function PreLoader(props: Readonly<PropsWithChildren>) {
   if (isLoading || isError)
     return (
       <>
-        <Box className={classes.backdropContainer} ref={backdropRef}>
+        <Box className={classes.backdrop} ref={backdropRef}>
           <canvas ref={canvasRef} />
         </Box>
         <Box className={classes.logoContainer}>
@@ -110,12 +108,16 @@ export default function PreLoader(props: Readonly<PropsWithChildren>) {
             {isLoading ? (
               <BrandLoader size={200} brand />
             ) : (
-              <BrandLogo width={200} height={200} className="logo-error" />
+              <BrandLogo width={200} height={200} className={classes.logoError} />
             )}
           </Box>
         </Box>
         <Box className={classes.progressContainer}>
-          <Flex align="center" mb="xs" justify="space-between">
+          <Box
+            display="flex"
+            mb={"sm"}
+            style={{ justifyContent: "space-between", alignItems: "center" }}
+          >
             <Text fz="sm" fs="italic">
               Connecting to Server, Please Wait...
             </Text>
@@ -143,13 +145,14 @@ export default function PreLoader(props: Readonly<PropsWithChildren>) {
                 <IconHelp size={16} />
               </ThemeIcon>
             </Tooltip>
-          </Flex>
-          <Progress
-            value={progress}
-            color={isError ? "red" : "indigo"}
-            sx={{ width: "100%" }}
-            size="sm"
-          />
+          </Box>
+          <Progress.Root size="sm">
+            <Progress.Section
+              aria-label="Connection Progress"
+              color={isError ? "red" : "indigo"}
+              value={progress}
+            />
+          </Progress.Root>
           {isError && (
             <Text fz="sm" color="red" fs="italic" mt="xs">
               Failed to connect,
@@ -157,7 +160,7 @@ export default function PreLoader(props: Readonly<PropsWithChildren>) {
                 component="span"
                 td="underline"
                 fw="bold"
-                sx={{ cursor: "pointer" }}
+                style={{ cursor: "pointer" }}
                 onClick={() => document.location.reload()}
               >
                 {" "}
@@ -171,34 +174,3 @@ export default function PreLoader(props: Readonly<PropsWithChildren>) {
 
   return <>{props.children}</>;
 }
-
-const usePreloaderStyles = createStyles((theme) => ({
-  backdropContainer: {
-    width: "100vw",
-    height: "100vh",
-    position: "fixed",
-    top: 0,
-    left: 0,
-  },
-  logoContainer: {
-    position: "fixed",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -60%)",
-    backgroundColor: theme.colors.dark[5],
-    boxShadow: theme.shadows.lg,
-    borderRadius: theme.radius.lg,
-    zIndex: 1000,
-  },
-  progressContainer: {
-    position: "fixed",
-    bottom: 0,
-    width: "100vw",
-    backgroundColor: theme.colors.dark[5],
-    boxShadow: theme.shadows.lg,
-    borderTopLeftRadius: theme.radius.lg,
-    borderTopRightRadius: theme.radius.lg,
-    padding: theme.spacing.sm,
-    zIndex: 1000,
-  },
-}));

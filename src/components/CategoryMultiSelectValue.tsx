@@ -15,7 +15,7 @@ export default function CategoryMultiSelectValue({
   const Icon = useMemo(() => Icons[icon], [icon]);
 
   return (
-    <Group spacing={0} {...rest}>
+    <Group gap={0} {...rest}>
       <Tooltip label={label} withinPortal position="bottom" color="dark">
         <Button.Group>
           <Button
@@ -24,7 +24,7 @@ export default function CategoryMultiSelectValue({
             variant="light"
             size="xs"
             px={4}
-            sx={{ pointerEvents: "none", maxHeight: "22px" }}
+            style={{ pointerEvents: "none", maxHeight: "22px" }}
             tabIndex={-1}
           >
             <Icon size={14} />
@@ -35,7 +35,7 @@ export default function CategoryMultiSelectValue({
             radius="lg"
             size="xs"
             px={4}
-            sx={{ maxHeight: "22px" }}
+            style={{ maxHeight: "22px" }}
             onClick={onRemove}
           >
             <IconX size={14} />

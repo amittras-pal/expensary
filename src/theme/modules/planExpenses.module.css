@@ -1,0 +1,11 @@
+/* Converted from plan.styles.ts (usePlanExpensesStyles) */
+
+.wrapper {
+  position: fixed;
+  width: 100%;
+  max-width: 100%;
+  top: 10px;
+  display: flex;
+  justify-content: center;
+  z-index: 1000;
+}

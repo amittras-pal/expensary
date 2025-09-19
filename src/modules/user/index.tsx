@@ -19,7 +19,7 @@ export default function User() {
           <Text fz="2rem" fw="bold" fs="italic">
             {userData?.userName}
           </Text>
-          <Group spacing="sm">
+          <Group gap="sm">
             <Text component="p" m={0} fz="xs">
               <Text component="span" color="dimmed">
                 Member Since:{" "}

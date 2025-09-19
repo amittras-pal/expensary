@@ -68,7 +68,7 @@ export default function Preferences() {
       onSubmit={handleSubmit((values) => {
         updatePreferences(values);
       })}
-      sx={(theme) => ({
+      style={(theme) => ({
         display: "flex",
         flexDirection: "column",
         gap: theme.spacing.sm,
@@ -115,13 +115,13 @@ export default function Preferences() {
           application to your preference.
         </Text>
         <Divider my="sm" />
-        <Group position="center" spacing="xs">
+        <Group position="center" gap="xs">
           {Object.keys(colors).map((color) => (
             <Tooltip position="top" label={color} key={color}>
               <ColorSwatch
                 color={colors[color][6]}
                 component="button"
-                sx={{ cursor: "pointer" }}
+                style={{ cursor: "pointer" }}
                 type="button"
                 onClick={() =>
                   setValue("color", color, {
