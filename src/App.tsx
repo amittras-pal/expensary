@@ -1,7 +1,8 @@
-import { Suspense } from "react";
-import { MantineProvider } from "@mantine/core";
+import { Suspense, useMemo } from "react";
+import { MantineProvider, createTheme } from "@mantine/core";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
+import '@mantine/notifications/styles.css';
 import { useLocalStorage } from "@mantine/hooks";
 import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
@@ -14,7 +15,15 @@ import ThemeMonitor from "./components/monitors/ThemeMonitor";
 import TimezoneMonitor from "./components/monitors/TimezoneMonitor";
 import { primaryColor } from "./constants/app";
 import UserProvider from "./context/user.context";
-import theme from "./theme";
+import "./theme/globals.scss";
+
+const theme = createTheme({
+  defaultRadius: "sm",
+  fontFamily: "'Poppins', sans-serif",
+  fontFamilyMonospace: "Monaco, Courier, monospace",
+  cursorType: "pointer",
+  focusRing: "auto",
+});
 
 export default function App() {
   const [color] = useLocalStorage({
@@ -22,12 +31,37 @@ export default function App() {
     defaultValue: primaryColor,
   });
 
+  const componentDefaults = useMemo(
+    () => ({
+      Button: { defaultProps: { color } },
+      Progress: { defaultProps: { color } },
+      Slider: { defaultProps: { color } },
+      TextInput: { defaultProps: { mb: "sm", variant: "filled" } },
+      Textarea: { defaultProps: { mb: "sm", variant: "filled" } },
+      Select: { defaultProps: { mb: "sm", variant: "filled" } },
+      DateTimePicker: { defaultProps: { mb: "sm", variant: "filled" } },
+      DatePicker: { defaultProps: { mb: "sm", variant: "filled" } },
+      DatePickerInput: { defaultProps: { mb: "sm", variant: "filled" } },
+      Divider: { defaultProps: { variant: "dashed" } },
+      ScrollArea: { defaultProps: { scrollbarSize: 6 } },
+      Tooltip: {
+        defaultProps: { events: { hover: true, touch: true, focus: true } },
+      },
+    }),
+    [color]
+  );
+
   return (
     <MantineProvider
       defaultColorScheme="dark"
       cssVariablesSelector="html"
       withCssVariables
-      theme={{ ...theme, primaryColor: color ?? "indigo" }}
+      theme={{
+        ...theme,
+        primaryColor: color ?? "indigo",
+        components: componentDefaults,
+        focusRing: "auto",
+      }}
     >
       <ThemeMonitor />
       <PreLoader>

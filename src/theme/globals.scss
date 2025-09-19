@@ -1,0 +1,58 @@
+/* Focus ring styles for keyboard navigation - uses primary color */
+[data-focus-ring="auto"]:focus-visible {
+  outline: 2px solid var(--mantine-color-primary-6) !important;
+  outline-offset: 2px;
+}
+
+/* Alternative focus ring class - uses primary color */
+.mantine-focus-auto:focus-visible {
+  outline: 2px solid var(--mantine-color-primary-6) !important;
+  outline-offset: 2px;
+}
+
+/* Button focus styles - uses primary color for outline */
+.mantine-Button-root:focus-visible {
+  outline: 2px solid var(--mantine-color-primary-6) !important;
+  outline-offset: 2px;
+}
+
+/* Input field focus styles - removes default outline and sets border to primary color */
+.mantine-TextInput-input:focus,
+.mantine-Textarea-input:focus,
+.mantine-Select-input:focus,
+.mantine-PinInput-input:focus,
+.mantine-DateTimePicker-input:focus-within,
+.mantine-TimeInput-input:focus-within {
+  outline: none;
+  --input-bd: var(--mantine-color-primary-7);
+}
+
+/* Filled variant input wrappers - sets focus border to primary color */
+.mantine-PillsInput-wrapper,
+.mantine-DatePickerInput-wrapper {
+  &[data-variant="filled"] {
+    --input-bd-focus: var(--mantine-color-primary-6) !important;
+  }
+}
+
+/* Date and Month picker styling - customizes selected date ranges and individual selections */
+.mantine-DatePicker-day,
+.mantine-DateTimePicker-day,
+.mantine-DatePickerInput-day,
+.mantine-MonthPicker-monthsListControl {
+  /* Dates/months in selected range - semi-transparent primary color background */
+  &[data-in-range="true"] {
+    background-color: color-mix(
+      in srgb,
+      var(--mantine-color-primary-6) 30%,
+      transparent
+    );
+  }
+  /* Start and end dates/months in range - solid primary color background with white text */
+  &[data-first-in-range="true"],
+  &[data-last-in-range="true"],
+  &[data-selected="true"] {
+    background-color: var(--mantine-color-primary-6);
+    color: var(--mantine-color-black);
+  }
+}
