@@ -13,7 +13,7 @@ import {
   ThemeIcon,
   Tooltip,
 } from "@mantine/core";
-import { MonthPickerInput } from "@mantine/dates";
+import { DateValue, MonthPickerInput } from "@mantine/dates";
 import { useHotkeys } from "@mantine/hooks";
 import {
   IconArrowRight,
@@ -121,7 +121,7 @@ export default function BudgetBreakdown({
     );
   }, [selection, summary?.response]);
 
-  const handleMonthChange = (e: string | null) => {
+  const handleMonthChange = (e: DateValue) => {
     setPayload((prev) => ({
       ...prev,
       startDate: dayjs(e).startOf("month").toDate(),
@@ -181,7 +181,7 @@ export default function BudgetBreakdown({
                   size="sm"
                   radius="xl"
                   variant="light"
-                  onClick={() => handleMonthChange(dayjs().toISOString())}
+                  onClick={() => handleMonthChange(dayjs().toDate())}
                 >
                   <IconCalendarRepeat size={16} />
                 </ActionIcon>
@@ -219,7 +219,7 @@ export default function BudgetBreakdown({
       </Group>
       <Divider my="xs" />
       {Object.entries(summary?.response?.summary ?? {}).length > 0 ? (
-        <ScrollArea h={`calc(100vh - ${isMobile ? 272 : 247}px)`}>
+        <ScrollArea h={`calc(100vh - ${isMobile ? 280 : 250}px)`}>
           <SimpleGrid cols={1} spacing="xs">
             {Object.entries(summary?.response?.summary ?? {})?.map((item) => (
               <BudgetItem

@@ -1,6 +1,7 @@
 import {
   ActionIcon,
   AppShell,
+  Burger,
   Group,
   Image,
   Kbd,
@@ -69,15 +70,14 @@ export default function Layout() {
         padding="md"
       >
         <AppShell.Header className={classes.header}>
-          {/* <MediaQuery largerThan="sm" styles={{ display: "none" }}>
           <Burger
+            hiddenFrom="sm"
             opened={open}
             onClick={() => setOpen((o) => !o)}
             size="sm"
             color={theme.colors.gray[6]}
             mr={6}
           />
-        </MediaQuery> */}
           <ThemeIcon
             color="gray"
             mr={8}
@@ -182,7 +182,10 @@ export default function Layout() {
               disabled={isMobile}
               offset={10}
             >
-              <UnstyledButton onClick={confirmLogout} className={classes.navBtn}>
+              <UnstyledButton
+                onClick={confirmLogout}
+                className={classes.navBtn}
+              >
                 <ThemeIcon variant={"light"} color="red" size={36}>
                   <IconPower size={20} />
                 </ThemeIcon>

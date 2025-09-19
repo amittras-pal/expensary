@@ -88,7 +88,12 @@ function ExpenseCard({
             />
           </Text>
           {data.description && (
-            <Text component="p" fz="xs" style={{ whiteSpace: "pre-wrap" }} m={0}>
+            <Text
+              component="p"
+              fz="xs"
+              style={{ whiteSpace: "pre-wrap" }}
+              m={0}
+            >
               <Highlighter
                 searchWords={highlight?.split(" ") ?? []}
                 textToHighlight={data.description}
@@ -133,7 +138,12 @@ function ExpenseCard({
           {!hideMenu && (
             <Menu shadow="md" position="bottom-end">
               <Menu.Target>
-                <ActionIcon size="sm" radius="xl" variant="light">
+                <ActionIcon
+                  size="sm"
+                  radius="xl"
+                  variant="transparent"
+                  color="gray"
+                >
                   <IconDotsVertical size={16} />
                 </ActionIcon>
               </Menu.Target>
@@ -141,7 +151,7 @@ function ExpenseCard({
               <Menu.Dropdown>
                 {isEditable && (
                   <Menu.Item
-                    icon={<IconEdit size={14} />}
+                    leftSection={<IconEdit size={14} />}
                     onClick={() => onEditExpense?.(data)}
                     disabled={Boolean(data.linked)}
                   >
@@ -151,7 +161,7 @@ function ExpenseCard({
                 {isEditable && (
                   <Menu.Item
                     color="red"
-                    icon={<IconTrash size={14} />}
+                    leftSection={<IconTrash size={14} />}
                     onClick={() => onDeleteExpense?.(data)}
                   >
                     Delete
