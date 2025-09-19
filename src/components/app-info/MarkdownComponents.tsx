@@ -123,7 +123,7 @@ const UserCard = (props: Readonly<{ username: string }>) => {
           <ContainedLoader size={150} />
         ) : (
           <>
-            <Group position="left" align="center">
+            <Group justify="flex-start" align="center">
               <Avatar src={user?.avatarUrl ?? ""} size="lg" radius="xl" />
               <Box>
                 <Text

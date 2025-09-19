@@ -69,7 +69,12 @@ export default function Layout() {
         navbar={{ width: 60, breakpoint: "sm", collapsed: { mobile: !open } }}
         padding="md"
       >
-        <AppShell.Header className={classes.header}>
+        <AppShell.Header
+          className={classes.header}
+          style={(theme) => ({
+            backgroundColor: theme.colors.dark[8],
+          })}
+        >
           <Burger
             hiddenFrom="sm"
             opened={open}
@@ -143,7 +148,11 @@ export default function Layout() {
             </ActionIcon>
           </Tooltip>
         </AppShell.Header>
-        <AppShell.Navbar>
+        <AppShell.Navbar
+          style={(theme) => ({
+            backgroundColor: theme.colors.dark[8],
+          })}
+        >
           <AppShell.Section
             style={{
               display: "flex",
@@ -201,7 +210,12 @@ export default function Layout() {
           </AppShell.Section>
         </AppShell.Navbar>
         {/* App Content */}
-        <AppShell.Main>
+        <AppShell.Main
+          style={(theme) => ({
+            backgroundColor: theme.colors.dark[8],
+            border: "none",
+          })}
+        >
           <Suspense fallback={<OverlayLoader visible />}>
             <Outlet />
           </Suspense>

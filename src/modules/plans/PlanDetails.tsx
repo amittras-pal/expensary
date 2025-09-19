@@ -7,12 +7,7 @@ import {
 } from "@mantine/core";
 import { useDisclosure, useDocumentTitle, useHotkeys } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
-import {
-  IconDownload,
-  IconInfoCircle,
-  IconPlus,
-  IconTableDown,
-} from "@tabler/icons-react";
+import { IconDownload, IconPlus, IconTableDown } from "@tabler/icons-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -113,11 +108,7 @@ export default function PlanDetails() {
         <Tabs.List>
           <Tabs.Tab value="summary">Summary</Tabs.Tab>
           <Tabs.Tab value="list">Expenses</Tabs.Tab>
-          <Tabs.Tab
-            value="info"
-            ml="auto"
-            icon={<IconInfoCircle size={16} />}
-          />
+          <Tabs.Tab value="info">Plan Info</Tabs.Tab>
         </Tabs.List>
 
         <Tabs.Panel value="summary" pt="xs" style={{ height: "100%" }}>

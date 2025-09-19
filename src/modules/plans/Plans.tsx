@@ -23,6 +23,7 @@ import { getPlans, updatePlan } from "../../services/plans.service";
 import DeletePlan from "./components/DeletePlan";
 import ExpensePlan from "./components/ExpensePlan";
 import ExpensePlanForm from "./components/ExpensePlanForm";
+import { useMediaMatch } from "../../hooks/media-match";
 
 interface PlanSegregation {
   active: IExpensePlan[];
@@ -32,6 +33,7 @@ interface PlanSegregation {
 export default function Plans() {
   useDocumentTitle(`${APP_TITLE} | Vacations & Plans`);
   const { primaryColor } = useMantineTheme();
+  const isMobile = useMediaMatch();
   const { onError } = useErrorHandler();
   const { data, isLoading } = useQuery({
     queryKey: ["plans-list", false],
@@ -103,7 +105,7 @@ export default function Plans() {
           withCloseButton: false,
           children: (
             <>
-              <Text color="red">
+              <Text c="red">
                 Once closed, no more expenses can be added to the plan and
                 existing expenses cannot be modified.
               </Text>
@@ -119,7 +121,7 @@ export default function Plans() {
           },
           confirmProps: {
             color: "red",
-            leftIcon: <IconX />,
+            leftSection: <IconX />,
           },
           onConfirm: () => {
             update({ ...data, open: false });
@@ -197,20 +199,11 @@ export default function Plans() {
         <>
           <Divider
             labelPosition="center"
-            labelProps={{ color: "dimmed" }}
             label={`Open Plans (${plansList.active.length})`}
             mb="sm"
             color={primaryColor}
           />
-          <SimpleGrid
-            cols={2}
-            gap="lg"
-            mb="sm"
-            breakpoints={[
-              { maxWidth: "md", cols: 2, spacing: "sm", verticalSpacing: "sm" },
-              { maxWidth: "sm", cols: 1, spacing: "sm", verticalSpacing: "sm" },
-            ]}
-          >
+          <SimpleGrid cols={isMobile ? 1 : 2} spacing="sm" mb="sm">
             {plansList.active?.map((plan) => (
               <ExpensePlan
                 hideMenu={false}
@@ -226,20 +219,11 @@ export default function Plans() {
         <>
           <Divider
             labelPosition="center"
-            labelProps={{ color: "dimmed" }}
             label={`Closed Plans (${plansList.closed.length})`}
             mb="sm"
             color="red"
           />
-          <SimpleGrid
-            cols={2}
-            gap="lg"
-            mb="sm"
-            breakpoints={[
-              { maxWidth: "md", cols: 2, spacing: "sm", verticalSpacing: "sm" },
-              { maxWidth: "sm", cols: 1, spacing: "sm", verticalSpacing: "sm" },
-            ]}
-          >
+          <SimpleGrid cols={isMobile ? 1 : 2} spacing="sm" mb="sm">
             {plansList.closed?.map((plan) => (
               <ExpensePlan
                 hideMenu={false}

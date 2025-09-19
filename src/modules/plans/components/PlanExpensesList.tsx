@@ -3,8 +3,7 @@ import {
   Box,
   Group,
   Notification,
-  Portal,
-  Text,
+  Text
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { IconCheck, IconCopy, IconX } from "@tabler/icons-react";
@@ -109,7 +108,7 @@ export default function PlanExpensesList({
   return (
     <>
       <OverlayLoader visible={loadingList} />
-      <Box ref={ref} style={{ height: "100%" }}>
+      <Box ref={ref} style={{ height: "calc(100vh - 145px)" }}>
         <AgGridMod
           columnDefs={columns}
           popupParent={document.body}
@@ -131,49 +130,47 @@ export default function PlanExpensesList({
         />
       </Box>
       {selection.length > 0 && (
-  <Portal target={document.body} className={classes.wrapper}>
-          <Notification
-            style={{ maxWidth: "95%" }}
-            withCloseButton={false}
-            title={`Copy ${selection.length} expenses to monthly budget.`}
-            onClose={clearSelection}
-          >
-            <Group justify="space-between" gap={8} style={{ flexWrap: "nowrap" }}>
-              <Text>
-                <Text size="xs" c="dimmed" mt={6} component="span">
-                  Expenses will be copied to monthly budget at creation date.{" "}
-                </Text>
-                {!isMobile && <br />}
-                <Text size="xs" color="red" component="span">
-                  Copied expenses cannot be modified!
-                </Text>
+        <Notification
+          className={classes.wrapper}
+          withCloseButton={false}
+          title={`Copy ${selection.length} expenses to monthly budget.`}
+          onClose={clearSelection}
+        >
+          <Group justify="space-between" gap={6} style={{ flexWrap: "nowrap" }}>
+            <Text>
+              <Text size="xs" c="dimmed" mt={6} component="span">
+                Expenses will be copied to monthly budget at creation date.{" "}
               </Text>
-              <Box>
-                <ActionIcon
-                  color="green"
-                  variant="filled"
-                  radius="sm"
-                  mb={6}
-                  loading={copying}
-                  onClick={() => copy({ expenses: selection })}
-                >
-                  <IconCopy size={14} />
-                </ActionIcon>
-                <ActionIcon
-                  color="red"
-                  variant="filled"
-                  radius="sm"
-                  onClick={() => {
-                    setSelection([]);
-                    grid?.deselectAll();
-                  }}
-                >
-                  <IconX size={14} />
-                </ActionIcon>
-              </Box>
+              {!isMobile && <br />}
+              <Text size="xs" color="red" component="span">
+                Copied expenses cannot be modified!
+              </Text>
+            </Text>
+            <Group gap={6} style={{ flexDirection: "column" }}>
+              <ActionIcon
+                color="green"
+                variant="filled"
+                radius="sm"
+                mb={6}
+                loading={copying}
+                onClick={() => copy({ expenses: selection })}
+              >
+                <IconCopy size={14} />
+              </ActionIcon>
+              <ActionIcon
+                color="red"
+                variant="filled"
+                radius="sm"
+                onClick={() => {
+                  setSelection([]);
+                  grid?.deselectAll();
+                }}
+              >
+                <IconX size={14} />
+              </ActionIcon>
             </Group>
-          </Notification>
-        </Portal>
+          </Group>
+        </Notification>
       )}
     </>
   );

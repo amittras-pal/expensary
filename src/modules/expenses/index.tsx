@@ -24,7 +24,7 @@ interface ExpenseAtRow extends IExpense {
 }
 
 export default function Expenses() {
-  useDocumentTitle(`${APP_TITLE} | Expenses List`);
+  useDocumentTitle(`${APP_TITLE} | All Transactions`);
   const { userData } = useCurrentUser();
   const { onError } = useErrorHandler();
 
@@ -221,7 +221,7 @@ export default function Expenses() {
         onClose={() => handleClose(false)}
       >
         {showForm && (
-          <ExpenseForm data={targetExpense} onComplete={handleClose} />
+        <ExpenseForm data={targetExpense} onComplete={handleClose} />
         )}
         {confirm && (
           <DeleteExpense data={targetExpense} onComplete={handleClose} />

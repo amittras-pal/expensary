@@ -32,7 +32,6 @@ export default function ExpensePlan({
   onPlanAction,
   hideMenu,
 }: ActionableCard | ReadOnlyCard) {
-
   const textProps = useMemo(
     (): Partial<TextProps> => ({
       fz: "md",
@@ -45,8 +44,8 @@ export default function ExpensePlan({
   );
 
   return (
-  <Box className={classes.wrapper}>
-  <Box className={classes.details}>
+    <Box className={classes.wrapper}>
+      <Box className={classes.details}>
         <Box>
           {hideMenu ? (
             <Text {...textProps} component={"p"}>
@@ -67,21 +66,21 @@ export default function ExpensePlan({
             {data?.open ? (
               <Menu shadow="md" position="bottom-end">
                 <Menu.Target>
-                  <ActionIcon size="sm" radius="xl" variant="light">
+                  <ActionIcon size="sm" radius="xl" variant="transparent" color="gray">
                     <IconDotsVertical size={16} />
                   </ActionIcon>
                 </Menu.Target>
 
                 <Menu.Dropdown>
                   <Menu.Item
-                    icon={<IconEdit size={14} />}
+                    leftSection={<IconEdit size={14} />}
                     onClick={() => onPlanAction(data, "edit")}
                   >
                     Edit
                   </Menu.Item>
                   <Menu.Item
                     color="red"
-                    icon={<IconX size={14} />}
+                    leftSection={<IconX size={14} />}
                     onClick={() => onPlanAction(data, "close")}
                   >
                     Close

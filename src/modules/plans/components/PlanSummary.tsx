@@ -16,9 +16,11 @@ import ContainedLoader from "../../../components/loaders/ContainedLoader";
 import { useErrorHandler } from "../../../hooks/error-handler";
 import { getSummary } from "../../../services/expense.service";
 import { formatCurrency } from "../../../utils";
+import { useMediaMatch } from "../../../hooks/media-match";
 
 function PlanSummary() {
   const { onError } = useErrorHandler();
+  const isMobile = useMediaMatch();
   const { primaryColor } = useMantineTheme();
   const params = useParams();
 
@@ -57,16 +59,8 @@ function PlanSummary() {
         borderRadius: theme.radius.md,
       })}
     >
-      <ScrollArea w="100%" h="calc(100% - 50px)">
-        <SimpleGrid
-          cols={summaryData.length > 0 ? 2 : 1}
-          gap="xs"
-          verticalgap="xs"
-          breakpoints={[
-            { maxWidth: "md", cols: 2, spacing: "sm", verticalSpacing: "sm" },
-            { maxWidth: "sm", cols: 1, spacing: "sm", verticalSpacing: "sm" },
-          ]}
-        >
+      <ScrollArea w="100%" h="calc(100vh - 220px)">
+        <SimpleGrid cols={isMobile ? 1 : 2} spacing="xs">
           {summaryData.length === 0 && (
             <Box
               style={{

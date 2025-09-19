@@ -304,9 +304,9 @@ export default function YearTrend() {
         ref={chartRef}
         onEvents={events}
         style={{
-          border: "1px solid var(--mantine-color-dark-5)",
           borderRadius: "var(--mantine-radius-md)",
           padding: "var(--mantine-spacing-xs)",
+          backgroundColor: " var(--mantine-color-dark-6)",
           width: "100%",
           height: "calc(100vh - 150px)",
         }}

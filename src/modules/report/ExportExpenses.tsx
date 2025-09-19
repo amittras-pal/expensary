@@ -7,12 +7,12 @@ import {
   Text,
   useMantineTheme,
 } from "@mantine/core";
-import { DatePicker, MonthPicker, PickerBaseProps } from "@mantine/dates";
+import { DatePicker, DatesRangeValue, MonthPicker, PickerBaseProps } from "@mantine/dates";
 import { useDocumentTitle } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import { IconDownload, IconTableDown } from "@tabler/icons-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import dayjs from "dayjs";
+import dayjs, { OpUnitType } from "dayjs";
 import { useMemo, useState } from "react";
 import { APP_TITLE } from "../../constants/app";
 import { useCurrentUser } from "../../context/user.context";
@@ -32,10 +32,10 @@ interface CommonPickerProps extends PickerBaseProps<"range"> {
 export default function DownloadReport() {
   useDocumentTitle(`${APP_TITLE} | Export Expenses`);
   const { primaryColor } = useMantineTheme();
-  const [view, setView] = useState<"day" | "month" | "plan">("day");
+  const [view, setView] = useState<string>("day");
   const [includeList, setIncludeList] = useState(false);
   const [plan, setPlan] = useState<string | null>(null);
-  const [selection, setSelection] = useState<[Date | null, Date | null]>([
+  const [selection, setSelection] = useState<DatesRangeValue>([
     null,
     null,
   ]);
@@ -46,14 +46,14 @@ export default function DownloadReport() {
 
   const pickerProps = useMemo(
     (): CommonPickerProps => ({
-  className: classes.wrapper,
+      className: classes.wrapper,
       type: "range",
       maxDate: dayjs().toDate(),
       minDate: userData
         ? dayjs(userData?.createdAt).toDate()
         : dayjs().toDate(),
     }),
-  [userData]
+    [userData]
   );
 
   const { mutate: downloadRange, isLoading: downloadingRange } = useMutation({
@@ -101,8 +101,12 @@ export default function DownloadReport() {
   const handleDownload = () => {
     if (view !== "plan") {
       downloadRange({
-        startDate: dayjs(selection[0]).startOf(view).toDate(),
-        endDate: dayjs(selection[1]).endOf(view).toDate(),
+        startDate: dayjs(selection[0])
+          .startOf(view as OpUnitType)
+          .toDate(),
+        endDate: dayjs(selection[1])
+          .endOf(view as OpUnitType)
+          .toDate(),
         includeList,
       });
     } else {
@@ -113,18 +117,21 @@ export default function DownloadReport() {
   return (
     <Group
       justify="center"
-      style={{
+      style={(theme) => ({
         maxWidth: isMobile ? "95%" : 400,
         flexDirection: "column",
         margin: "auto",
-      }}
+        backgroundColor: theme.colors.dark[6],
+        padding: theme.spacing.xs,
+        borderRadius: theme.radius.md,
+      })}
     >
       <Text mr="auto">Select export type.</Text>
       <SegmentedControl
         size="sm"
         value={view}
         color={primaryColor}
-        onChange={(mode: "day" | "month" | "plan") => setView(mode)}
+        onChange={(mode) => setView(mode)}
         style={{ width: "100%" }}
         data={[
           { label: "Dates Range", value: "day" },

@@ -112,16 +112,16 @@ export default function ExpensePlanForm({
           {watch("description")?.length} / 400
         </Text>
       </Box>
-      <Group grow mt="md">
-        <Button type="reset" variant="outline" disabled={creating || updating}>
-          Cancel
-        </Button>
+      <Group grow mt="md" style={{ flexDirection: "row-reverse" }}>
         <Button
           type="submit"
           loading={creating || updating}
           disabled={!isValid}
         >
           Save
+        </Button>
+        <Button type="reset" variant="outline" disabled={creating || updating}>
+          Cancel
         </Button>
       </Group>
     </Box>

@@ -18,7 +18,8 @@ import classes from "../../theme/modules/Layout.module.scss";
 
 export default function ShortcutsList() {
   const { pathname } = useLocation();
-  const cx = (...classes: (string | false | undefined)[]) => classes.filter(Boolean).join(" ");
+  const cx = (...classes: (string | false | undefined)[]) =>
+    classes.filter(Boolean).join(" ");
   const { primaryColor } = useMantineTheme();
 
   return (
@@ -30,15 +31,7 @@ export default function ShortcutsList() {
         <Kbd>I</Kbd> - Open Keyboard Shortcuts.
       </Text>
       <Divider my="sm" />
-      <SimpleGrid
-        cols={2}
-        gap="sm"
-        mb="sm"
-        breakpoints={[
-          { maxWidth: "md", cols: 2, spacing: "sm", verticalSpacing: "sm" },
-          { maxWidth: "sm", cols: 1, spacing: "sm", verticalSpacing: "sm" },
-        ]}
-      >
+      <SimpleGrid cols={2} spacing="sm" mb="sm">
         <Box
           className={cx(
             classes.shortcutBlock,
@@ -49,7 +42,7 @@ export default function ShortcutsList() {
             fz="md"
             fw="bold"
             mb="sm"
-            color={pathname === "/" ? primaryColor : ""}
+            c={pathname === "/" ? primaryColor : ""}
           >
             Dashboard {pathname === "/" && <YouAreHere />}
           </Text>
@@ -70,7 +63,7 @@ export default function ShortcutsList() {
             fz="md"
             fw="bold"
             mb="sm"
-            color={pathname === "/expenses" ? primaryColor : ""}
+            c={pathname === "/expenses" ? primaryColor : ""}
           >
             Expenses List {pathname === "/expenses" && <YouAreHere />}
           </Text>
@@ -88,7 +81,7 @@ export default function ShortcutsList() {
             fz="md"
             fw="bold"
             mb="sm"
-            color={pathname === "/plans" ? primaryColor : ""}
+            c={pathname === "/plans" ? primaryColor : ""}
           >
             Plans List {pathname === "/plans" && <YouAreHere />}
           </Text>
@@ -99,14 +92,15 @@ export default function ShortcutsList() {
         <Box
           className={cx(
             classes.shortcutBlock,
-            !!RegExp(planDetailsPath).exec(pathname) && classes.shortcutHighlight
+            !!RegExp(planDetailsPath).exec(pathname) &&
+              classes.shortcutHighlight
           )}
         >
           <Text
             fz="md"
             fw="bold"
             mb="sm"
-            color={RegExp(planDetailsPath).exec(pathname) ? primaryColor : ""}
+            c={RegExp(planDetailsPath).exec(pathname) ? primaryColor : ""}
           >
             Plan Details{" "}
             {RegExp(planDetailsPath).exec(pathname) && <YouAreHere />}
@@ -125,7 +119,7 @@ export default function ShortcutsList() {
             fz="md"
             fw="bold"
             mb="sm"
-            color={pathname === "/statistics" ? primaryColor : ""}
+            c={pathname === "/statistics" ? primaryColor : ""}
           >
             Spend Statistics {pathname === "/statistics" && <YouAreHere />}
           </Text>
@@ -153,7 +147,7 @@ export default function ShortcutsList() {
 function YouAreHere() {
   const { primaryColor } = useMantineTheme();
   return (
-    <ThemeIcon color={primaryColor} variant="light" size="sm" radius="lg">
+    <ThemeIcon c={primaryColor} variant="light" size="sm" radius="lg">
       <IconMapPinFilled size={12} />
     </ThemeIcon>
   );

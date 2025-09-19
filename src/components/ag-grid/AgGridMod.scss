@@ -2,19 +2,17 @@
 @import "ag-grid-community/styles/ag-theme-material.min.css";
 
 .ag-theme-material {
-  --ag-background-color: var(--mantine-color-dark-5);
+  --ag-background-color: var(--mantine-color-dark-6);
   --ag-material-accent-color: var(--mantine-color-primary-5);
 }
 
 .mtrace-ag-mod {
   .ag-root-wrapper {
-    background-color: transparent;
+    background-color: var(--mantine-color-dark-6);
     border-radius: var(--mantine-radius-md);
-    border: 1px solid var(--mantine-color-dark-5);
     .ag-header {
-      background-color: transparent;
-      border-bottom-color: var(--mantine-color-dark-5);
-      border-bottom-width: 2px;
+      background-color: var(--mantine-color-dark-6);
+      border-bottom-color: var(--mantine-color-dark-8);
       &-cell {
         color: var(--mantine-color-gray-2);
         transition: background-color 0.2s;
@@ -48,7 +46,7 @@
         }
       }
       background-color: transparent;
-      border-bottom-color: var(--mantine-color-dark-5);
+      border-bottom-color: var(--mantine-color-dark-8);
       &-focus,
       &-hover {
         background-color: var(--mantine-color-dark-4) !important;
@@ -87,7 +85,7 @@
         .ag-cell-range-single-cell
       ),
     .ag-pinned-left-header {
-      border-right-color: var(--mantine-color-dark-5) !important;
+      border-right-color: var(--mantine-color-dark-8) !important;
     }
   }
 }

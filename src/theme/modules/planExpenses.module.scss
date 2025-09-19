@@ -3,8 +3,10 @@
 .wrapper {
   position: fixed;
   width: 100%;
-  max-width: 100%;
-  top: 10px;
+  max-width: 50%;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   justify-content: center;
   z-index: 1000;
