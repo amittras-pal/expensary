@@ -49,17 +49,17 @@ export default function DownloadReport() {
   // Handle different picker onChange types for Mantine v8
   const handleDatePickerChange = (value: any) => {
     if (Array.isArray(value)) {
-      if (typeof value[0] === 'string') {
+      if (typeof value[0] === "string") {
         // Handle string array - convert to Date array
         setSelection([
           value[0] ? new Date(value[0]) : null,
-          value[1] ? new Date(value[1]) : null
+          value[1] ? new Date(value[1]) : null,
         ]);
       } else {
         // Handle Date array
         setSelection([value[0] || null, value[1] || null]);
       }
-    } else if (typeof value === 'string') {
+    } else if (typeof value === "string") {
       // Handle single string value
       setSelection([new Date(value), null]);
     } else if (value instanceof Date) {
