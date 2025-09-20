@@ -60,11 +60,11 @@ function PlanSummary() {
       })}
     >
       <ScrollArea w="100%" h="calc(100vh - 220px)">
-        <SimpleGrid cols={isMobile ? 1 : 2} spacing="xs">
+        <SimpleGrid cols={isMobile || !summaryData.length ? 1 : 2} spacing="xs">
           {summaryData.length === 0 && (
             <Box
               style={{
-                height: "200px",
+                height: "calc(100vh - 220px)",
                 width: "100%",
                 display: "flex",
                 flexDirection: "column",

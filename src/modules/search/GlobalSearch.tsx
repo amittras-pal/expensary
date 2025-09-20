@@ -101,17 +101,23 @@ export default function GlobalSearch2() {
   // Handle date picker change for Mantine v8 compatibility
   const handleDateRangeChange = (value: any) => {
     if (Array.isArray(value)) {
-      if (typeof value[0] === 'string') {
+      if (typeof value[0] === "string") {
         // Handle string array - convert to Date array
-        setValue("dateRange", [
-          value[0] ? new Date(value[0]) : null,
-          value[1] ? new Date(value[1]) : null
-        ], { shouldDirty: true });
+        setValue(
+          "dateRange",
+          [
+            value[0] ? new Date(value[0]) : null,
+            value[1] ? new Date(value[1]) : null,
+          ],
+          { shouldDirty: true }
+        );
       } else {
         // Handle Date array
-        setValue("dateRange", [value[0] || null, value[1] || null], { shouldDirty: true });
+        setValue("dateRange", [value[0] || null, value[1] || null], {
+          shouldDirty: true,
+        });
       }
-    } else if (typeof value === 'string') {
+    } else if (typeof value === "string") {
       // Handle single string value
       setValue("dateRange", [new Date(value), null], { shouldDirty: true });
     } else if (value instanceof Date) {
@@ -248,7 +254,14 @@ export default function GlobalSearch2() {
           </>
         }
       />
-      <ScrollArea h="calc(100vh - 190px)" style={{ paddingBottom: "1px" }}>
+      <ScrollArea
+        h="calc(100vh - 190px)"
+        style={(theme) => ({
+          padding: theme.spacing.sm,
+          borderRadius: theme.radius.md,
+          backgroundColor: theme.colors.dark[6],
+        })}
+      >
         <SimpleGrid cols={isMobile ? 1 : 2} spacing="xs">
           {expenses?.response.map((ex) => (
             <ExpenseCard

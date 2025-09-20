@@ -49,15 +49,15 @@ export default function User() {
       </Paper>
       <Paper withBorder p="md" radius="md">
         <Title order={3} mb="xs">
-          Change Pin
-        </Title>
-        <ChangePassword />
-      </Paper>
-      <Paper withBorder p="md" radius="md">
-        <Title order={3} mb="xs">
           Preferences
         </Title>
         <Preferences />
+      </Paper>
+      <Paper withBorder p="md" radius="md">
+        <Title order={3} mb="xs">
+          Change Pin
+        </Title>
+        <ChangePassword />
       </Paper>
     </Container>
   );

@@ -36,6 +36,7 @@ export default function App() {
       Button: { defaultProps: { color } },
       Progress: { defaultProps: { color } },
       Slider: { defaultProps: { color } },
+      Switch: { defaultProps: { color } },
       TextInput: { defaultProps: { mb: "sm", variant: "filled" } },
       Textarea: { defaultProps: { mb: "sm", variant: "filled" } },
       Select: { defaultProps: { mb: "sm", variant: "filled" } },
