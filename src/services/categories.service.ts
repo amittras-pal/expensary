@@ -3,12 +3,10 @@ import axios from "../config/axios";
 import { ENDPOINTS } from "../constants/endpoints";
 import { ResponseBody } from "./response.type";
 
-export function getCategories(): Promise<ResponseBody<ICategory[]>> {
-  return axios.get(ENDPOINTS.categories).then((res) => res.data);
+export function getCategories() {
+  return axios.get<ResponseBody<ICategory[]>>(ENDPOINTS.categories).then((res) => res.data);
 }
 
-export function getCategoryGroups(): Promise<
-  ResponseBody<{ name: string; color: MantineColor; subCategories: number }[]>
-> {
-  return axios.get(ENDPOINTS.categoryGroups).then((res) => res.data);
+export function getCategoryGroups() {
+  return axios.get<ResponseBody<{ name: string; color: MantineColor; subCategories: number }[]>>(ENDPOINTS.categoryGroups).then((res) => res.data);
 }

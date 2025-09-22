@@ -5,24 +5,24 @@ import { ResponseBody } from "./response.type";
 export function loginUser(payload: {
   email: string;
   pin: string;
-}): Promise<ResponseBody<IUser>> {
-  return axios.post(ENDPOINTS.login, payload).then((res) => res.data);
+}) {
+  return axios.post<ResponseBody<IUser>>(ENDPOINTS.login, payload).then((res) => res.data);
 }
 
 export function registerUser(
   payload: Partial<IUser>
-): Promise<ResponseBody<undefined>> {
-  return axios.post(ENDPOINTS.register, payload).then((res) => res.data);
+) {
+  return axios.post<ResponseBody<undefined>>(ENDPOINTS.register, payload).then((res) => res.data);
 }
 
-export function getUserData(): Promise<ResponseBody<IUser>> {
-  return axios.get(ENDPOINTS.userInfo).then((res) => res.data);
+export function getUserData() {
+  return axios.get<ResponseBody<IUser>>(ENDPOINTS.userInfo).then((res) => res.data);
 }
 
 export function updateUserDetails(
   payload: Partial<IUser>
-): Promise<ResponseBody<IUser>> {
-  return axios.put(ENDPOINTS.updateUser, payload).then((res) => res.data);
+) {
+  return axios.put<ResponseBody<IUser>>(ENDPOINTS.updateUser, payload).then((res) => res.data);
 }
 
 export function changeUserPassword(payload: {

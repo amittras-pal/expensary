@@ -11,14 +11,14 @@ type PlanExportParams = {
   plan: string;
 };
 
-export function exportRange(params: RangeExportParams): Promise<Blob> {
+export function exportRange(params: RangeExportParams) {
   return axios
-    .get(ENDPOINTS.exportRange, { params, responseType: "blob" })
+    .get<Blob>(ENDPOINTS.exportRange, { params, responseType: "blob" })
     .then((res) => res.data);
 }
 
-export function exportPlan(params: PlanExportParams): Promise<Blob> {
+export function exportPlan(params: PlanExportParams) {
   return axios
-    .get(ENDPOINTS.exportPlan, { params, responseType: "blob" })
+    .get<Blob>(ENDPOINTS.exportPlan, { params, responseType: "blob" })
     .then((res) => res.data);
 }
