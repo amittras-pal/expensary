@@ -281,6 +281,7 @@ export default function YearTrend() {
           value={year}
           onChange={(e) => setYear(e ?? "")}
           data={yearOptions}
+          allowDeselect={false}
           mb={0}
           autoFocus
         />
