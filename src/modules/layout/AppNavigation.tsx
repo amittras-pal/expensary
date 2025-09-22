@@ -134,13 +134,12 @@ function NavLink({ onChange, ...route }: NavLinkProps) {
         component={Link}
         onClick={() => onChange(false)}
         to={route.path}
+        w={isMobile ? "100%" : ""}
         className={
           active ? `${classes.navBtn} ${classes.navBtnActive}` : classes.navBtn
         }
       >
-        <ThemeIcon variant={active ? "filled" : "light"} size={36}>
-          {route.icon}
-        </ThemeIcon>
+        <route.icon size={20} />
         {isMobile && <Text size="sm">{route.label}</Text>}
       </UnstyledButton>
     </Tooltip>

@@ -1,3 +1,8 @@
+interface TablerIconsProps extends Partial<Omit<React.SVGProps<SVGSVGElement>, 'stroke'>> {
+    size?: string | number,
+    stroke?: string | number
+}
+
 declare module "*.svg?react" {
   const content: React.FunctionComponent<React.SVGAttributes<SVGElement>>;
   export default content;
@@ -16,7 +21,7 @@ declare module "*.module.scss" {
 }
 
 interface RouteItem {
-  icon: JSX.Element;
+  icon: (props: TablerIconsProps) => JSX.Element;
   label: string;
   path: string;
   exactMatch: boolean;
