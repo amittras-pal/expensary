@@ -154,7 +154,7 @@ export default function GlobalSearch2() {
   }, [categoryRes?.response]);
 
   return (
-    <>
+    <Box>
       <Accordion
         variant="separated"
         value={showFilter}
@@ -232,7 +232,7 @@ export default function GlobalSearch2() {
         </Accordion.Item>
       </Accordion>
       <Divider
-        my="sm"
+      my="sm"
         color={primaryColor}
         labelPosition="center"
         label={
@@ -255,7 +255,7 @@ export default function GlobalSearch2() {
         }
       />
       <ScrollArea
-        h="calc(100vh - 190px)"
+        h={`calc(100vh - ${showFilter ? 300 : 190}px)`}
         style={(theme) => ({
           padding: theme.spacing.sm,
           borderRadius: theme.radius.md,
@@ -274,6 +274,6 @@ export default function GlobalSearch2() {
           ))}
         </SimpleGrid>
       </ScrollArea>
-    </>
+    </Box>
   );
 }
