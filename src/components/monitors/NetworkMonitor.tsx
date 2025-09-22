@@ -8,7 +8,7 @@ export default function NetworkMonitor() {
     <Notification
       icon={!isOnline ? <IconWifiOff size={16} /> : <IconWifi size={16} />}
       color={!isOnline ? "red" : "green"}
-      title={!isOnline ? "Netwook Disconnected!" : "Back Online!"}
+      title={!isOnline ? "Network Disconnected!" : "Back Online!"}
       withCloseButton={false}
       styles={(theme) => ({
         root: {
