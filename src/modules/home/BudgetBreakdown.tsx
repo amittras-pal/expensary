@@ -1,3 +1,4 @@
+import { useMemo, useRef, useState } from "react";
 import {
   ActionIcon,
   Box,
@@ -13,7 +14,7 @@ import {
   ThemeIcon,
   Tooltip,
 } from "@mantine/core";
-import { MonthPickerInput } from "@mantine/dates";
+import { DateValue, MonthPickerInput } from "@mantine/dates";
 import { useHotkeys } from "@mantine/hooks";
 import {
   IconArrowRight,
@@ -26,19 +27,18 @@ import {
 } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import { useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import BudgetItem from "../../components/BudgetItem";
 import ContainedLoader from "../../components/loaders/ContainedLoader";
+import { _20Min } from "../../constants/app";
 import { useCurrentUser } from "../../context/user.context";
 import { useErrorHandler } from "../../hooks/error-handler";
 import { useMediaMatch } from "../../hooks/media-match";
 import EmptyState from "../../resources/empty-state.svg?react";
 import { getBudget } from "../../services/budget.service";
 import { getSummary } from "../../services/expense.service";
-import { useDashboardStyles } from "../../theme/modules/dashboard.styles";
+import classes from "../../theme/modules/dashboard.module.scss";
 import { formatCurrency, getPercentage, getSeverityColor } from "../../utils";
-import { _20Min } from "../../constants/app";
 
 interface IBudgetBreakdownProps {
   showForm: () => void;
@@ -56,7 +56,6 @@ export default function BudgetBreakdown({
   const { userData } = useCurrentUser();
   const { onError } = useErrorHandler();
   const isMobile = useMediaMatch();
-  const { classes } = useDashboardStyles();
   const [budgetPayload, setBudgetPayload] = useState({
     month: dayjs().month(),
     year: dayjs().year(),
@@ -122,7 +121,7 @@ export default function BudgetBreakdown({
     );
   }, [selection, summary?.response]);
 
-  const handleMonthChange = (e: Date) => {
+  const handleMonthChange = (e: DateValue) => {
     setPayload((prev) => ({
       ...prev,
       startDate: dayjs(e).startOf("month").toDate(),
@@ -154,10 +153,10 @@ export default function BudgetBreakdown({
 
   return (
     <Box ref={ref} className={classes.budgetWrapper}>
-      <Group position="apart">
+      <Group justify="space-between">
         <MonthPickerInput
           size="xs"
-          sx={{ flex: 1, textAlign: "center" }}
+          style={{ flex: 1, textAlign: "center" }}
           placeholder="Select month"
           variant="filled"
           value={payload.startDate}
@@ -220,7 +219,7 @@ export default function BudgetBreakdown({
       </Group>
       <Divider my="xs" />
       {Object.entries(summary?.response?.summary ?? {}).length > 0 ? (
-        <ScrollArea h={`calc(100vh - ${isMobile ? 272 : 247}px)`}>
+        <ScrollArea h={`calc(100vh - ${isMobile ? 280 : 250}px)`}>
           <SimpleGrid cols={1} spacing="xs">
             {Object.entries(summary?.response?.summary ?? {})?.map((item) => (
               <BudgetItem
@@ -242,17 +241,17 @@ export default function BudgetBreakdown({
           </Text>
         </Stack>
       )}
-      <Group grow spacing="xs" align="flex-start" mt="auto">
+      <Group grow gap="xs" align="flex-start" mt="auto">
         <Group
-          spacing={4}
-          sx={{
+          gap={4}
+          style={{
             height: "100%",
             flexDirection: "column",
             justifyContent: "flex-end",
             alignItems: "flex-start",
           }}
         >
-          <Group position="apart" w="100%">
+          <Group justify="space-between" w="100%">
             <Text fz="sm" fw="bold" color={percColor}>
               {percSpent}%
             </Text>
@@ -273,17 +272,17 @@ export default function BudgetBreakdown({
           </Text>
         </Group>
         <Group
-          sx={{
+          style={{
             flexDirection: "column",
             justifyContent: "flex-end",
             height: "100%",
           }}
-          spacing="xs"
+          gap="xs"
           align="flex-end"
         >
           <Button
             ml="auto"
-            leftIcon={<IconPlus size={18} />}
+            leftSection={<IconPlus size={18} />}
             size="xs"
             onClick={showForm}
             autoFocus
@@ -295,7 +294,7 @@ export default function BudgetBreakdown({
               size="xs"
               variant="light"
               onClick={showRecent}
-              rightIcon={<IconChevronUp size={18} />}
+              rightSection={<IconChevronUp size={18} />}
             >
               View Recent ({recents})
             </Button>
@@ -303,7 +302,7 @@ export default function BudgetBreakdown({
           <Button
             size="xs"
             variant="light"
-            rightIcon={<IconArrowRight size={18} />}
+            rightSection={<IconArrowRight size={18} />}
             component={Link}
             to="/expenses"
           >

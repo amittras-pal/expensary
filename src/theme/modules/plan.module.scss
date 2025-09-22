@@ -1,0 +1,17 @@
+/* Converted from plan.styles.ts (usePlanStyles) */
+
+.wrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--mantine-radius-sm);
+  padding: var(--mantine-spacing-xs);
+  background-color: var(--mantine-color-dark-6);
+}
+
+.details {
+  display: flex;
+  gap: var(--mantine-spacing-xs);
+  justify-content: space-between;
+  margin-bottom: var(--mantine-spacing-sm);
+}

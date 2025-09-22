@@ -1,8 +1,3 @@
-import { Box, Button, Divider, Text, useMantineTheme } from "@mantine/core";
-import { IconArrowElbowRight, IconTriangleFilled } from "@tabler/icons-react";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { ColDef } from "ag-grid-community";
-import dayjs from "dayjs";
 import {
   forwardRef,
   useEffect,
@@ -10,6 +5,11 @@ import {
   useMemo,
   useState,
 } from "react";
+import { Box, Button, Divider, Text, useMantineTheme } from "@mantine/core";
+import { IconArrowElbowRight, IconTriangleFilled } from "@tabler/icons-react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import dayjs from "dayjs";
+import { ColDef } from "ag-grid-community";
 import AgGridMod from "../../../components/ag-grid/AgGridMod";
 import generateColDef from "../../../components/ag-grid/utils/columns";
 import { _20Min } from "../../../constants/app";
@@ -124,7 +124,7 @@ export default forwardRef<ListDetailsHandle, ListDetailsProps>(
     return (
       <Box fw="sm" pb="sm">
         {path.map((segment, i, { length }) => (
-          <Text color="dimmed" key={segment.name || "Total"} ml={i * 8}>
+          <Text c="dimmed" key={segment.name || "Total"} ml={i * 8}>
             {i > 0 && (
               <IconArrowElbowRight
                 size={12}
@@ -134,7 +134,7 @@ export default forwardRef<ListDetailsHandle, ListDetailsProps>(
             {segment.name || "Total Spent"}:{" "}
             <Text
               component="span"
-              color={i === length - 1 ? colors.gray[1] : "dimmed"}
+              c={i === length - 1 ? colors.gray[1] : "dimmed"}
             >
               {formatCurrency(segment.value)}
             </Text>
@@ -155,11 +155,10 @@ export default forwardRef<ListDetailsHandle, ListDetailsProps>(
             {i === 2 && (
               <Button
                 size="xs"
-                variant="link"
+                variant="transparent"
                 onClick={handleLoadExpenses}
                 loading={searching}
-                loaderPosition="right"
-                ml="sm"
+                color="gray"
                 disabled={loadingCategories}
               >
                 {showExpenses ? "Hide" : "Show"} Expenses

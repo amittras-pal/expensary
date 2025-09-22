@@ -10,7 +10,7 @@ export default function PlanDetailsPanel({
 }: Readonly<IPlanDetailsPanelProps>) {
   return (
     <Box
-      sx={(theme) => ({
+      style={(theme) => ({
         display: "flex",
         flexDirection: "column",
         backgroundColor: theme.colors.dark[6],
@@ -22,10 +22,10 @@ export default function PlanDetailsPanel({
       <Text fz="lg" fw="bold">
         {data.name}
       </Text>
-      <Text sx={{ whiteSpace: "pre-wrap" }}>{data.description}</Text>
+      <Text style={{ whiteSpace: "pre-wrap" }}>{data.description}</Text>
       <Divider my="lg" />
-      <Text fz="sm" display="flex" sx={{ alignItems: "center" }}>
-        <Text component="span" color="dimmed">
+      <Text fz="sm" display="flex" style={{ alignItems: "center" }}>
+        <Text component="span" c="dimmed">
           Status:{" "}
         </Text>
         <Badge
@@ -38,7 +38,7 @@ export default function PlanDetailsPanel({
         </Badge>
       </Text>
       <Text fz="sm">
-        <Text component="span" color="dimmed">
+        <Text component="span" c="dimmed">
           Created:{" "}
         </Text>
         <Text component="span" fw="bold">
@@ -46,7 +46,7 @@ export default function PlanDetailsPanel({
         </Text>
       </Text>
       <Text fz="sm">
-        <Text component="span" color="dimmed">
+        <Text component="span" c="dimmed">
           Last Updated:{" "}
         </Text>
         <Text component="span" fw="bold">
@@ -54,7 +54,7 @@ export default function PlanDetailsPanel({
         </Text>
       </Text>
       <Text fz="sm">
-        <Text component="span" color="dimmed">
+        <Text component="span" c="dimmed">
           Last Action:{" "}
         </Text>
         <Text component="span" fw="bold">

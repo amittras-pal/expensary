@@ -1,4 +1,3 @@
-import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Box,
   Button,
@@ -11,6 +10,7 @@ import {
 import { useDocumentTitle } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation } from "@tanstack/react-query";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
@@ -20,11 +20,10 @@ import { APP_TITLE } from "../../constants/app";
 import { useErrorHandler } from "../../hooks/error-handler";
 import { RegisterForm, registerSchema } from "../../schemas/schemas";
 import { registerUser } from "../../services/user.service";
-import { useAuthStyles } from "../../theme/modules/auth.styles";
+import classes from "../../theme/modules/auth.module.scss";
 import PublicGuard from "../guards/PublicGuard";
 
 export default function Register() {
-  const { classes } = useAuthStyles();
   const navigate = useNavigate();
   useDocumentTitle(`${APP_TITLE} | Register`);
   const { onError } = useErrorHandler();
@@ -124,7 +123,7 @@ export default function Register() {
             required
           />
           <Text fz="sm" mb="md" align="center">
-            <Text component="span" color="dimmed">
+            <Text component="span" c="dimmed">
               Detected Time Zone:
             </Text>{" "}
             <Text component="span" fw="bold">

@@ -1,8 +1,8 @@
+import { useState } from "react";
 import { Box, Drawer, Modal, SimpleGrid, Text } from "@mantine/core";
 import { useDisclosure, useDocumentTitle } from "@mantine/hooks";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import { useState } from "react";
 import DeleteExpense from "../../components/DeleteExpense";
 import ExpenseForm from "../../components/ExpenseForm";
 import { APP_TITLE } from "../../constants/app";
@@ -56,7 +56,7 @@ export default function Home() {
 
   return (
     <>
-      <SimpleGrid cols={isMobile ? 1 : 2} sx={{ height: "100%" }}>
+      <SimpleGrid cols={isMobile ? 1 : 2} style={{ height: "100%" }}>
         <BudgetBreakdown
           showForm={formModal.open}
           showRecent={listDrawer.open}
@@ -93,7 +93,7 @@ export default function Home() {
           zIndex={199}
           title={
             <Box
-              sx={{
+              style={{
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "flex-end",
@@ -103,7 +103,7 @@ export default function Home() {
               <Text fw="bold" fz="sm">
                 {list?.response?.length ?? 0} Recent Transactions
               </Text>
-              <Text color="dimmed" fz="xs" fs="italic" ml="md">
+              <Text c="dimmed" fz="xs" fs="italic" ml="md">
                 Since{" "}
                 {dayjs()
                   .subtract(userData?.editWindow ?? 7, "days")

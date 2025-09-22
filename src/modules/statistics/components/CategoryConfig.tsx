@@ -1,7 +1,7 @@
+import { ChangeEventHandler, Fragment, useState } from "react";
 import { Button, Checkbox, Divider, Popover } from "@mantine/core";
 import { IconChevronDown } from "@tabler/icons-react";
 import ReactECharts from "echarts-for-react";
-import { ChangeEventHandler, Fragment, useState } from "react";
 import { Selection } from "../types";
 
 export default function CategoryConfig(
@@ -35,7 +35,7 @@ export default function CategoryConfig(
         <Button
           variant="default"
           size="xs"
-          rightIcon={<IconChevronDown size={14} />}
+          rightSection={<IconChevronDown size={14} />}
         >
           Categories
         </Button>

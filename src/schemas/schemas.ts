@@ -9,7 +9,10 @@ export const budgetFormSchema = yup.object().shape({
     .min(1, "Budget cannot be 0"),
   month: yup.number(),
   year: yup.number(),
-  remarks: yup.string().optional().max(180, "Remarks should be 180 characters or smaller."),
+  remarks: yup
+    .string()
+    .optional()
+    .max(180, "Remarks should be 180 characters or smaller."),
 });
 
 export const expenseSchema = (expenseWindow: number) =>

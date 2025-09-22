@@ -1,4 +1,10 @@
-import { yupResolver } from "@hookform/resolvers/yup";
+import {
+  FocusEventHandler,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import {
   Alert,
   Box,
@@ -8,8 +14,8 @@ import {
   Group,
   Select,
   Text,
-  Textarea,
   TextInput,
+  Textarea,
   useMantineTheme,
 } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
@@ -19,26 +25,20 @@ import {
   IconChevronRight,
   IconCurrencyRupee,
 } from "@tabler/icons-react";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import {
-  FocusEventHandler,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { _20Min, eqSanityRX } from "../constants/app";
 import { useCurrentUser } from "../context/user.context";
 import { useErrorHandler } from "../hooks/error-handler";
-import { expenseSchema, ExpenseForm as FormSchema } from "../schemas/schemas";
+import { ExpenseForm as FormSchema, expenseSchema } from "../schemas/schemas";
 import { getCategories } from "../services/categories.service";
 import { createExpense, editExpense } from "../services/expense.service";
 import { getPlans } from "../services/plans.service";
 import { ResponseBody } from "../services/response.type";
-import { roundOff } from "../utils";
+import { groupCategories, roundOff } from "../utils";
 import CategorySelectItem from "./CategorySelectItem";
 
 interface IExpenseFormProps {
@@ -209,6 +209,11 @@ export default function ExpenseForm({
     } else if (!errors.amount) setAmount(watch("amount")?.toString() ?? "0");
   };
 
+  const categoryOptions = useMemo(() => {
+    if (!categoryRes?.response) return [];
+    return groupCategories(categoryRes);
+  }, [categoryRes?.response]);
+
   return (
     <Box
       component="form"
@@ -238,50 +243,52 @@ export default function ExpenseForm({
           placeholder="Expense Description"
           label="Expense Description"
           error={errors.description?.message}
-          minRows={5}
+          rows={6}
         />
         <TextInput
           error={errors?.amount?.message}
           placeholder="Enter number or calculation"
           label="Amount"
-          icon={<IconCurrencyRupee size={18} />}
+          leftSection={<IconCurrencyRupee size={18} />}
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
           onBlur={onAmountBlur}
+          required
           description={
             <>
-              <Text fz="xs" color="dimmed">
+              <Text fz="xs" c="dimmed" component="span">
                 <IconChevronRight size={8} /> Enter number or calculation. E.g.:
                 (a+b*c)/d.
               </Text>
-              <Text fz="xs" color="dimmed">
+              <br />
+              <Text fz="xs" c="dimmed" component="span">
                 <IconChevronRight size={8} /> Keeping '0' indicates an expense
                 where money wasn't spent.
               </Text>
             </>
           }
         />
-        <Select
-          searchable
-          required
-          label="Category"
-          placeholder={
-            loadingCategories ? "Loading Categories" : "Pick a category"
-          }
-          disabled={loadingCategories}
-          value={watch("categoryId")}
-          error={errors.categoryId?.message}
-          onChange={(e) => setFieldValue("categoryId", e ?? "")}
-          itemComponent={CategorySelectItem}
-          data={
-            categoryRes?.response?.map((cat) => ({
-              ...cat,
-              value: cat._id ?? "",
-            })) ?? []
-          }
-        />
+        {categoryRes?.response && (
+          <Select
+            searchable
+            required
+            comboboxProps={{ zIndex: 1000 }}
+            label="Category"
+            placeholder={
+              loadingCategories ? "Loading Categories" : "Pick a category"
+            }
+            disabled={loadingCategories}
+            value={watch("categoryId")}
+            error={errors.categoryId?.message}
+            onChange={(e) => setFieldValue("categoryId", e ?? "")}
+            renderOption={CategorySelectItem}
+            data={categoryOptions}
+          />
+        )}
         <DateTimePicker
           label="Expense Date"
+          dropdownType="popover"
+          popoverProps={{ withinPortal: true, zIndex: 1000 }}
           placeholder="Select Date"
           minDate={minDate}
           maxDate={dayjs().add(5, "minutes").toDate()}
@@ -305,11 +312,12 @@ export default function ExpenseForm({
           <Select
             label="Select Plan"
             required
+            comboboxProps={{ zIndex: 1000 }}
             placeholder={loadingPlans ? "Loading plans" : "Select Plan"}
             disabled={loadingPlans || !!params.id}
             value={watch("plan")}
             error={errors.plan?.message}
-            nothingFound={"No Open Plans..."}
+            nothingFoundMessage={"No Open Plans..."}
             onChange={(e) => setFieldValue("plan", e ?? "")}
             data={
               plansRes?.response?.map((plan) => ({
@@ -320,12 +328,12 @@ export default function ExpenseForm({
           />
         )}
       </Box>
-      <Group grow>
-        <Button type="reset" variant="outline" disabled={creating || editing}>
-          Cancel
-        </Button>
+      <Group grow style={{ flexDirection: "row-reverse" }}>
         <Button type="submit" loading={creating || editing} disabled={!isValid}>
           Save
+        </Button>
+        <Button type="reset" variant="outline" disabled={creating || editing}>
+          Cancel
         </Button>
       </Group>
     </Box>

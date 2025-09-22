@@ -4,7 +4,7 @@ import ExpenseCard from "../../components/ExpenseCard";
 import ExpenseListSkeleton from "../../components/ExpenseListSkeleton";
 import { useCurrentUser } from "../../context/user.context";
 import { useMediaMatch } from "../../hooks/media-match";
-import { useDashboardStyles } from "../../theme/modules/dashboard.styles";
+import classes from "../../theme/modules/dashboard.module.scss";
 
 interface IRecentTransactionsProps {
   list: IExpense[];
@@ -20,7 +20,6 @@ export default function RecentTransactions({
   onDeleteExpense,
 }: Readonly<IRecentTransactionsProps>) {
   const isMobile = useMediaMatch();
-  const { classes } = useDashboardStyles();
   const { userData } = useCurrentUser();
 
   return isMobile ? (
@@ -33,7 +32,7 @@ export default function RecentTransactions({
   ) : (
     <Box className={classes.listWrapper}>
       <Box
-        sx={{
+        style={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
@@ -42,7 +41,7 @@ export default function RecentTransactions({
         <Text fw="bold">
           {list?.length > 0 ? list.length : "No"} Recent Transactions
         </Text>
-        <Text color="dimmed" fz="xs" fs="italic">
+        <Text c="dimmed" fz="xs" fs="italic">
           Since{" "}
           {dayjs()
             .subtract(userData?.editWindow ?? 7, "days")

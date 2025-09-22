@@ -1,4 +1,4 @@
-import { Accordion, Divider, Group, Text } from "@mantine/core";
+import { Container, Divider, Group, Paper, Text, Title } from "@mantine/core";
 import { useDocumentTitle } from "@mantine/hooks";
 import dayjs from "dayjs";
 import { APP_TITLE } from "../../constants/app";
@@ -12,54 +12,53 @@ export default function User() {
   const { userData } = useCurrentUser();
 
   return (
-    <Accordion variant="separated" defaultValue="details">
-      <Accordion.Item value="details">
-        <Accordion.Control>Account Info</Accordion.Control>
-        <Accordion.Panel>
-          <Text fz="2rem" fw="bold" fs="italic">
-            {userData?.userName}
-          </Text>
-          <Group spacing="sm">
-            <Text component="p" m={0} fz="xs">
-              <Text component="span" color="dimmed">
-                Member Since:{" "}
-              </Text>
-              <Text component="span" fw="bold">
-                {dayjs(userData?.createdAt).format("DD MMM 'YY")}
-              </Text>
+    <Container
+      size={"lg"}
+      style={{ display: "flex", flexDirection: "column", gap: 16 }}
+    >
+      <Paper withBorder p="md" radius="md">
+        <Title order={4} mb="xs">
+          Account Info
+        </Title>
+        <Text fz="2rem" fw="bold" fs="italic" mb="xs">
+          {userData?.userName}
+        </Text>
+        <Group gap="sm" wrap="wrap">
+          <Text component="p" m={0} fz="xs">
+            <Text component="span" c="dimmed">
+              Member Since:{" "}
             </Text>
-            {userData?.createdAt !== userData?.updatedAt && (
-              <>
-                <Divider
-                  orientation="vertical"
-                  variant="solid"
-                  color={userData?.color}
-                />
-                <Text component="p" m={0} fz="xs">
-                  <Text component="span" color="dimmed">
-                    Last Updated:{" "}
-                  </Text>
-                  <Text component="span" fw="bold">
-                    {dayjs(userData?.updatedAt).format("DD MMM' YY")}
-                  </Text>
+            <Text component="span" fw="bold">
+              {dayjs(userData?.createdAt).format("DD MMM 'YY")}
+            </Text>
+          </Text>
+          {userData?.createdAt !== userData?.updatedAt && (
+            <>
+              <Divider orientation="vertical" color={userData?.color} />
+              <Text component="p" m={0} fz="xs">
+                <Text component="span" c="dimmed">
+                  Last Updated:{" "}
                 </Text>
-              </>
-            )}
-          </Group>
-        </Accordion.Panel>
-      </Accordion.Item>
-      <Accordion.Item value="password">
-        <Accordion.Control>Change Password</Accordion.Control>
-        <Accordion.Panel>
-          <ChangePassword />
-        </Accordion.Panel>
-      </Accordion.Item>
-      <Accordion.Item value="preferences">
-        <Accordion.Control>Preferences</Accordion.Control>
-        <Accordion.Panel>
-          <Preferences />
-        </Accordion.Panel>
-      </Accordion.Item>
-    </Accordion>
+                <Text component="span" fw="bold">
+                  {dayjs(userData?.updatedAt).format("DD MMM' YY")}
+                </Text>
+              </Text>
+            </>
+          )}
+        </Group>
+      </Paper>
+      <Paper withBorder p="md" radius="md">
+        <Title order={3} mb="xs">
+          Preferences
+        </Title>
+        <Preferences />
+      </Paper>
+      <Paper withBorder p="md" radius="md">
+        <Title order={3} mb="xs">
+          Change Pin
+        </Title>
+        <ChangePassword />
+      </Paper>
+    </Container>
   );
 }

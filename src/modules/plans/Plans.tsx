@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import {
   ActionIcon,
   Alert,
@@ -15,10 +16,10 @@ import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import { IconCheck, IconChecklist, IconPlus, IconX } from "@tabler/icons-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
 import ContainedLoader from "../../components/loaders/ContainedLoader";
 import { APP_TITLE } from "../../constants/app";
 import { useErrorHandler } from "../../hooks/error-handler";
+import { useMediaMatch } from "../../hooks/media-match";
 import { getPlans, updatePlan } from "../../services/plans.service";
 import DeletePlan from "./components/DeletePlan";
 import ExpensePlan from "./components/ExpensePlan";
@@ -32,6 +33,7 @@ interface PlanSegregation {
 export default function Plans() {
   useDocumentTitle(`${APP_TITLE} | Vacations & Plans`);
   const { primaryColor } = useMantineTheme();
+  const isMobile = useMediaMatch();
   const { onError } = useErrorHandler();
   const { data, isLoading } = useQuery({
     queryKey: ["plans-list", false],
@@ -103,7 +105,7 @@ export default function Plans() {
           withCloseButton: false,
           children: (
             <>
-              <Text color="red">
+              <Text c="red">
                 Once closed, no more expenses can be added to the plan and
                 existing expenses cannot be modified.
               </Text>
@@ -119,7 +121,7 @@ export default function Plans() {
           },
           confirmProps: {
             color: "red",
-            leftIcon: <IconX />,
+            leftSection: <IconX />,
           },
           onConfirm: () => {
             update({ ...data, open: false });
@@ -134,7 +136,7 @@ export default function Plans() {
   if (isLoading)
     return (
       <Box
-        sx={{
+        style={{
           height: "100%",
           width: "100%",
           display: "flex",
@@ -150,7 +152,7 @@ export default function Plans() {
     return (
       <>
         <Box
-          sx={{
+          style={{
             height: "100%",
             width: "100%",
             display: "flex",
@@ -163,7 +165,7 @@ export default function Plans() {
           <Text my="sm" align="center">
             No plans have been created!
           </Text>
-          <Text size="sm" align="center" color="dimmed" mb="sm">
+          <Text size="sm" align="center" c="dimmed" mb="sm">
             Plans help you organize expenses which need to be tracked outside of
             your general monthly budget.
           </Text>
@@ -197,20 +199,11 @@ export default function Plans() {
         <>
           <Divider
             labelPosition="center"
-            labelProps={{ color: "dimmed" }}
             label={`Open Plans (${plansList.active.length})`}
             mb="sm"
             color={primaryColor}
           />
-          <SimpleGrid
-            cols={2}
-            spacing="lg"
-            mb="sm"
-            breakpoints={[
-              { maxWidth: "md", cols: 2, spacing: "sm", verticalSpacing: "sm" },
-              { maxWidth: "sm", cols: 1, spacing: "sm", verticalSpacing: "sm" },
-            ]}
-          >
+          <SimpleGrid cols={isMobile ? 1 : 2} spacing="sm" mb="sm">
             {plansList.active?.map((plan) => (
               <ExpensePlan
                 hideMenu={false}
@@ -226,20 +219,11 @@ export default function Plans() {
         <>
           <Divider
             labelPosition="center"
-            labelProps={{ color: "dimmed" }}
             label={`Closed Plans (${plansList.closed.length})`}
             mb="sm"
             color="red"
           />
-          <SimpleGrid
-            cols={2}
-            spacing="lg"
-            mb="sm"
-            breakpoints={[
-              { maxWidth: "md", cols: 2, spacing: "sm", verticalSpacing: "sm" },
-              { maxWidth: "sm", cols: 1, spacing: "sm", verticalSpacing: "sm" },
-            ]}
-          >
+          <SimpleGrid cols={isMobile ? 1 : 2} spacing="sm" mb="sm">
             {plansList.closed?.map((plan) => (
               <ExpensePlan
                 hideMenu={false}
@@ -258,7 +242,7 @@ export default function Plans() {
           variant="filled"
           color={primaryColor}
           onClick={formModal.open}
-          sx={{ position: "fixed", bottom: "1rem", right: "1rem" }}
+          style={{ position: "fixed", bottom: "1rem", right: "1rem" }}
         >
           <IconPlus size={24} />
         </ActionIcon>

@@ -1,17 +1,17 @@
+import { useCallback, useMemo, useRef, useState } from "react";
 import { Box, Divider, Group, Modal, Text } from "@mantine/core";
-import { MonthPickerInput } from "@mantine/dates";
+import { DateValue, MonthPickerInput } from "@mantine/dates";
 import { useDisclosure, useDocumentTitle, useHotkeys } from "@mantine/hooks";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { ColDef, FilterChangedEvent, GridApi } from "ag-grid-community";
 import dayjs from "dayjs";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { ColDef, FilterChangedEvent, GridApi } from "ag-grid-community";
 import DeleteExpense from "../../components/DeleteExpense";
 import ExpenseForm from "../../components/ExpenseForm";
 import AgGridMod from "../../components/ag-grid/AgGridMod";
 import { RowMenuCell } from "../../components/ag-grid/plugins/cells";
 import generateColDef from "../../components/ag-grid/utils/columns";
 import OverlayLoader from "../../components/loaders/OverlayLoader";
-import { _20Min, APP_TITLE } from "../../constants/app";
+import { APP_TITLE, _20Min } from "../../constants/app";
 import { useCurrentUser } from "../../context/user.context";
 import { useErrorHandler } from "../../hooks/error-handler";
 import { useMediaMatch } from "../../hooks/media-match";
@@ -24,7 +24,7 @@ interface ExpenseAtRow extends IExpense {
 }
 
 export default function Expenses() {
-  useDocumentTitle(`${APP_TITLE} | Expenses List`);
+  useDocumentTitle(`${APP_TITLE} | All Transactions`);
   const { userData } = useCurrentUser();
   const { onError } = useErrorHandler();
 
@@ -159,7 +159,7 @@ export default function Expenses() {
     setFilterTotal(total);
   };
 
-  const handleMonthChange = (e: Date) => {
+  const handleMonthChange = (e: DateValue) => {
     setPayload((prev) => ({
       ...prev,
       startDate: dayjs(e).startOf("month").toDate(),
@@ -174,53 +174,46 @@ export default function Expenses() {
 
   return (
     <>
-      <Group
-        spacing={0}
-        sx={{ flexDirection: "column", height: "100%" }}
-        position="left"
-        align="flex-start"
-      >
-        <Group spacing="xs" sx={{ width: "100%" }}>
-          <MonthPickerInput
-            size="xs"
-            sx={{ flexGrow: 1, textAlign: "center" }}
-            placeholder="Select month"
-            variant="filled"
-            value={payload.startDate}
-            valueFormat="MMM 'YY"
-            onChange={handleMonthChange}
-            maxDate={dayjs().toDate()}
-            minDate={
-              userData ? dayjs(userData?.createdAt).toDate() : dayjs().toDate()
-            }
-          />
-          <Text
-            ta="right"
-            fw="bold"
-            fz="xs"
-            sx={{ flexGrow: 3, whiteSpace: "nowrap" }}
-          >
-            Total: {filterTotal > 0 ? formatCurrency(filterTotal) : "N.A."} of{" "}
-            {formatCurrency(budgetRes?.response?.amount ?? 0)}
-          </Text>
-        </Group>
-        <Divider my="sm" sx={{ width: "100%" }} />
-        <Box sx={{ flexGrow: 1, width: "100%" }} ref={ref}>
-          <AgGridMod
-            columnDefs={columns}
-            popupParent={document.body}
-            onFilterChanged={updateFilterTotal}
-            height={ref.current?.clientHeight ?? 0}
-            rowData={listRes?.response ?? []}
-            onGridReady={({ api }) => setGrid(api)}
-            noRowsOverlayComponentParams={{
-              message: `No expenses recorded for ${dayjs(
-                payload.startDate
-              ).format("MMM, 'YY")}`,
-            }}
-          />
-        </Box>
+      <Group gap="xs" style={{ width: "100%" }}>
+        <MonthPickerInput
+          size="xs"
+          style={{ flexGrow: 1, textAlign: "center" }}
+          placeholder="Select month"
+          variant="filled"
+          value={payload.startDate}
+          valueFormat="MMM 'YY"
+          onChange={handleMonthChange}
+          maxDate={dayjs().toDate()}
+          minDate={
+            userData ? dayjs(userData?.createdAt).toDate() : dayjs().toDate()
+          }
+        />
+        <Text
+          ta="right"
+          fw="bold"
+          fz="xs"
+          style={{ flexGrow: isMobile ? 3 : 4, whiteSpace: "nowrap" }}
+        >
+          Total: {filterTotal > 0 ? formatCurrency(filterTotal) : "N.A."} of{" "}
+          {formatCurrency(budgetRes?.response?.amount ?? 0)}
+        </Text>
       </Group>
+      <Divider my="sm" style={{ width: "100%" }} />
+      <Box style={{ width: "100%", height: "calc(100vh - 150px)" }} ref={ref}>
+        <AgGridMod
+          columnDefs={columns}
+          popupParent={document.body}
+          onFilterChanged={updateFilterTotal}
+          height={ref.current?.clientHeight ?? 0}
+          rowData={listRes?.response ?? []}
+          onGridReady={({ api }) => setGrid(api)}
+          noRowsOverlayComponentParams={{
+            message: `No expenses recorded for ${dayjs(
+              payload.startDate
+            ).format("MMM, 'YY")}`,
+          }}
+        />
+      </Box>
       <Modal
         opened={showForm || confirm}
         withCloseButton={false}

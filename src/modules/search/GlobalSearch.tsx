@@ -1,12 +1,10 @@
-import { yupResolver } from "@hookform/resolvers/yup";
+import { useMemo, useState } from "react";
 import {
   Accordion,
-  ActionIcon,
   Box,
   Button,
   Divider,
   Group,
-  MultiSelect,
   ScrollArea,
   SimpleGrid,
   Text,
@@ -15,13 +13,10 @@ import {
 } from "@mantine/core";
 import { DatePickerInput, PickerBaseProps } from "@mantine/dates";
 import { useDocumentTitle } from "@mantine/hooks";
-import { IconX } from "@tabler/icons-react";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import { useMemo, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import CategoryMultiSelectValue from "../../components/CategoryMultiSelectValue";
-import CategorySelectItem from "../../components/CategorySelectItem";
 import ExpenseCard from "../../components/ExpenseCard";
 import ContainedLoader from "../../components/loaders/ContainedLoader";
 import { APP_TITLE, _20Min } from "../../constants/app";
@@ -31,6 +26,9 @@ import { useMediaMatch } from "../../hooks/media-match";
 import { GlobalSearchForm, gSearchSchema } from "../../schemas/schemas";
 import { getCategories } from "../../services/categories.service";
 import { searchExpenses } from "../../services/expense.service";
+import { groupCategories } from "../../utils";
+import CategoryMultiSelect from "./CategoryMultiSelect";
+import ClearField from "./ClearField";
 
 interface CommonPickerProps extends PickerBaseProps<"range"> {
   minDate: Date;
@@ -100,6 +98,37 @@ export default function GlobalSearch2() {
     resolver: yupResolver(gSearchSchema),
   });
 
+  // Handle date picker change for Mantine v8 compatibility
+  const handleDateRangeChange = (value: any) => {
+    if (Array.isArray(value)) {
+      if (typeof value[0] === "string") {
+        // Handle string array - convert to Date array
+        setValue(
+          "dateRange",
+          [
+            value[0] ? new Date(value[0]) : null,
+            value[1] ? new Date(value[1]) : null,
+          ],
+          { shouldDirty: true }
+        );
+      } else {
+        // Handle Date array
+        setValue("dateRange", [value[0] || null, value[1] || null], {
+          shouldDirty: true,
+        });
+      }
+    } else if (typeof value === "string") {
+      // Handle single string value
+      setValue("dateRange", [new Date(value), null], { shouldDirty: true });
+    } else if (value instanceof Date) {
+      // Handle single Date value
+      setValue("dateRange", [value, null], { shouldDirty: true });
+    } else {
+      // Handle null
+      setValue("dateRange", [null, null], { shouldDirty: true });
+    }
+  };
+
   const handleSearch: SubmitHandler<GlobalSearchForm> = (values) => {
     setShowFilter(null);
     const payload: ISearchReqBody = {};
@@ -119,8 +148,13 @@ export default function GlobalSearch2() {
     reset();
   };
 
+  const categoryOptions = useMemo(() => {
+    if (!categoryRes?.response) return [];
+    return groupCategories(categoryRes);
+  }, [categoryRes?.response]);
+
   return (
-    <Box>
+    <>
       <Accordion
         variant="separated"
         value={showFilter}
@@ -149,35 +183,17 @@ export default function GlobalSearch2() {
                   {...register("q")}
                   autoFocus
                 />
-                <MultiSelect
-                  searchable
-                  mb={0}
+                <CategoryMultiSelect
+                  options={categoryOptions}
+                  value={watch("categories") ?? []}
                   disabled={loadingCategories}
-                  value={watch("categories")}
-                  disableSelectedItemFiltering
-                  onChange={(e) =>
-                    setValue("categories", e, { shouldDirty: true })
-                  }
-                  itemComponent={CategorySelectItem}
-                  valueComponent={CategoryMultiSelectValue}
-                  rightSection={
-                    <ClearField
-                      onClick={() =>
-                        setValue("categories", [], { shouldDirty: true })
-                      }
-                      disabled={!watch("categories")?.length}
-                    />
-                  }
                   placeholder={
                     loadingCategories
                       ? "Loading Categories"
                       : "Select Categories"
                   }
-                  data={
-                    categoryRes?.response?.map((cat) => ({
-                      ...cat,
-                      value: cat._id ?? "",
-                    })) ?? []
+                  onChange={(e) =>
+                    setValue("categories", e, { shouldDirty: true })
                   }
                 />
                 <DatePickerInput
@@ -185,9 +201,7 @@ export default function GlobalSearch2() {
                   mb={0}
                   placeholder="Select Date Range"
                   defaultDate={watch("dateRange")[0] ?? new Date()}
-                  onChange={(e) =>
-                    setValue("dateRange", e, { shouldDirty: true })
-                  }
+                  onChange={handleDateRangeChange}
                   value={[watch("dateRange")[0]!, watch("dateRange")[1]!]}
                   rightSection={
                     <ClearField
@@ -204,12 +218,12 @@ export default function GlobalSearch2() {
                 />
                 <div></div>
                 <div></div>
-                <Group grow>
-                  <Button type="reset" variant="outline">
-                    Clear All
-                  </Button>
+                <Group grow style={{ flexDirection: "row-reverse" }}>
                   <Button type="submit" disabled={!isDirty || !isValid}>
                     Search
+                  </Button>
+                  <Button type="reset" variant="outline">
+                    Clear All
                   </Button>
                 </Group>
               </SimpleGrid>
@@ -240,7 +254,14 @@ export default function GlobalSearch2() {
           </>
         }
       />
-      <ScrollArea h="calc(100vh - 190px)" sx={{ paddingBottom: "1px" }}>
+      <ScrollArea
+        h="calc(100vh - 190px)"
+        style={(theme) => ({
+          padding: theme.spacing.sm,
+          borderRadius: theme.radius.md,
+          backgroundColor: theme.colors.dark[6],
+        })}
+      >
         <SimpleGrid cols={isMobile ? 1 : 2} spacing="xs">
           {expenses?.response.map((ex) => (
             <ExpenseCard
@@ -253,21 +274,6 @@ export default function GlobalSearch2() {
           ))}
         </SimpleGrid>
       </ScrollArea>
-    </Box>
-  );
-}
-
-function ClearField(
-  props: Readonly<{
-    onClick?: React.MouseEventHandler<HTMLButtonElement>;
-    disabled?: boolean;
-  }>
-) {
-  if (props.disabled) return null;
-
-  return (
-    <ActionIcon size="sm" color="red" variant="light" onClick={props.onClick}>
-      <IconX size={16} />
-    </ActionIcon>
+    </>
   );
 }

@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import {
   ActionIcon,
   Modal,
@@ -7,14 +8,8 @@ import {
 } from "@mantine/core";
 import { useDisclosure, useDocumentTitle, useHotkeys } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
-import {
-  IconDownload,
-  IconInfoCircle,
-  IconPlus,
-  IconTableDown,
-} from "@tabler/icons-react";
+import { IconDownload, IconPlus, IconTableDown } from "@tabler/icons-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import DeleteExpense from "../../components/DeleteExpense";
 import ExpenseForm from "../../components/ExpenseForm";
@@ -108,28 +103,24 @@ export default function PlanDetails() {
       <Tabs
         defaultValue="summary"
         keepMounted={false}
-        sx={{ height: "calc(100% - 62px)" }}
+        style={{ height: "calc(100% - 62px)" }}
       >
         <Tabs.List>
           <Tabs.Tab value="summary">Summary</Tabs.Tab>
           <Tabs.Tab value="list">Expenses</Tabs.Tab>
-          <Tabs.Tab
-            value="info"
-            ml="auto"
-            icon={<IconInfoCircle size={16} />}
-          />
+          <Tabs.Tab value="info">Plan Info</Tabs.Tab>
         </Tabs.List>
 
-        <Tabs.Panel value="summary" pt="xs" sx={{ height: "100%" }}>
+        <Tabs.Panel value="summary" pt="xs" style={{ height: "100%" }}>
           <PlanSummary />
         </Tabs.Panel>
-        <Tabs.Panel value="list" pt="xs" sx={{ height: "100%" }}>
+        <Tabs.Panel value="list" pt="xs" style={{ height: "100%" }}>
           <PlanExpensesList
             onExpenseAction={handleExpenseAction}
             plan={detailsRes?.response}
           />
         </Tabs.Panel>
-        <Tabs.Panel value="info" pt="xs" sx={{ height: "100%" }}>
+        <Tabs.Panel value="info" pt="xs" style={{ height: "100%" }}>
           <PlanDetailsPanel data={detailsRes?.response} />
         </Tabs.Panel>
       </Tabs>
@@ -141,7 +132,7 @@ export default function PlanDetails() {
             variant="filled"
             color={primaryColor}
             onClick={formModal.open}
-            sx={{ position: "fixed", bottom: "4.5rem", right: "1rem" }}
+            style={{ position: "fixed", bottom: "4.5rem", right: "1rem" }}
           >
             <IconPlus size={20} />
           </ActionIcon>
@@ -155,7 +146,7 @@ export default function PlanDetails() {
           color={"green"}
           onClick={() => downloadPlan({ plan: params.id ?? "" })}
           loading={downloadingPlan}
-          sx={{ position: "fixed", bottom: "1rem", right: "1rem" }}
+          style={{ position: "fixed", bottom: "1rem", right: "1rem" }}
         >
           <IconTableDown size={20} />
         </ActionIcon>

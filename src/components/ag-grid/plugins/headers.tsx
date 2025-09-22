@@ -26,8 +26,8 @@ export function ColumnHeader({
 }: Readonly<IHeaderParams<IExpense>>) {
   const { primaryColor } = useMantineTheme();
   return (
-    <Group position="left" sx={{ width: "100%" }} spacing="xs">
-      <Text fw="bold" mr="auto">
+    <Group justify="flex-start" style={{ width: "100%" }} gap="xs">
+      <Text fw="bold" mr="auto" fz="sm">
         {displayName}
       </Text>
       {enableMenu && (
@@ -40,7 +40,9 @@ export function ColumnHeader({
               : "gray"
           }
           variant={"filled"}
-          onClick={(e) => showColumnMenu(e.currentTarget)}
+          onClick={(e: MouseEvent) =>
+            showColumnMenu(e.currentTarget as HTMLElement)
+          }
         >
           <IconFilter size={16} />
         </ActionIcon>
@@ -55,7 +57,7 @@ export function ColumnHeader({
               : "gray"
           }
           variant={"filled"}
-          onClick={(e) =>
+          onClick={(e: KeyboardEvent) =>
             setSort(getNextSortOrder(column.getSort()), e.shiftKey)
           }
         >
@@ -70,7 +72,7 @@ export function ColumnHeader({
 
 export function RowCountHeader({ api }: Readonly<IHeaderParams<IExpense>>) {
   return (
-    <Text component="span" mx="auto" color="red" fw="bold">
+    <Text component="span" mx="auto" fw="bold" c="red" fz="sm">
       {api.getDisplayedRowCount()}
     </Text>
   );
@@ -91,7 +93,7 @@ export function MetaHeader() {
         </ActionIcon>
       </Popover.Target>
       <Popover.Dropdown p={8}>
-        <Text color="dimmed" fz="xs">
+        <Text c="dimmed" fz="xs">
           Expense Description
         </Text>
       </Popover.Dropdown>

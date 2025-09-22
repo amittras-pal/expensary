@@ -1,4 +1,4 @@
-import { yupResolver } from "@hookform/resolvers/yup";
+import { useMemo } from "react";
 import {
   Box,
   Button,
@@ -8,9 +8,9 @@ import {
   Text,
   TextInput,
 } from "@mantine/core";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import { useMemo } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { _20Min } from "../../constants/app";
@@ -138,7 +138,7 @@ const BudgetMonitor = () => {
           error={errors.remarks?.message}
           mt="md"
         />
-        <Group grow sx={{ flexDirection: "row-reverse" }}>
+        <Group grow style={{ flexDirection: "row-reverse" }}>
           <Button type="submit" disabled={!isValid} loading={creating}>
             Save
           </Button>
@@ -151,7 +151,7 @@ const BudgetMonitor = () => {
           </Button>
         </Group>
         {(previousMonthError || !previousMonthRes?.response.amount) && (
-          <Text color="dimmed" fz="xs" fs="italic" mt="sm">
+          <Text c="dimmed" fz="xs" fs="italic" mt="sm">
             <Text component="span" color="red">
               *{" "}
             </Text>

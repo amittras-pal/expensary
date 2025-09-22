@@ -1,4 +1,3 @@
-import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Box,
   Button,
@@ -11,6 +10,7 @@ import {
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation } from "@tanstack/react-query";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useErrorHandler } from "../../../hooks/error-handler";
@@ -108,20 +108,20 @@ export default function ExpensePlanForm({
           minRows={5}
           required
         />
-        <Text size="xs" color="dimmed" ta="right">
+        <Text size="xs" c="dimmed" ta="right">
           {watch("description")?.length} / 400
         </Text>
       </Box>
-      <Group grow mt="md">
-        <Button type="reset" variant="outline" disabled={creating || updating}>
-          Cancel
-        </Button>
+      <Group grow mt="md" style={{ flexDirection: "row-reverse" }}>
         <Button
           type="submit"
           loading={creating || updating}
           disabled={!isValid}
         >
           Save
+        </Button>
+        <Button type="reset" variant="outline" disabled={creating || updating}>
+          Cancel
         </Button>
       </Group>
     </Box>

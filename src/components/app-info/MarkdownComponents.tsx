@@ -1,3 +1,4 @@
+import { Fragment, PropsWithChildren, useMemo, useState } from "react";
 import {
   Avatar,
   Blockquote,
@@ -13,7 +14,6 @@ import {
 } from "@mantine/core";
 import { IconBuilding, IconMapPin } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
-import { Fragment, PropsWithChildren, useMemo, useState } from "react";
 import { Components, ExtraProps } from "react-markdown";
 import { getContributor } from "../../services/app-info.service";
 import ContainedLoader from "../loaders/ContainedLoader";
@@ -114,7 +114,7 @@ const UserCard = (props: Readonly<{ username: string }>) => {
       onClose={() => setOpen(false)}
     >
       <HoverCard.Target>
-        <Text component="span" sx={{ cursor: "pointer" }} color="yellow">
+        <Text component="span" style={{ cursor: "pointer" }} color="yellow">
           {props.username + " "}
         </Text>
       </HoverCard.Target>
@@ -123,7 +123,7 @@ const UserCard = (props: Readonly<{ username: string }>) => {
           <ContainedLoader size={150} />
         ) : (
           <>
-            <Group position="left" align="center">
+            <Group justify="flex-start" align="center">
               <Avatar src={user?.avatarUrl ?? ""} size="lg" radius="xl" />
               <Box>
                 <Text
@@ -135,14 +135,14 @@ const UserCard = (props: Readonly<{ username: string }>) => {
                 >
                   {user?.name}
                 </Text>
-                <Text fz="xs" color="dimmed">
+                <Text fz="xs" c="dimmed">
                   {user?.bio}
                 </Text>
               </Box>
             </Group>
             <Divider my="xs" />
             {user?.location && (
-              <Group align="center" spacing="xs">
+              <Group align="center" gap="xs">
                 <ThemeIcon size="sm" variant="light" radius="xl" color="gray">
                   <IconMapPin />
                 </ThemeIcon>
@@ -152,7 +152,7 @@ const UserCard = (props: Readonly<{ username: string }>) => {
               </Group>
             )}
             {user?.company && (
-              <Group align="center" spacing="xs" mt="xs">
+              <Group align="center" gap="xs" mt="xs">
                 <ThemeIcon size="sm" variant="light" radius="xl" color="gray">
                   <IconBuilding />
                 </ThemeIcon>
@@ -221,7 +221,7 @@ const QuoteBlock = (
   return (
     <Blockquote
       color="indigo"
-      sx={(theme) => ({ borderLeft: `5px solid ${theme.colors.gray[9]}` })}
+      style={(theme) => ({ borderLeft: `5px solid ${theme.colors.gray[9]}` })}
     >
       {props.children}
     </Blockquote>

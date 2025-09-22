@@ -1,4 +1,4 @@
-import { yupResolver } from "@hookform/resolvers/yup";
+import { useEffect } from "react";
 import {
   Box,
   Button,
@@ -12,8 +12,8 @@ import {
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useCurrentUser } from "../../context/user.context";
 import { PreferenceForm, preferencesSchema } from "../../schemas/schemas";
@@ -68,7 +68,7 @@ export default function Preferences() {
       onSubmit={handleSubmit((values) => {
         updatePreferences(values);
       })}
-      sx={(theme) => ({
+      style={(theme) => ({
         display: "flex",
         flexDirection: "column",
         gap: theme.spacing.sm,
@@ -78,7 +78,7 @@ export default function Preferences() {
         <Text fw="bold" fz="sm" mb="sm">
           Expense Editing Window
         </Text>
-        <Text fz="sm" color="dimmed">
+        <Text fz="sm" c="dimmed">
           The Edit Window determines how far behind the current date expenses
           can be added/edited in your record. This will impact the expense
           adding/editing window.
@@ -110,18 +110,18 @@ export default function Preferences() {
         <Text fw="bold" fz="sm" mb="sm">
           Color Theme
         </Text>
-        <Text fz="sm" color="dimmed" mb="md">
+        <Text fz="sm" c="dimmed" mb="md">
           Set the colors of action buttons and certain other aspects of the
           application to your preference.
         </Text>
         <Divider my="sm" />
-        <Group position="center" spacing="xs">
+        <Group justify="center" gap="xs">
           {Object.keys(colors).map((color) => (
             <Tooltip position="top" label={color} key={color}>
               <ColorSwatch
                 color={colors[color][6]}
                 component="button"
-                sx={{ cursor: "pointer" }}
+                style={{ cursor: "pointer" }}
                 type="button"
                 onClick={() =>
                   setValue("color", color, {
@@ -137,7 +137,7 @@ export default function Preferences() {
           ))}
         </Group>
       </Box>
-      <Group position="right">
+      <Group justify="flex-end">
         <Button
           type="submit"
           loading={isLoading}

@@ -1,9 +1,9 @@
+import { useMemo, useRef } from "react";
 import { Box, Divider, Text, useMantineTheme } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { EChartsOption } from "echarts";
 import ReactECharts from "echarts-for-react";
-import { useMemo, useRef } from "react";
 import { useErrorHandler } from "../../../hooks/error-handler";
 import { BudgetForm } from "../../../schemas/schemas";
 import { getSummary } from "../../../services/expense.service";
@@ -86,7 +86,7 @@ export default function MonthBreakdown({
   };
 
   return (
-    <Box sx={{ height: "calc(100vh - 75px)" }} fz="sm">
+    <Box style={{ height: "calc(100vh - 75px)" }} fz="sm">
       <ReactECharts
         option={config}
         style={{ width: "100%", height: "50%" }}
@@ -100,18 +100,18 @@ export default function MonthBreakdown({
           dataZoom: handleClick,
         }}
       />
-      <Text ta="right" fz="xs" fs="italic" color="dimmed">
+      <Text ta="right" fz="xs" fs="italic" c="dimmed">
         Click on any segment to focus.
       </Text>
       <Divider my="xs" />
-      <Text color="dimmed">
+      <Text c="dimmed">
         Set Budget:{" "}
         <Text component="span" color={colors.gray[1]}>
           {formatCurrency(budget?.amount ?? 0)}
         </Text>
       </Text>
       {budget?.remarks && (
-        <Text color="dimmed">
+        <Text c="dimmed">
           Remarks for budget:{" "}
           <Text component="span" color={colors.gray[1]}>
             {budget.remarks}

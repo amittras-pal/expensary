@@ -1,3 +1,4 @@
+import { memo, useMemo } from "react";
 import {
   ActionIcon,
   Badge,
@@ -20,13 +21,13 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-import { memo, useMemo } from "react";
 import Highlighter from "react-highlight-words";
+import relativeTime from "dayjs/plugin/relativeTime";
 import { Icons } from "../constants/categories";
 import { useCurrentUser } from "../context/user.context";
-import { useExpenseStyles } from "../theme/modules/expenseCard.styles";
+import classes from "../theme/modules/expenseCard.module.scss";
 import { formatCurrency } from "../utils";
+
 dayjs.extend(relativeTime);
 
 type ExpenseAction = (e: IExpense) => void;
@@ -48,7 +49,6 @@ function ExpenseCard({
   highlight,
   hideMonthIndicator,
 }: Readonly<ExpenseCardProps>) {
-  const { classes } = useExpenseStyles();
   const { userData } = useCurrentUser();
   const { primaryColor } = useMantineTheme();
 
@@ -66,15 +66,14 @@ function ExpenseCard({
   return (
     <Box className={classes.wrapper}>
       <Group
-        noWrap
-        spacing={0}
-        position="apart"
+        gap={0}
+        justify="space-between"
         align="flex-start"
-        sx={{ height: "100%" }}
+        style={{ height: "100%" }}
       >
         <Group
-          spacing={6}
-          sx={{
+          gap={6}
+          style={{
             flexGrow: 1,
             height: "100%",
             flexDirection: "column",
@@ -90,7 +89,12 @@ function ExpenseCard({
             />
           </Text>
           {data.description && (
-            <Text component="p" fz="xs" sx={{ whiteSpace: "pre-wrap" }} m={0}>
+            <Text
+              component="p"
+              fz="xs"
+              style={{ whiteSpace: "pre-wrap" }}
+              m={0}
+            >
               <Highlighter
                 searchWords={highlight?.split(" ") ?? []}
                 textToHighlight={data.description}
@@ -99,18 +103,17 @@ function ExpenseCard({
               />
             </Text>
           )}
-          <Badge
-            variant="light"
-            size="xs"
-            color={data.category?.color}
-            leftSection={<Icon size={12} style={{ marginBottom: -2 }} />}
-            mt={4}
-          >
-            {data.category?.group}{" "}
-            <IconChevronRight size={12} style={{ marginBottom: -2 }} />{" "}
-            {data.category?.label}
-          </Badge>
-          <Group position="apart" align="center" mt={4}>
+          <Group gap={6}>
+            <Badge
+              variant="light"
+              size="xs"
+              color={data.category?.color}
+              leftSection={<Icon size={12} style={{ marginBottom: -2 }} />}
+            >
+              {data.category?.group}{" "}
+              <IconChevronRight size={12} style={{ marginBottom: -2 }} />{" "}
+              {data.category?.label}
+            </Badge>
             <Tooltip
               position="top"
               disabled={hideMenu}
@@ -120,22 +123,32 @@ function ExpenseCard({
                 </Text>
               }
             >
-              <Badge color="dark" size="sm" variant="filled">
+              <Badge
+                size="sm"
+                variant="dot"
+                color="dark"
+                style={{ color: "var(--mantine-color-gray-5)" }}
+              >
                 {hideMenu
                   ? dayjs(data.date).format("DD MMM 'YY hh:mm a")
                   : dayjs(data.date).fromNow()}
               </Badge>
             </Tooltip>
-            <Text fz="lg" fw="bold" mt="auto">
-              {formatCurrency(data.amount)}
-            </Text>
           </Group>
+          <Text fz="lg" fw="bold" mt="auto">
+            {formatCurrency(data.amount)}
+          </Text>
         </Group>
-        <Group sx={{ flexDirection: "column" }} spacing={6}>
+        <Group style={{ flexDirection: "column" }} gap={"xs"}>
           {!hideMenu && (
             <Menu shadow="md" position="bottom-end">
               <Menu.Target>
-                <ActionIcon size="sm" radius="xl" variant="light">
+                <ActionIcon
+                  size="sm"
+                  radius="xl"
+                  variant="transparent"
+                  color="gray"
+                >
                   <IconDotsVertical size={16} />
                 </ActionIcon>
               </Menu.Target>
@@ -143,7 +156,7 @@ function ExpenseCard({
               <Menu.Dropdown>
                 {isEditable && (
                   <Menu.Item
-                    icon={<IconEdit size={14} />}
+                    leftSection={<IconEdit size={14} />}
                     onClick={() => onEditExpense?.(data)}
                     disabled={Boolean(data.linked)}
                   >
@@ -153,7 +166,7 @@ function ExpenseCard({
                 {isEditable && (
                   <Menu.Item
                     color="red"
-                    icon={<IconTrash size={14} />}
+                    leftSection={<IconTrash size={14} />}
                     onClick={() => onDeleteExpense?.(data)}
                   >
                     Delete

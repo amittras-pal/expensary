@@ -1,8 +1,13 @@
 import {
+  MutableRefObject,
+  PropsWithChildren,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import {
   Box,
-  createStyles,
   Divider,
-  Flex,
   Progress,
   Text,
   ThemeIcon,
@@ -11,18 +16,11 @@ import {
 } from "@mantine/core";
 import { IconHelp } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
-import {
-  MutableRefObject,
-  PropsWithChildren,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import { _20Min, APP_TITLE } from "../../constants/app";
+import { APP_TITLE, _20Min } from "../../constants/app";
 import { pingServer } from "../../services/server.service";
-import BrandLogo from "./logo-stroke.svg?react";
 import BrandLoader from "./LogoLoader";
-import "./PreLoader.scss";
+import classes from "./PreLoader.module.scss";
+import BrandLogo from "./logo-stroke.svg?react";
 import {
   COORDS,
   createPoints,
@@ -39,8 +37,6 @@ export default function PreLoader(props: Readonly<PropsWithChildren>) {
   const backdropRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const points: MutableRefObject<COORDS[]> = useRef([]);
-
-  const { classes } = usePreloaderStyles();
 
   const { isLoading, isError } = useQuery({
     queryKey: ["wake-server"],
@@ -98,11 +94,11 @@ export default function PreLoader(props: Readonly<PropsWithChildren>) {
   if (isLoading || isError)
     return (
       <>
-        <Box className={classes.backdropContainer} ref={backdropRef}>
+        <Box className={classes.backdrop} ref={backdropRef}>
           <canvas ref={canvasRef} />
         </Box>
         <Box className={classes.logoContainer}>
-          <Text align="center" fw="bold" fz="lg" pt="md">
+          <Text ta="center" fw="bold" fz="lg" pt="md">
             {APP_TITLE}
           </Text>
           <Divider variant="dashed" my="sm" />
@@ -110,12 +106,20 @@ export default function PreLoader(props: Readonly<PropsWithChildren>) {
             {isLoading ? (
               <BrandLoader size={200} brand />
             ) : (
-              <BrandLogo width={200} height={200} className="logo-error" />
+              <BrandLogo
+                width={200}
+                height={200}
+                className={classes.logoError}
+              />
             )}
           </Box>
         </Box>
         <Box className={classes.progressContainer}>
-          <Flex align="center" mb="xs" justify="space-between">
+          <Box
+            display="flex"
+            mb={"sm"}
+            style={{ justifyContent: "space-between", alignItems: "center" }}
+          >
             <Text fz="sm" fs="italic">
               Connecting to Server, Please Wait...
             </Text>
@@ -125,15 +129,15 @@ export default function PreLoader(props: Readonly<PropsWithChildren>) {
               position="top-end"
               label={
                 <>
-                  <Text fz="xs" fw="bold" align="left" fs="italic">
+                  <Text fz="xs" fw="bold" ta="left" fs="italic">
                     Why is it taking so long to load?
                   </Text>
-                  <Text fz="xs" align="left" mt="sm">
+                  <Text fz="xs" ta="left" mt="sm">
                     Our compute engine is hosted on a free-tier platform to save
                     cost. It may take a about a minute to restart after being
                     inactive for a while.
                   </Text>
-                  <Text fz="xs" align="left" mt="sm" fs="italic">
+                  <Text fz="xs" ta="left" mt="sm" fs="italic">
                     Thank you for your patience!!
                   </Text>
                 </>
@@ -143,21 +147,21 @@ export default function PreLoader(props: Readonly<PropsWithChildren>) {
                 <IconHelp size={16} />
               </ThemeIcon>
             </Tooltip>
-          </Flex>
+          </Box>
           <Progress
+            size="sm"
             value={progress}
             color={isError ? "red" : "indigo"}
-            sx={{ width: "100%" }}
-            size="sm"
+            aria-label="Connection Progress"
           />
           {isError && (
-            <Text fz="sm" color="red" fs="italic" mt="xs">
+            <Text fz="sm" c="red" fs="italic" mt="xs">
               Failed to connect,
               <Text
                 component="span"
                 td="underline"
                 fw="bold"
-                sx={{ cursor: "pointer" }}
+                style={{ cursor: "pointer" }}
                 onClick={() => document.location.reload()}
               >
                 {" "}
@@ -171,34 +175,3 @@ export default function PreLoader(props: Readonly<PropsWithChildren>) {
 
   return <>{props.children}</>;
 }
-
-const usePreloaderStyles = createStyles((theme) => ({
-  backdropContainer: {
-    width: "100vw",
-    height: "100vh",
-    position: "fixed",
-    top: 0,
-    left: 0,
-  },
-  logoContainer: {
-    position: "fixed",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -60%)",
-    backgroundColor: theme.colors.dark[5],
-    boxShadow: theme.shadows.lg,
-    borderRadius: theme.radius.lg,
-    zIndex: 1000,
-  },
-  progressContainer: {
-    position: "fixed",
-    bottom: 0,
-    width: "100vw",
-    backgroundColor: theme.colors.dark[5],
-    boxShadow: theme.shadows.lg,
-    borderTopLeftRadius: theme.radius.lg,
-    borderTopRightRadius: theme.radius.lg,
-    padding: theme.spacing.sm,
-    zIndex: 1000,
-  },
-}));

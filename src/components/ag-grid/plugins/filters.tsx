@@ -1,7 +1,3 @@
-import { Box, Button, Checkbox, Group, ScrollArea, Text } from "@mantine/core";
-import { useQuery } from "@tanstack/react-query";
-import { IFilterParams } from "ag-grid-community";
-import { IFilterReactComp } from "ag-grid-react";
 import {
   Fragment,
   forwardRef,
@@ -9,15 +5,18 @@ import {
   useMemo,
   useState,
 } from "react";
+import { Box, Button, Checkbox, Group, ScrollArea, Text } from "@mantine/core";
+import { useQuery } from "@tanstack/react-query";
+import { IFilterParams } from "ag-grid-community";
+import { IFilterReactComp } from "ag-grid-react";
 import { _20Min } from "../../../constants/app";
 import { useErrorHandler } from "../../../hooks/error-handler";
 import { getCategories } from "../../../services/categories.service";
-import { useCategoryFilterStyles } from "../../../theme/modules/grid.styles";
+import classes from "../../../theme/modules/grid.module.scss";
 import ContainedLoader from "../../loaders/ContainedLoader";
 import { SubCategoryOption } from "../interfaces";
 
 function Category(props: IFilterParams<IExpense>, ref: any) {
-  const { classes } = useCategoryFilterStyles();
   const { onError } = useErrorHandler();
   const [selection, setSelection] = useState<string[]>([]);
 
@@ -77,11 +76,11 @@ function Category(props: IFilterParams<IExpense>, ref: any) {
 
   return (
     <Box className={classes.wrapper}>
-      <Text fw="bold" mb="sm">
+      <Text fw="bold" mb="sm" fz="sm">
         Filter Categories
       </Text>
       <Checkbox.Group value={selection} onChange={setSelection}>
-        <Group spacing="xs" className={classes.selectionGroup}>
+        <Group gap="xs" className={classes.selectionGroup}>
           {isLoading ? (
             <ContainedLoader size={150} />
           ) : (
@@ -90,13 +89,13 @@ function Category(props: IFilterParams<IExpense>, ref: any) {
                 key={opt}
                 label={opt}
                 value={opt}
-                sx={{ cursor: "pointer" }}
+                style={{ cursor: "pointer" }}
               />
             ))
           )}
         </Group>
       </Checkbox.Group>
-      <Group grow mt="sm" sx={{ position: "sticky", bottom: 0 }}>
+      <Group grow mt="sm" style={{ position: "sticky", bottom: 0 }}>
         <Button
           size="xs"
           variant="light"
@@ -115,7 +114,6 @@ function Category(props: IFilterParams<IExpense>, ref: any) {
 
 function SubCategory(props: IFilterParams<IExpense>, ref: any) {
   const [selection, setSelection] = useState<string[]>([]);
-  const { classes } = useCategoryFilterStyles();
   const { onError } = useErrorHandler();
 
   const { isLoading, data: catRes } = useQuery({
@@ -183,13 +181,13 @@ function SubCategory(props: IFilterParams<IExpense>, ref: any) {
 
   return (
     <Box className={classes.wrapper}>
-      <Text fw="bold" mb="sm">
+      <Text fw="bold" mb="sm" fz="sm">
         Filter Sub Categories
       </Text>
       <ScrollArea h={categoryOptions.length > 0 ? 200 : 75}>
         {categoryOptions.length > 0 ? (
           <Checkbox.Group value={selection} onChange={setSelection}>
-            <Group spacing="xs" className={classes.selectionGroup}>
+            <Group gap="xs" className={classes.selectionGroup}>
               {isLoading ? (
                 <ContainedLoader size={150} />
               ) : (
@@ -202,7 +200,7 @@ function SubCategory(props: IFilterParams<IExpense>, ref: any) {
                         label={child.label}
                         value={child._id}
                         ml="sm"
-                        sx={{ cursor: "pointer" }}
+                        style={{ cursor: "pointer" }}
                       />
                     ))}
                   </Fragment>
@@ -211,14 +209,14 @@ function SubCategory(props: IFilterParams<IExpense>, ref: any) {
             </Group>
           </Checkbox.Group>
         ) : (
-          <Text ta="center" color="dimmed">
+          <Text ta="center" c="dimmed" fz="sm">
             Please select one or more categories first to filter by
             subcategories.
           </Text>
         )}
       </ScrollArea>
       {categoryOptions.length > 0 && (
-        <Group grow mt="sm" sx={{ position: "sticky", bottom: 0 }}>
+        <Group grow mt="sm" style={{ position: "sticky", bottom: 0 }}>
           <Button
             size="xs"
             variant="light"

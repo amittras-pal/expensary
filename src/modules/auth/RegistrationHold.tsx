@@ -3,11 +3,10 @@ import { useDocumentTitle } from "@mantine/hooks";
 import { Link } from "react-router-dom";
 import AppInfo from "../../components/app-info/AppInfo";
 import { APP_TITLE } from "../../constants/app";
-import { useAuthStyles } from "../../theme/modules/auth.styles";
+import classes from "../../theme/modules/auth.module.scss";
 import PublicGuard from "../guards/PublicGuard";
 
 export default function RegistrationHold() {
-  const { classes } = useAuthStyles();
   const { primaryColor } = useMantineTheme();
 
   useDocumentTitle(`${APP_TITLE} | Register`);
@@ -18,7 +17,7 @@ export default function RegistrationHold() {
         <Container
           size="lg"
           className={classes.paper}
-          sx={{ maxWidth: 560, textAlign: "center" }}
+          style={{ maxWidth: 560, textAlign: "center" }}
         >
           <Text fz="lg" fw="bold" mb="sm">
             Creating Accounts is Suspended.

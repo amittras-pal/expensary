@@ -1,0 +1,26 @@
+/* Converted from expenseCard.styles.ts (useExpenseStyles) */
+
+.wrapper {
+  height: 100%;
+  background-color: var(--mantine-color-dark-8);
+  padding: var(--mantine-spacing-xs);
+  border-radius: var(--mantine-radius-sm);
+  transition: all 0.25s ease-in-out;
+}
+
+.wrapper:not(:last-child) {
+  margin-bottom: var(--mantine-spacing-xs);
+}
+
+.highlight {
+  font-weight: 700;
+  /* Color tokens approximating theme primary shades */
+  color: var(--mantine-color-primary-2, var(--mantine-primary-color-filled));
+  /* Approximate rgba(primary[9], 0.4) using color-mix if supported */
+  background-color: color-mix(
+    in srgb,
+    var(--mantine-color-primary-9, var(--mantine-primary-color-filled)) 40%,
+    transparent
+  );
+  border-radius: var(--mantine-radius-xs);
+}

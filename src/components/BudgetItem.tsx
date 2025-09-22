@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
   Badge,
   Box,
@@ -7,9 +8,8 @@ import {
   ThemeIcon,
   Tooltip,
 } from "@mantine/core";
-import { useMemo } from "react";
 import { Icons } from "../constants/categories";
-import { useBudgetItemStyles } from "../theme/modules/budgetItem.styles";
+import classes from "../theme/modules/budgetItem.module.scss";
 import { formatCurrency, getPercentage } from "../utils";
 
 interface IBudgetItemProps {
@@ -29,7 +29,6 @@ function BudgetItem({
 }: Readonly<IBudgetItemProps>) {
   const [category, { subCategories, total }] = data;
 
-  const { classes } = useBudgetItemStyles();
   const subItems = useMemo(() => {
     return data[1].subCategories.map((item) => ({
       ...item,
@@ -53,14 +52,19 @@ function BudgetItem({
           className={classes.elevate}
         />
       )}
-      <Box className={classes.elevate} sx={{ width: "100%" }}>
-        <Group align="center" mb={2} position="apart">
-          <Badge color={subCategories[0].color} size="sm" radius="sm">
+      <Box className={classes.elevate} style={{ width: "100%" }}>
+        <Group align="center" mb={2} justify="space-between">
+          <Badge
+            variant="light"
+            color={subCategories[0].color}
+            size="sm"
+            radius="sm"
+          >
             {category}
           </Badge>
           <Text fw="bold">{formatCurrency(total)} </Text>
         </Group>
-        <Group spacing={6} align="center">
+        <Group gap={6} align="center">
           {subItems.map(({ label, value, color, Icon }) => (
             <Tooltip
               label={`${label}: ${formatCurrency(value)}`}
@@ -73,17 +77,17 @@ function BudgetItem({
               </ThemeIcon>
             </Tooltip>
           ))}
-          <Text color="dimmed" fz="xs" ml="auto" pt={1}>
+          <Text c="dimmed" fz="xs" ml="auto" pt={1}>
             {share < 1 ? "<1" : share} %
           </Text>
         </Group>
       </Box>
       <Box
         className={classes.share}
-        sx={(theme) => ({
+        style={{
           width: `${share}%`,
-          backgroundColor: theme.colors[subCategories[0].color][7],
-        })}
+          backgroundColor: `var(--mantine-color-${subCategories[0].color}-7)`,
+        }}
       />
     </Box>
   );

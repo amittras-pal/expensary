@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
   Group,
   GroupProps,
@@ -10,12 +11,11 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { IconInfoCircle, IconPoint } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useCurrentUser } from "../../context/user.context";
 import { useMediaMatch } from "../../hooks/media-match";
 import { updateUserDetails } from "../../services/user.service";
-import { useNavBtnStyle } from "../../theme/modules/layout.styles";
+import classes from "../../theme/modules/Layout.module.scss";
 import Changelog from "./Changelog";
 
 export default function AppInfo(
@@ -45,18 +45,16 @@ export default function AppInfo(
     if (userData?.seenChangelog === false) mutate({ seenChangelog: true });
   };
 
-  const { classes } = useNavBtnStyle({ active: false });
-
   return (
     <>
       {props.type === "text" && (
-        <Group {...props} spacing="xs" position={props.position ?? "center"}>
+        <Group {...props} gap="xs">
           <Text
             component={Link}
             to={userData ? "/about-app" : "/about"}
             td="underline"
             fz="xs"
-            color="dimmed"
+            c="dimmed"
             onClick={props.onLinkClick}
           >
             About
@@ -64,9 +62,9 @@ export default function AppInfo(
           <IconPoint size={12} />
           <Text
             td="underline"
-            sx={{ cursor: "pointer" }}
+            style={{ cursor: "pointer" }}
             fz="xs"
-            color="dimmed"
+            c="dimmed"
             onClick={open}
           >
             What's New?

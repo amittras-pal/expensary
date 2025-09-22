@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { ActionIcon, Box, Divider, Menu, Text, TextProps } from "@mantine/core";
 import {
   IconDotsVertical,
@@ -6,9 +7,8 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import dayjs from "dayjs";
-import { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { usePlanStyles } from "../../../theme/modules/plan.styles";
+import classes from "../../../theme/modules/plan.module.scss";
 
 type PlanAction = (
   data: IExpensePlan,
@@ -32,8 +32,6 @@ export default function ExpensePlan({
   onPlanAction,
   hideMenu,
 }: ActionableCard | ReadOnlyCard) {
-  const { classes } = usePlanStyles();
-
   const textProps = useMemo(
     (): Partial<TextProps> => ({
       fz: "md",
@@ -59,7 +57,7 @@ export default function ExpensePlan({
             </Text>
           )}
 
-          <Text size="xs" color="dimmed" sx={{ whiteSpace: "pre-wrap" }}>
+          <Text size="xs" c="dimmed" style={{ whiteSpace: "pre-wrap" }}>
             {data.description}
           </Text>
         </Box>
@@ -68,21 +66,26 @@ export default function ExpensePlan({
             {data?.open ? (
               <Menu shadow="md" position="bottom-end">
                 <Menu.Target>
-                  <ActionIcon size="sm" radius="xl" variant="light">
+                  <ActionIcon
+                    size="sm"
+                    radius="xl"
+                    variant="transparent"
+                    color="gray"
+                  >
                     <IconDotsVertical size={16} />
                   </ActionIcon>
                 </Menu.Target>
 
                 <Menu.Dropdown>
                   <Menu.Item
-                    icon={<IconEdit size={14} />}
+                    leftSection={<IconEdit size={14} />}
                     onClick={() => onPlanAction(data, "edit")}
                   >
                     Edit
                   </Menu.Item>
                   <Menu.Item
                     color="red"
-                    icon={<IconX size={14} />}
+                    leftSection={<IconX size={14} />}
                     onClick={() => onPlanAction(data, "close")}
                   >
                     Close

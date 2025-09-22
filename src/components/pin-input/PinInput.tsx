@@ -3,6 +3,7 @@ import { Box, PinInput as MPinInput, PinInputProps, Text } from "@mantine/core";
 interface EnhancedPinProps extends PinInputProps {
   label: string;
   errorMsg: string;
+  required?: boolean;
 }
 
 export default function PinInput({

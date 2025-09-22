@@ -5,7 +5,7 @@ import { NoDataOverlayProps } from "../interfaces";
 export function NoDataOverlay(props: Readonly<NoDataOverlayProps>) {
   return (
     <Box
-      sx={{
+      style={{
         width: "100%",
         height: "100%",
         display: "flex",
@@ -20,7 +20,7 @@ export function NoDataOverlay(props: Readonly<NoDataOverlayProps>) {
       </ThemeIcon>
       <Text
         ta="center"
-        sx={(theme) => ({
+        style={(theme) => ({
           color: theme.colors[theme.primaryColor][3],
         })}
       >
