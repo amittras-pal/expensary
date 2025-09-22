@@ -221,7 +221,7 @@ export default function Plans() {
             labelPosition="center"
             label={`Closed Plans (${plansList.closed.length})`}
             mb="sm"
-            color="red"
+            color={primaryColor}
           />
           <SimpleGrid cols={isMobile ? 1 : 2} spacing="sm" mb="sm">
             {plansList.closed?.map((plan) => (
