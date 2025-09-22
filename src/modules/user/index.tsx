@@ -5,6 +5,7 @@ import { APP_TITLE } from "../../constants/app";
 import { useCurrentUser } from "../../context/user.context";
 import ChangePassword from "./ChangePassword";
 import Preferences from "./Preferences";
+import classes from "../../theme/modules/account.module.scss";
 
 export default function User() {
   useDocumentTitle(`${APP_TITLE} | My Account`);
@@ -16,7 +17,7 @@ export default function User() {
       size={"lg"}
       style={{ display: "flex", flexDirection: "column", gap: 16 }}
     >
-      <Paper withBorder p="md" radius="md">
+      <Paper className={classes.tile}>
         <Title order={4} mb="xs">
           Account Info
         </Title>
@@ -47,13 +48,13 @@ export default function User() {
           )}
         </Group>
       </Paper>
-      <Paper withBorder p="md" radius="md">
+      <Paper className={classes.tile}>
         <Title order={3} mb="xs">
           Preferences
         </Title>
         <Preferences />
       </Paper>
-      <Paper withBorder p="md" radius="md">
+      <Paper className={classes.tile}>
         <Title order={3} mb="xs">
           Change Pin
         </Title>
