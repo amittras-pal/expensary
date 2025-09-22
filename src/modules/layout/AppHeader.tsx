@@ -54,7 +54,7 @@ export default function AppHeader(props: Readonly<AppHeaderProps>) {
         {title[0]}
       </Text>
       <IconTallymark1 size={24} stroke={1} />
-      <Tooltip label={title[1]} disabled={!isMobile} color="dark">
+      <Tooltip label={title[1]} disabled={!isMobile}>
         <Text fz="sm" fw={400} c="dimmed" mr="auto" lineClamp={1}>
           {title[1]}
         </Text>
@@ -68,7 +68,6 @@ export default function AppHeader(props: Readonly<AppHeaderProps>) {
             </Text>
           }
           position="bottom"
-          color="dark"
           withArrow
         >
           <ActionIcon
@@ -83,7 +82,7 @@ export default function AppHeader(props: Readonly<AppHeaderProps>) {
           </ActionIcon>
         </Tooltip>
       )}
-      <Tooltip label="Search Expenses" position="bottom" withArrow color="dark">
+      <Tooltip label="Search Expenses" position="bottom" withArrow>
         <ActionIcon
           size="md"
           variant="default"
