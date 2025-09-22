@@ -95,6 +95,7 @@ export default function Login() {
           <PinInput
             length={6}
             mask
+            onEnterDown={handleSubmit(handleLogin)}
             onChange={(e) =>
               setValue("pin", parseInt(e), {
                 shouldTouch: true,
