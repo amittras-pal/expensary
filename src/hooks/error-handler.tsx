@@ -1,6 +1,6 @@
 import { notifications } from "@mantine/notifications";
 import { IconX } from "@tabler/icons-react";
-import { isAxiosError } from "axios";
+import axios, { AxiosError } from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import { logoutUser } from "../services/user.service";
 
@@ -9,8 +9,10 @@ export function useErrorHandler(func?: () => void) {
   const { pathname } = useLocation();
 
   const onError = async (err: unknown) => {
-    if (isAxiosError(err)) {
-      if (err.response?.status === 401 && pathname !== "/login") {
+    if (axios.isAxiosError(err)) {
+      const axiosError = err as AxiosError;
+      
+      if (axiosError.response?.status === 401 && pathname !== "/login") {
         await logoutUser().then(() => {
           localStorage.clear();
           notifications.hide("invalid_session");
@@ -25,7 +27,7 @@ export function useErrorHandler(func?: () => void) {
         });
       } else {
         notifications.show({
-          message: err?.response?.data?.message,
+          message: (axiosError?.response?.data as any)?.message || "Unknown error occurred",
           color: "red",
           icon: <IconX />,
         });

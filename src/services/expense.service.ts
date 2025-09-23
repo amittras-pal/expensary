@@ -9,9 +9,9 @@ export function getSummary(
     startDate?: Date;
     endDate?: Date;
   }
-): Promise<ResponseBody<SummaryResponse>> {
+) {
   return axios
-    .get(ENDPOINTS.summary, {
+    .get<ResponseBody<SummaryResponse>>(ENDPOINTS.summary, {
       params: {
         startDate: plan ? null : payload?.startDate,
         endDate: plan ? null : payload?.endDate,
@@ -21,11 +21,9 @@ export function getSummary(
     .then((res) => res.data);
 }
 
-export function getRecentTransactions(
-  expenseWindow: number
-): Promise<ResponseBody<IExpense[]>> {
+export function getRecentTransactions(expenseWindow: number) {
   return axios
-    .post(ENDPOINTS.list, {
+    .post<ResponseBody<IExpense[]>>(ENDPOINTS.list, {
       startDate: dayjs().subtract(expenseWindow, "days").toDate(),
       endDate: dayjs().toDate(),
       sort: { date: -1 },
@@ -38,25 +36,27 @@ export function getExpenseList(payload: {
   endDate?: Date;
   sort: { date: number };
   plan?: string;
-}): Promise<ResponseBody<IExpense[]>> {
-  return axios.post(ENDPOINTS.list, payload).then((res) => res.data);
-}
-
-export function createExpense(
-  payload: Partial<IExpense>
-): Promise<ResponseBody<undefined>> {
-  return axios.post(ENDPOINTS.expenses, payload).then((res) => res.data);
-}
-
-export function editExpense(
-  payload: Partial<IExpense>
-): Promise<ResponseBody<IExpense>> {
-  return axios.put(ENDPOINTS.expenses, payload).then((res) => res.data);
-}
-
-export function deleteExpense(id: string): Promise<ResponseBody<undefined>> {
+}) {
   return axios
-    .delete(ENDPOINTS.expenses, { params: { id } })
+    .post<ResponseBody<IExpense[]>>(ENDPOINTS.list, payload)
+    .then((res) => res.data);
+}
+
+export function createExpense(payload: Partial<IExpense>) {
+  return axios
+    .post<ResponseBody<undefined>>(ENDPOINTS.expenses, payload)
+    .then((res) => res.data);
+}
+
+export function editExpense(payload: Partial<IExpense>) {
+  return axios
+    .put<ResponseBody<IExpense>>(ENDPOINTS.expenses, payload)
+    .then((res) => res.data);
+}
+
+export function deleteExpense(id: string) {
+  return axios
+    .delete<ResponseBody<undefined>>(ENDPOINTS.expenses, { params: { id } })
     .then((res) => res.data);
 }
 

@@ -2,6 +2,6 @@ import axios from "../config/axios";
 import { ENDPOINTS } from "../constants/endpoints";
 import { ResponseBody } from "./response.type";
 
-export function pingServer(): Promise<ResponseBody<undefined>> {
-  return axios.get(ENDPOINTS.ping).then((res) => res.data);
+export function pingServer() {
+  return axios.get<ResponseBody<undefined>>(ENDPOINTS.ping).then((res) => res.data);
 }
