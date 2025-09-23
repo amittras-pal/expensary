@@ -148,7 +148,7 @@ export default function Login() {
           >
             Login
           </Button>
-          <Text align="center" c={primaryColor} td="underline">
+          <Text ta="center" c={primaryColor} td="underline">
             <Text component={Link} to="/register">
               Create a new Account
             </Text>

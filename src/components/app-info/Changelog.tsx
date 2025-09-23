@@ -36,7 +36,7 @@ export default function Changelog() {
         <Accordion.Item key={version.tagName} value={version.tagName} mt="md">
           <Accordion.Control>
             <Group gap="xs">
-              <Text component="h1" m={0} fz="lg" color="violet">
+              <Text component="h1" m={0} fz="lg" c="violet">
                 {version.tagName}
               </Text>
               <Badge color="violet" size="sm" variant="outline">

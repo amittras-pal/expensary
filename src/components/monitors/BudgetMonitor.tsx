@@ -152,10 +152,10 @@ const BudgetMonitor = () => {
         </Group>
         {(previousMonthError || !previousMonthRes?.response.amount) && (
           <Text c="dimmed" fz="xs" fs="italic" mt="sm">
-            <Text component="span" color="red">
+            <Text component="span" c="red">
               *{" "}
             </Text>
-            <Text component="span" color="white">
+            <Text component="span" c="white">
               No previous budget found.
             </Text>
             <br />

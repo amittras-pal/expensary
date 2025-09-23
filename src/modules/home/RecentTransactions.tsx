@@ -83,7 +83,7 @@ function ItemList({
           />
         ))
       ) : (
-        <Text fs="italic" align="center" my="xl" fz="sm">
+        <Text fs="italic" ta="center" my="xl" fz="sm">
           No recent expenses to show.
         </Text>
       )}

@@ -122,7 +122,7 @@ export default function Register() {
             label="Confirm your pin"
             required
           />
-          <Text fz="sm" mb="md" align="center">
+          <Text fz="sm" mb="md" ta="center">
             <Text component="span" c="dimmed">
               Detected Time Zone:
             </Text>{" "}
@@ -139,7 +139,7 @@ export default function Register() {
           >
             Create Account
           </Button>
-          <Text align="center" c={primaryColor} td="underline">
+          <Text ta="center" c={primaryColor} td="underline">
             <Text component={Link} to="/login">
               Login to existing account.
             </Text>

@@ -136,7 +136,7 @@ export default function PlanExpensesList({
                 Expenses will be copied to monthly budget at creation date.{" "}
               </Text>
               {!isMobile && <br />}
-              <Text size="xs" color="red" component="span">
+              <Text size="xs" c="red" component="span">
                 Copied expenses cannot be modified!
               </Text>
             </Text>

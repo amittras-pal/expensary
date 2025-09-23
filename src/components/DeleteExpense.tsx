@@ -52,7 +52,7 @@ export default function DeleteExpense({
           delete the other one.
         </Alert>
       )}
-      <Text color="red" fz="sm" fw="bold">
+      <Text c="red" fz="sm" fw="bold">
         This action cannot be undone!
       </Text>
       <Group grow mt="lg">

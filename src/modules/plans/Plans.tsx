@@ -162,17 +162,17 @@ export default function Plans() {
           }}
         >
           <IconChecklist size={80} />
-          <Text my="sm" align="center">
+          <Text my="sm" ta="center">
             No plans have been created!
           </Text>
-          <Text size="sm" align="center" c="dimmed" mb="sm">
+          <Text size="sm" ta="center" c="dimmed" mb="sm">
             Plans help you organize expenses which need to be tracked outside of
             your general monthly budget.
           </Text>
           <Button
             size="sm"
             mt="sm"
-            leftIcon={<IconPlus size={16} />}
+            leftSection={<IconPlus size={16} />}
             onClick={formModal.open}
           >
             Create a plan
