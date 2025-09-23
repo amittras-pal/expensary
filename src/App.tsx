@@ -45,6 +45,8 @@ export default function App() {
       DatePickerInput: { defaultProps: { mb: "sm", variant: "filled" } },
       Divider: { defaultProps: { variant: "dashed" } },
       ScrollArea: { defaultProps: { scrollbarSize: 6 } },
+      Modal: { defaultProps: { overlayProps: { blur: 5 } } },
+      Drawer: { defaultProps: { overlayProps: { blur: 5 } } },
       Tooltip: {
         defaultProps: { events: { hover: true, touch: true, focus: true } },
       },
