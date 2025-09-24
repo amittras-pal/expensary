@@ -91,6 +91,7 @@ function ExpenseCard({
           {data.description && (
             <Text
               component="p"
+              c={"dimmed"}
               fz="xs"
               style={{ whiteSpace: "pre-wrap" }}
               m={0}
@@ -124,7 +125,7 @@ function ExpenseCard({
               }
             >
               <Badge
-                size="sm"
+                size="xs"
                 variant="dot"
                 color="dark"
                 style={{ color: "var(--mantine-color-gray-5)" }}
@@ -135,7 +136,7 @@ function ExpenseCard({
               </Badge>
             </Tooltip>
           </Group>
-          <Text fz="lg" fw="bold" mt="auto">
+          <Text mt="auto">
             {formatCurrency(data.amount)}
           </Text>
         </Group>

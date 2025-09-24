@@ -114,7 +114,7 @@ const UserCard = (props: Readonly<{ username: string }>) => {
       onClose={() => setOpen(false)}
     >
       <HoverCard.Target>
-        <Text component="span" style={{ cursor: "pointer" }} color="yellow">
+        <Text component="span" style={{ cursor: "pointer" }} c="yellow">
           {props.username + " "}
         </Text>
       </HoverCard.Target>

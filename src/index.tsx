@@ -5,6 +5,8 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import App from "./App";
 import Layout from "./modules/layout/Layout";
 
+import '@fontsource-variable/josefin-sans';
+
 const Login = lazy(() => import("./modules/auth/Login"));
 const RegistrationHold = lazy(() => import("./modules/auth/RegistrationHold"));
 const Expenses = lazy(() => import("./modules/expenses"));

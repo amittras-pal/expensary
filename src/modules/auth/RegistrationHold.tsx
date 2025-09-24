@@ -35,7 +35,7 @@ export default function RegistrationHold() {
               about page
             </Text>
           </Text>
-          <Text align="center" c={primaryColor} td="underline" mt="lg">
+          <Text ta="center" c={primaryColor} td="underline" mt="lg">
             <Text component={Link} to="/login">
               Login to existing account.
             </Text>

@@ -106,14 +106,14 @@ export default function MonthBreakdown({
       <Divider my="xs" />
       <Text c="dimmed">
         Set Budget:{" "}
-        <Text component="span" color={colors.gray[1]}>
+        <Text component="span" c={colors.gray[1]}>
           {formatCurrency(budget?.amount ?? 0)}
         </Text>
       </Text>
       {budget?.remarks && (
         <Text c="dimmed">
           Remarks for budget:{" "}
-          <Text component="span" color={colors.gray[1]}>
+          <Text component="span" c={colors.gray[1]}>
             {budget.remarks}
           </Text>
         </Text>

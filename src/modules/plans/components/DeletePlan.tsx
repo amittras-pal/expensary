@@ -46,10 +46,10 @@ export default function DeletePlan({
       <Divider my="md" />
       {data && <ExpensePlan data={data} hideMenu />}
       <Divider my="md" />
-      <Text color="red">
+      <Text c="red">
         This action will delete all expenses added to this plan.
       </Text>
-      <Text color="red" fw="bold">
+      <Text c="red" fw="bold">
         This action cannot be undone.
       </Text>
       <Group grow mt="md">

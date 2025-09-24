@@ -234,9 +234,9 @@ function SubCategory(props: IFilterParams<IExpense>, ref: any) {
   );
 }
 
-export const CategoryFilter = forwardRef<IFilterParams<IExpense>, any>(
+export const CategoryFilter = forwardRef<any, IFilterParams<IExpense>>(
   Category
 );
-export const SubCategoryFilter = forwardRef<IFilterParams<IExpense>, any>(
+export const SubCategoryFilter = forwardRef<any, IFilterParams<IExpense>>(
   SubCategory
 );

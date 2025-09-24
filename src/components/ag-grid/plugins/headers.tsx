@@ -1,3 +1,4 @@
+import React from "react";
 import {
   ActionIcon,
   Group,
@@ -40,7 +41,7 @@ export function ColumnHeader({
               : "gray"
           }
           variant={"filled"}
-          onClick={(e: MouseEvent) =>
+          onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
             showColumnMenu(e.currentTarget as HTMLElement)
           }
         >
@@ -57,7 +58,7 @@ export function ColumnHeader({
               : "gray"
           }
           variant={"filled"}
-          onClick={(e: KeyboardEvent) =>
+          onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
             setSort(getNextSortOrder(column.getSort()), e.shiftKey)
           }
         >

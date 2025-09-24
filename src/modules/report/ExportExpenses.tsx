@@ -207,7 +207,7 @@ export default function DownloadReport() {
       <Button
         fullWidth
         disabled={view === "plan" ? !plan : !selection[0] || !selection[1]}
-        leftIcon={<IconTableDown size={16} />}
+        leftSection={<IconTableDown size={16} />}
         onClick={handleDownload}
         loading={downloadingRange || downloadingPlan}
       >

@@ -236,7 +236,7 @@ export default function BudgetBreakdown({
       ) : (
         <Stack h="100%" justify="center">
           <EmptyState height={isMobile ? 250 : 350} />
-          <Text fs="italic" align="center" fz="sm">
+          <Text fs="italic" ta="center" fz="sm">
             No expenses added yet for this month.
           </Text>
         </Stack>
@@ -252,7 +252,7 @@ export default function BudgetBreakdown({
           }}
         >
           <Group justify="space-between" w="100%">
-            <Text fz="sm" fw="bold" color={percColor}>
+            <Text fz="sm" fw="bold" c={percColor}>
               {percSpent}%
             </Text>
             <Text size="sm" fw="normal">

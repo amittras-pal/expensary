@@ -62,7 +62,7 @@ function BudgetItem({
           >
             {category}
           </Badge>
-          <Text fw="bold">{formatCurrency(total)} </Text>
+          <Text>{formatCurrency(total)} </Text>
         </Group>
         <Group gap={6} align="center">
           {subItems.map(({ label, value, color, Icon }) => (
