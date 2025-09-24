@@ -19,7 +19,6 @@ import "./theme/globals.scss";
 
 const theme = createTheme({
   defaultRadius: "sm",
-  fontFamily: "'Poppins', sans-serif",
   fontFamilyMonospace: "Monaco, Courier, monospace",
   cursorType: "pointer",
   focusRing: "auto",
