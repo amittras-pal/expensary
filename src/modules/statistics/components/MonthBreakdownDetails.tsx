@@ -114,8 +114,6 @@ export default forwardRef<ListDetailsHandle, ListDetailsProps>(
         ],
         ["description"],
         ["title", { minWidth: isMobile ? 240 : 320 }],
-        ["category", { filter: undefined }],
-        ["subCategory", { filter: undefined }],
         ["amount"],
         ["date"],
       ]);
