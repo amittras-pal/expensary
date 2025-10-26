@@ -27,6 +27,7 @@ import { exportPlan, exportRange } from "../../services/export.service";
 import { getPlans } from "../../services/plans.service";
 import classes from "../../theme/modules/report.module.scss";
 import { downloadFile } from "../../utils";
+import PlanSelectaOption from "./components/PlanSelectOption";
 
 interface CommonPickerProps extends PickerBaseProps<"range"> {
   className: string;
@@ -189,10 +190,12 @@ export default function DownloadReport() {
           onChange={setPlan}
           disabled={loadingPlans}
           nothingFoundMessage="No Plans to Export"
+          renderOption={PlanSelectaOption}
           data={
             plans?.response.map((plan) => ({
-              label: `${plan.name} (${plan.open ? "Active" : "Closed"})`,
+              label: plan.name,
               value: plan._id,
+              open: plan.open,
             })) ?? []
           }
         />
