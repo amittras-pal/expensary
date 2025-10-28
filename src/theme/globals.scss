@@ -66,8 +66,10 @@ body {
 
 input,
 textarea,
+// combine these below ones.
 button.mantine-DateTimePicker-input,
-button.mantine-DatePickerInput-input {
+button.mantine-DatePickerInput-input,
+button.mantine-MonthPickerInput-input {
   font-family: "Josefin Sans Variable", sans-serif !important;
   font-style: normal;
   line-height: 1;
