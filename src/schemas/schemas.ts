@@ -90,6 +90,26 @@ export const expensePlanSchema = yup.object().shape({
     .required("Plan description is required.")
     .max(400, "Plan description can't exceed 400 characters.")
     .min(20, "Plan description should be 20 characters or longer"),
+  executionRange: yup
+    .object({
+      from: yup
+        .date()
+        .nullable()
+        .required("Start date is required"),
+      to: yup
+        .date()
+        .nullable()
+        .required("End date is required"),
+    })
+    .required("Execution range is required")
+    .test(
+      "end-after-start",
+      "End date must be after start date",
+      (value) => {
+        if (!value?.from || !value?.to) return false; // both required
+        return new Date(value.to).getTime() > new Date(value.from).getTime();
+      }
+    ),
 });
 
 export const preferencesSchema = yup.object().shape({

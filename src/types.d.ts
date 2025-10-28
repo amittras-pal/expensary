@@ -85,6 +85,7 @@ interface IExpensePlan {
   description: string;
   user: string;
   open: boolean;
+  executionRange?: { from: Date | string | null; to: Date | string | null };
   createdAt: string;
   updatedAt: string;
   lastAction:
