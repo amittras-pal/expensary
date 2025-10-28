@@ -15,6 +15,7 @@ export default function User() {
   return (
     <Container
       size={"lg"}
+      px={0}
       style={{ display: "flex", flexDirection: "column", gap: 16 }}
     >
       <Paper className={classes.tile}>

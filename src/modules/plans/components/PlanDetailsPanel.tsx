@@ -1,4 +1,4 @@
-import { Badge, Box, Divider, Text } from "@mantine/core";
+import { Box, Divider, Text } from "@mantine/core";
 import dayjs from "dayjs";
 
 interface IPlanDetailsPanelProps {
@@ -24,33 +24,44 @@ export default function PlanDetailsPanel({
       </Text>
       <Text style={{ whiteSpace: "pre-wrap" }}>{data.description}</Text>
       <Divider my="lg" />
-      <Text fz="sm" display="flex" style={{ alignItems: "center" }}>
+      <Text fz="sm">
         <Text component="span" c="dimmed">
           Status:{" "}
         </Text>
-        <Badge
-          ml={6}
-          variant="light"
+        <Text
           component="span"
-          color={data.open ? "indigo" : "red"}
+          fw="bold"
+          c={data.open ? "green" : "red"}
         >
           {data.open ? "Open" : "Closed"}
-        </Badge>
+        </Text>
       </Text>
       <Text fz="sm">
         <Text component="span" c="dimmed">
           Created:{" "}
         </Text>
         <Text component="span" fw="bold">
-          {dayjs(data.createdAt).format("DD MMM, hh:mm a")}
+          {dayjs(data.createdAt).format("DD MMM, 'YY hh:mm a")}
         </Text>
       </Text>
+      {data.executionRange?.from && data.executionRange?.to && (
+        <Text fz="sm">
+          <Text component="span" c="dimmed">
+            Execution Dates:{" "}
+          </Text>
+          <Text component="span" fw="bold">
+            {dayjs(data.executionRange.from).format("DD MMM, 'YY")} - {dayjs(
+              data.executionRange.to
+            ).format("DD MMM, 'YY")}
+          </Text>
+        </Text>
+      )}
       <Text fz="sm">
         <Text component="span" c="dimmed">
           Last Updated:{" "}
         </Text>
         <Text component="span" fw="bold">
-          {dayjs(data.updatedAt).format("DD MMM, hh:mm a")}
+          {dayjs(data.updatedAt).format("DD MMM, 'YY hh:mm a")}
         </Text>
       </Text>
       <Text fz="sm">
