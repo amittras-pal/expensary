@@ -71,47 +71,44 @@ export default function ExpensePlan({
           </Text>
         </Box>
         {!hideMenu && (
-          <>
-            {data?.open ? (
-              <Menu shadow="md" position="bottom-end">
-                <Menu.Target>
-                  <ActionIcon
-                    size="sm"
-                    radius="xl"
-                    variant="transparent"
-                    color="gray"
-                  >
-                    <IconDotsVertical size={16} />
-                  </ActionIcon>
-                </Menu.Target>
-
-                <Menu.Dropdown>
-                  <Menu.Item
-                    leftSection={<IconEdit size={14} />}
-                    onClick={() => onPlanAction(data, "edit")}
-                  >
-                    Edit
-                  </Menu.Item>
-                  <Menu.Item
-                    color="red"
-                    leftSection={<IconX size={14} />}
-                    onClick={() => onPlanAction(data, "close")}
-                  >
-                    Close
-                  </Menu.Item>
-                </Menu.Dropdown>
-              </Menu>
-            ) : (
+          <Menu shadow="md" position="bottom-end">
+            <Menu.Target>
               <ActionIcon
-                color="red"
-                variant="light"
+                size="sm"
                 radius="xl"
-                onClick={() => onPlanAction(data, "delete")}
+                variant="transparent"
+                color="gray"
               >
-                <IconTrash size={16} />
+                <IconDotsVertical size={16} />
               </ActionIcon>
-            )}
-          </>
+            </Menu.Target>
+
+            <Menu.Dropdown>
+              <Menu.Item
+                leftSection={<IconEdit size={14} />}
+                onClick={() => onPlanAction(data, "edit")}
+              >
+                Edit
+              </Menu.Item>
+              {data.open ? (
+                <Menu.Item
+                  color="red"
+                  leftSection={<IconX size={14} />}
+                  onClick={() => onPlanAction(data, "close")}
+                >
+                  Close
+                </Menu.Item>
+              ) : (
+                <Menu.Item
+                  color="red"
+                  leftSection={<IconTrash size={14} />}
+                  onClick={() => onPlanAction(data, "delete")}
+                >
+                  Delete
+                </Menu.Item>
+              )}
+            </Menu.Dropdown>
+          </Menu>
         )}
       </Box>
       <Divider mb="sm" mt="auto" />
