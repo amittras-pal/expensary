@@ -78,5 +78,5 @@ export const Icons: Record<string, (props: TablerIconsProps) => JSX.Element> = {
   IconReceipt2,
   IconTicket,
   IconBriefcase,
-  IconBuilding
+  IconBuilding,
 };

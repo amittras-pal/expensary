@@ -8,9 +8,14 @@ import {
 } from "@mantine/core";
 import { useDisclosure, useDocumentTitle, useHotkeys } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
-import { IconDownload, IconPlus, IconTableDown } from "@tabler/icons-react";
+import {
+  IconArrowLeft,
+  IconDownload,
+  IconPlus,
+  IconTableDown,
+} from "@tabler/icons-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import DeleteExpense from "../../components/DeleteExpense";
 import ExpenseForm from "../../components/ExpenseForm";
 import OverlayLoader from "../../components/loaders/OverlayLoader";
@@ -25,7 +30,8 @@ import PlanSummary from "./components/PlanSummary";
 
 export default function PlanDetails() {
   const params = useParams();
-  const { primaryColor } = useMantineTheme();
+  const navigate = useNavigate();
+  const { primaryColor, colors } = useMantineTheme();
 
   const [showForm, formModal] = useDisclosure(false);
   const [confirm, deleteModal] = useDisclosure(false);
@@ -100,15 +106,25 @@ export default function PlanDetails() {
 
   return (
     <>
-      <Tabs
-        defaultValue="summary"
-        keepMounted={false}
-        style={{ height: "calc(100% - 62px)" }}
-      >
+      <Tabs defaultValue="summary" keepMounted={false}>
         <Tabs.List>
+          <Tabs.Tab
+            value="back"
+            onClick={(e) => {
+              e.preventDefault();
+              navigate(-1);
+            }}
+            color={primaryColor}
+            leftSection={
+              <IconArrowLeft
+                style={{ color: colors[primaryColor][4] }}
+                size={16}
+              />
+            }
+          />
           <Tabs.Tab value="summary">Summary</Tabs.Tab>
           <Tabs.Tab value="list">Expenses</Tabs.Tab>
-          <Tabs.Tab value="info">Plan Info</Tabs.Tab>
+          <Tabs.Tab value="info">Info</Tabs.Tab>
         </Tabs.List>
 
         <Tabs.Panel value="summary" pt="xs" style={{ height: "100%" }}>

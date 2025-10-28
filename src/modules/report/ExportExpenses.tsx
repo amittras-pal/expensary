@@ -116,9 +116,18 @@ export default function DownloadReport() {
     onError,
   });
 
-  const { data: plans, isLoading: loadingPlans } = useQuery({
+  const { data: closedPlansRes, isLoading: loadingOpenPlans } = useQuery({
     queryKey: ["plans-list", false],
     queryFn: () => getPlans("false"),
+    refetchOnMount: false,
+    staleTime: 10 * 60 * 1000,
+    enabled: view === "plan",
+    onError,
+  });
+
+  const { data: openPlansRes, isLoading: loadingClosedPlans } = useQuery({
+    queryKey: ["plans-list", true],
+    queryFn: () => getPlans("true"),
     refetchOnMount: false,
     staleTime: 10 * 60 * 1000,
     enabled: view === "plan",
@@ -187,14 +196,26 @@ export default function DownloadReport() {
           mb={0}
           value={plan}
           onChange={setPlan}
-          disabled={loadingPlans}
+          disabled={loadingOpenPlans || loadingClosedPlans}
           nothingFoundMessage="No Plans to Export"
-          data={
-            plans?.response.map((plan) => ({
-              label: `${plan.name} (${plan.open ? "Active" : "Closed"})`,
-              value: plan._id,
-            })) ?? []
-          }
+          data={[
+            {
+              group: "Open Plans",
+              items:
+                openPlansRes?.response.map((plan) => ({
+                  label: plan.name,
+                  value: plan._id,
+                })) ?? [],
+            },
+            {
+              group: "Closed Plans",
+              items:
+                closedPlansRes?.response.map((plan) => ({
+                  label: plan.name,
+                  value: plan._id,
+                })) ?? [],
+            },
+          ]}
         />
       )}
       {view !== "plan" && (

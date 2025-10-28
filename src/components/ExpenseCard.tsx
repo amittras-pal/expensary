@@ -136,9 +136,7 @@ function ExpenseCard({
               </Badge>
             </Tooltip>
           </Group>
-          <Text mt="auto">
-            {formatCurrency(data.amount)}
-          </Text>
+          <Text mt="auto">{formatCurrency(data.amount)}</Text>
         </Group>
         <Group style={{ flexDirection: "column" }} gap={"xs"}>
           {!hideMenu && (

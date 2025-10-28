@@ -1,12 +1,14 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import {
   ActionIcon,
   Alert,
   Box,
   Button,
   Divider,
+  Group,
   Modal,
   SimpleGrid,
+  Switch,
   Text,
   Tooltip,
   useMantineTheme,
@@ -25,52 +27,57 @@ import DeletePlan from "./components/DeletePlan";
 import ExpensePlan from "./components/ExpensePlan";
 import ExpensePlanForm from "./components/ExpensePlanForm";
 
-interface PlanSegregation {
-  active: IExpensePlan[];
-  closed: IExpensePlan[];
-}
-
 export default function Plans() {
   useDocumentTitle(`${APP_TITLE} | Vacations & Plans`);
   const { primaryColor } = useMantineTheme();
   const isMobile = useMediaMatch();
   const { onError } = useErrorHandler();
-  const { data, isLoading } = useQuery({
+
+  const [showClosed, setShowClosed] = useState(
+    () => sessionStorage.getItem("showClosedPlans") === "true"
+  );
+  const [targetPlan, setTargetPlan] = useState<IExpensePlan | null>(null);
+
+  const { data: closedPlansRes, isLoading: loadingClosedPlans } = useQuery({
     queryKey: ["plans-list", false],
     queryFn: () => getPlans("false"),
+    enabled: showClosed,
     refetchOnMount: false,
     onError,
   });
 
-  const plansList: PlanSegregation = useMemo(() => {
-    if (!data) return { active: [], closed: [] };
-    const groups: PlanSegregation = { active: [], closed: [] };
-
-    data?.response?.forEach((plan) => {
-      if (plan.open) groups.active.push(plan);
-      else groups.closed.push(plan);
-    });
-    return groups;
-  }, [data]);
+  const { data: openPlansRes, isLoading: loadingOpenPlans } = useQuery({
+    queryKey: ["plans-list", true],
+    queryFn: () => getPlans("true"),
+    refetchOnMount: false,
+    onError,
+  });
 
   const [showForm, formModal] = useDisclosure(false);
   const [confirm, deleteModal] = useDisclosure(false);
   useHotkeys([["N", formModal.open]]);
 
-  const [targetPlan, setTargetPlan] = useState<IExpensePlan | null>(null);
-
   const client = useQueryClient();
+
+  const refreshList = () => {
+    client.invalidateQueries(["plans-list", true]);
+    if (showClosed) client.invalidateQueries(["plans-list", false]);
+  };
 
   const handleModalClose = (refreshData: IExpensePlan | boolean) => {
     if (showForm) formModal.close();
     if (confirm) deleteModal.close();
 
-    if (refreshData)
-      client.invalidateQueries({ queryKey: ["plans-list", false] });
+    if (refreshData) refreshList();
 
     setTimeout(() => {
       setTargetPlan(null);
     }, 1000);
+  };
+
+  const handleShowClosedToggle = (checked: boolean) => {
+    setShowClosed(checked);
+    sessionStorage.setItem("showClosedPlans", checked ? "true" : "false");
   };
 
   const { mutate: update } = useMutation({
@@ -133,7 +140,7 @@ export default function Plans() {
     }
   };
 
-  if (isLoading)
+  if (loadingOpenPlans)
     return (
       <Box
         style={{
@@ -148,7 +155,10 @@ export default function Plans() {
       </Box>
     );
 
-  if (!plansList.active.length && !plansList.closed.length)
+  if (
+    !openPlansRes?.response.length ||
+    (showClosed && !loadingClosedPlans && !closedPlansRes?.response.length)
+  )
     return (
       <>
         <Box
@@ -163,20 +173,32 @@ export default function Plans() {
         >
           <IconChecklist size={80} />
           <Text my="sm" ta="center">
-            No plans have been created!
+            No currently active plans.
           </Text>
           <Text size="sm" ta="center" c="dimmed" mb="sm">
             Plans help you organize expenses which need to be tracked outside of
             your general monthly budget.
           </Text>
-          <Button
-            size="sm"
-            mt="sm"
-            leftSection={<IconPlus size={16} />}
-            onClick={formModal.open}
-          >
-            Create a plan
-          </Button>
+          <Group gap="sm">
+            <Button size="sm" mt="sm" onClick={formModal.open}>
+              Create New Plan
+            </Button>
+            <Button
+              size="sm"
+              mt="sm"
+              variant="subtle"
+              loading={loadingClosedPlans}
+              disabled={showClosed && !closedPlansRes?.response.length}
+              onClick={() => setShowClosed(true)}
+            >
+              Show Closed Plans
+            </Button>
+          </Group>
+          {showClosed && !closedPlansRes?.response.length && (
+            <Text size="sm" ta="center" c="dimmed" mt="sm">
+              You do not have any closed plans either.
+            </Text>
+          )}
         </Box>
         <Modal
           opened={showForm || confirm}
@@ -195,16 +217,15 @@ export default function Plans() {
 
   return (
     <>
-      {plansList.active?.length > 0 && (
+      {(openPlansRes?.response?.length ?? 0) > 0 && (
         <>
           <Divider
-            labelPosition="center"
-            label={`Open Plans (${plansList.active.length})`}
+            labelPosition="left"
+            label={`Open Plans (${openPlansRes?.response.length ?? 0})`}
             mb="sm"
-            color={primaryColor}
           />
           <SimpleGrid cols={isMobile ? 1 : 2} spacing="sm" mb="sm">
-            {plansList.active?.map((plan) => (
+            {openPlansRes?.response.map((plan) => (
               <ExpensePlan
                 hideMenu={false}
                 data={plan}
@@ -215,25 +236,42 @@ export default function Plans() {
           </SimpleGrid>
         </>
       )}
-      {plansList.closed?.length > 0 && (
-        <>
-          <Divider
-            labelPosition="center"
-            label={`Closed Plans (${plansList.closed.length})`}
-            mb="sm"
+      <Divider
+        labelPosition="left"
+        label={
+          <Switch
+            size="sm"
             color={primaryColor}
+            checked={showClosed}
+            onChange={(e) => handleShowClosedToggle(e.currentTarget.checked)}
+            label={
+              showClosed
+                ? `Closed plans (${closedPlansRes?.response.length ?? 0})`
+                : "Show closed plans"
+            }
           />
-          <SimpleGrid cols={isMobile ? 1 : 2} spacing="sm" mb="sm">
-            {plansList.closed?.map((plan) => (
-              <ExpensePlan
-                hideMenu={false}
-                data={plan}
-                key={plan._id}
-                onPlanAction={handlePlanAction}
-              />
-            ))}
-          </SimpleGrid>
-        </>
+        }
+      />
+      {showClosed && loadingClosedPlans && (
+        <Group justify="center" mb="sm" pt={"xl"}>
+          <ContainedLoader size={40} />
+          <Text size="sm" c="dimmed">
+            Loading closed plans...
+          </Text>
+        </Group>
+      )}
+
+      {showClosed && (closedPlansRes?.response?.length ?? 0) > 0 && (
+        <SimpleGrid cols={isMobile ? 1 : 2} spacing="sm" mt="sm">
+          {closedPlansRes?.response?.map((plan) => (
+            <ExpensePlan
+              hideMenu={false}
+              data={plan}
+              key={plan._id}
+              onPlanAction={handlePlanAction}
+            />
+          ))}
+        </SimpleGrid>
       )}
       <Tooltip label="Create new Plan" position="left" color="dark">
         <ActionIcon

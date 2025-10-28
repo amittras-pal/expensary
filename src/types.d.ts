@@ -1,6 +1,7 @@
-interface TablerIconsProps extends Partial<Omit<React.SVGProps<SVGSVGElement>, 'stroke'>> {
-    size?: string | number,
-    stroke?: string | number
+interface TablerIconsProps
+  extends Partial<Omit<React.SVGProps<SVGSVGElement>, "stroke">> {
+  size?: string | number;
+  stroke?: string | number;
 }
 
 declare module "*.svg?react" {
@@ -85,6 +86,7 @@ interface IExpensePlan {
   description: string;
   user: string;
   open: boolean;
+  executionRange?: { from: Date | string | null; to: Date | string | null };
   createdAt: string;
   updatedAt: string;
   lastAction:
