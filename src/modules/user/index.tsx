@@ -3,9 +3,9 @@ import { useDocumentTitle } from "@mantine/hooks";
 import dayjs from "dayjs";
 import { APP_TITLE } from "../../constants/app";
 import { useCurrentUser } from "../../context/user.context";
+import classes from "../../theme/modules/account.module.scss";
 import ChangePassword from "./ChangePassword";
 import Preferences from "./Preferences";
-import classes from "../../theme/modules/account.module.scss";
 
 export default function User() {
   useDocumentTitle(`${APP_TITLE} | My Account`);

@@ -8,14 +8,18 @@
   & > * {
     z-index: 1;
   }
-  &::after  {
+  &::after {
     content: "";
     position: absolute;
     right: -40px;
     top: 0px;
     height: 60px;
     width: 150px;
-    background: linear-gradient(to right, var(--mantine-color-primary-5), var(--mantine-color-primary-9));
+    background: linear-gradient(
+      to right,
+      var(--mantine-color-primary-5),
+      var(--mantine-color-primary-9)
+    );
     transform: skew(-35deg);
   }
 }

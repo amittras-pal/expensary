@@ -11,7 +11,7 @@ export function useErrorHandler(func?: () => void) {
   const onError = async (err: unknown) => {
     if (axios.isAxiosError(err)) {
       const axiosError = err as AxiosError;
-      
+
       if (axiosError.response?.status === 401 && pathname !== "/login") {
         await logoutUser().then(() => {
           localStorage.clear();
@@ -27,7 +27,9 @@ export function useErrorHandler(func?: () => void) {
         });
       } else {
         notifications.show({
-          message: (axiosError?.response?.data as any)?.message || "Unknown error occurred",
+          message:
+            (axiosError?.response?.data as any)?.message ||
+            "Unknown error occurred",
           color: "red",
           icon: <IconX />,
         });

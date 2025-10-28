@@ -232,7 +232,7 @@ export default function GlobalSearch2() {
         </Accordion.Item>
       </Accordion>
       <Divider
-      my="sm"
+        my="sm"
         color={primaryColor}
         labelPosition="center"
         label={

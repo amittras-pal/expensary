@@ -1,11 +1,10 @@
+import "@fontsource-variable/josefin-sans";
 import React, { lazy } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import App from "./App";
 import Layout from "./modules/layout/Layout";
-
-import '@fontsource-variable/josefin-sans';
 
 const Login = lazy(() => import("./modules/auth/Login"));
 const RegistrationHold = lazy(() => import("./modules/auth/RegistrationHold"));

@@ -97,11 +97,7 @@ export default function ExpensePlanForm({
     if (rawTo instanceof Date) to = rawTo;
     else if (typeof rawTo === "string" && rawTo) to = new Date(rawTo);
 
-    setValue(
-      "executionRange",
-      { from, to } as any,
-      { shouldValidate: true }
-    );
+    setValue("executionRange", { from, to } as any, { shouldValidate: true });
   };
 
   return (

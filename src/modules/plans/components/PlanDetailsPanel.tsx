@@ -28,11 +28,7 @@ export default function PlanDetailsPanel({
         <Text component="span" c="dimmed">
           Status:{" "}
         </Text>
-        <Text
-          component="span"
-          fw="bold"
-          c={data.open ? "green" : "red"}
-        >
+        <Text component="span" fw="bold" c={data.open ? "green" : "red"}>
           {data.open ? "Open" : "Closed"}
         </Text>
       </Text>
@@ -50,9 +46,8 @@ export default function PlanDetailsPanel({
             Execution Dates:{" "}
           </Text>
           <Text component="span" fw="bold">
-            {dayjs(data.executionRange.from).format("DD MMM, 'YY")} - {dayjs(
-              data.executionRange.to
-            ).format("DD MMM, 'YY")}
+            {dayjs(data.executionRange.from).format("DD MMM, 'YY")} -{" "}
+            {dayjs(data.executionRange.to).format("DD MMM, 'YY")}
           </Text>
         </Text>
       )}

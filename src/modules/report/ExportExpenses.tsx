@@ -27,7 +27,6 @@ import { exportPlan, exportRange } from "../../services/export.service";
 import { getPlans } from "../../services/plans.service";
 import classes from "../../theme/modules/report.module.scss";
 import { downloadFile } from "../../utils";
-import PlanSelectaOption from "./components/PlanSelectOption";
 
 interface CommonPickerProps extends PickerBaseProps<"range"> {
   className: string;
