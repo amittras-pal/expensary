@@ -8,6 +8,7 @@ import {
   Textarea,
   useMantineTheme,
 } from "@mantine/core";
+import { DatePickerInput } from "@mantine/dates";
 import { notifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -38,6 +39,7 @@ export default function ExpensePlanForm({
     handleSubmit,
     reset,
     watch,
+    setValue,
     formState: { errors, isValid },
   } = useForm<FormSchema>({
     mode: "onBlur",
@@ -45,6 +47,7 @@ export default function ExpensePlanForm({
     defaultValues: {
       name: data?.name ?? "",
       description: data?.description ?? "",
+      executionRange: (data as any)?.executionRange ?? { from: null, to: null },
     },
     resolver: yupResolver(expensePlanSchema),
   });
@@ -82,6 +85,17 @@ export default function ExpensePlanForm({
     else create(payload);
   };
 
+  const handleExecutionRangeChange = (val: [Date | string | null, Date | string | null] | null) => {
+    const [rawFrom, rawTo] = val || [null, null];
+    const from = typeof rawFrom === "string" ? (rawFrom ? new Date(rawFrom) : null) : rawFrom;
+    const to = typeof rawTo === "string" ? (rawTo ? new Date(rawTo) : null) : rawTo;
+    setValue(
+      "executionRange",
+      { from: from ?? null, to: to ?? null } as any,
+      { shouldValidate: true }
+    );
+  };
+
   return (
     <Box
       component="form"
@@ -91,27 +105,39 @@ export default function ExpensePlanForm({
       <Text fz="lg" fw="bold" c={primaryColor} mb="sm">
         {data ? "Edit Plan" : "Create New Plan"}
       </Text>
-      <Divider />
-      <Box>
-        <TextInput
-          {...register("name")}
-          error={errors.name?.message}
-          placeholder="Plan Title"
-          label="Plan Title"
-          required
-        />
-        <Textarea
-          {...register("description")}
-          error={errors.description?.message}
-          placeholder="Plan Description"
-          label="Plan Description"
-          minRows={5}
-          required
-        />
-        <Text size="xs" c="dimmed" ta="right">
-          {watch("description")?.length} / 400
-        </Text>
-      </Box>
+      <Divider my="sm" />
+      <TextInput
+        {...register("name")}
+        error={errors.name?.message}
+        placeholder="Plan Title"
+        label="Plan Title"
+        required={true}
+      />
+      <Textarea
+        {...register("description")}
+        error={errors.description?.message}
+        placeholder="Plan Description"
+        label="Plan Description"
+        minRows={5}
+        required
+      />
+      <Text size="xs" c="dimmed" ta="right">
+        {watch("description")?.length} / 400
+      </Text>
+      <DatePickerInput
+        type="range"
+        label="Execution Range"
+        placeholder="Select start and end date"
+        description="You can add/edit expenses outside of this range. This is just a remark indicating when this plan was in effect (e.g. trip start/end)."
+        value={(() => {
+          const range = watch("executionRange") as any;
+          return [range?.from ?? null, range?.to ?? null];
+        })()}
+        onChange={handleExecutionRangeChange}
+        mb="sm"
+        error={errors.executionRange?.message as any}
+        required={true}
+      />
       <Group grow mt="md" style={{ flexDirection: "row-reverse" }}>
         <Button
           type="submit"
