@@ -85,13 +85,21 @@ export default function ExpensePlanForm({
     else create(payload);
   };
 
-  const handleExecutionRangeChange = (val: [Date | string | null, Date | string | null] | null) => {
+  const handleExecutionRangeChange = (
+    val: [Date | string | null, Date | string | null] | null
+  ) => {
     const [rawFrom, rawTo] = val || [null, null];
-    const from = typeof rawFrom === "string" ? (rawFrom ? new Date(rawFrom) : null) : rawFrom;
-    const to = typeof rawTo === "string" ? (rawTo ? new Date(rawTo) : null) : rawTo;
+    let from: Date | null = null;
+    if (rawFrom instanceof Date) from = rawFrom;
+    else if (typeof rawFrom === "string" && rawFrom) from = new Date(rawFrom);
+
+    let to: Date | null = null;
+    if (rawTo instanceof Date) to = rawTo;
+    else if (typeof rawTo === "string" && rawTo) to = new Date(rawTo);
+
     setValue(
       "executionRange",
-      { from: from ?? null, to: to ?? null } as any,
+      { from, to } as any,
       { shouldValidate: true }
     );
   };

@@ -262,18 +262,16 @@ export default function Plans() {
       )}
 
       {showClosed && (closedPlansRes?.response?.length ?? 0) > 0 && (
-        <>
-          <SimpleGrid cols={isMobile ? 1 : 2} spacing="sm" mt="sm">
-            {closedPlansRes?.response?.map((plan) => (
-              <ExpensePlan
-                hideMenu={false}
-                data={plan}
-                key={plan._id}
-                onPlanAction={handlePlanAction}
-              />
-            ))}
-          </SimpleGrid>
-        </>
+        <SimpleGrid cols={isMobile ? 1 : 2} spacing="sm" mt="sm">
+          {closedPlansRes?.response?.map((plan) => (
+            <ExpensePlan
+              hideMenu={false}
+              data={plan}
+              key={plan._id}
+              onPlanAction={handlePlanAction}
+            />
+          ))}
+        </SimpleGrid>
       )}
       <Tooltip label="Create new Plan" position="left" color="dark">
         <ActionIcon
