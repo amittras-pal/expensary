@@ -19,7 +19,7 @@ import { notifications } from "@mantine/notifications";
 import { IconDownload, IconTableDown } from "@tabler/icons-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import dayjs, { OpUnitType } from "dayjs";
-import { APP_TITLE } from "../../constants/app";
+import { APP_TITLE, _20Min } from "../../constants/app";
 import { useCurrentUser } from "../../context/user.context";
 import { useErrorHandler } from "../../hooks/error-handler";
 import { useMediaMatch } from "../../hooks/media-match";
@@ -120,7 +120,7 @@ export default function DownloadReport() {
     queryKey: ["plans-list", false],
     queryFn: () => getPlans("false"),
     refetchOnMount: false,
-    staleTime: 10 * 60 * 1000,
+    staleTime: _20Min,
     enabled: view === "plan",
     onError,
   });
@@ -129,7 +129,7 @@ export default function DownloadReport() {
     queryKey: ["plans-list", true],
     queryFn: () => getPlans("true"),
     refetchOnMount: false,
-    staleTime: 10 * 60 * 1000,
+    staleTime: _20Min,
     enabled: view === "plan",
     onError,
   });

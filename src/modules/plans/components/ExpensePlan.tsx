@@ -4,6 +4,7 @@ import {
   Badge,
   Box,
   Divider,
+  Group,
   Menu,
   Text,
   TextProps,
@@ -17,21 +18,23 @@ import {
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
 import { primaryColor } from "../../../constants/app";
+import { IExpensePlanAggregate } from "../../../services/plans.service";
 import classes from "../../../theme/modules/plan.module.scss";
+import { formatCurrency } from "../../../utils";
 
 type PlanAction = (
-  data: IExpensePlan,
+  data: IExpensePlanAggregate,
   mode: "edit" | "delete" | "close"
 ) => void;
 
 interface ReadOnlyCard {
-  data: IExpensePlan;
+  data: IExpensePlanAggregate;
   hideMenu: true;
   onPlanAction?: PlanAction;
 }
 
 interface ActionableCard {
-  data: IExpensePlan;
+  data: IExpensePlanAggregate;
   hideMenu: false;
   onPlanAction: PlanAction;
 }
@@ -51,6 +54,17 @@ export default function ExpensePlan({
     }),
     [data.open]
   );
+
+  const isActiveNow = useMemo(() => {
+    const from = data.executionRange?.from;
+    const to = data.executionRange?.to;
+    if (!from || !to) return false;
+    const now = dayjs();
+    return (
+      now.isAfter(dayjs(from).startOf("day")) &&
+      now.isBefore(dayjs(to).endOf("day"))
+    );
+  }, [data.executionRange?.from, data.executionRange?.to]);
 
   return (
     <Box className={classes.wrapper}>
@@ -112,13 +126,23 @@ export default function ExpensePlan({
         )}
       </Box>
       <Divider mb="sm" mt="auto" />
-      {data.executionRange?.from && data.executionRange?.to && (
-        <Badge variant="light" color={primaryColor}>
-          {`${dayjs(data.executionRange.from).format("DD MMM, 'YY")} - ${dayjs(
-            data.executionRange.to
-          ).format("DD MMM, 'YY")}`}
-        </Badge>
-      )}
+      <Group gap="xs">
+        {data.executionRange?.from && data.executionRange?.to && (
+          <Badge variant="light" color={primaryColor} size="sm">
+            {`${dayjs(data.executionRange.from).format("DD MMM, 'YY")} - ${dayjs(
+              data.executionRange.to
+            ).format("DD MMM, 'YY")}`}
+          </Badge>
+        )}
+        {isActiveNow && (
+          <Badge variant="light" color="green" size="sm">
+            Ongoing
+          </Badge>
+        )}
+        <Text fw="bold" fz="sm" ml="auto">
+          {formatCurrency(data.totalExpense)}
+        </Text>
+      </Group>
     </Box>
   );
 }
