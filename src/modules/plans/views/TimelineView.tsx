@@ -81,19 +81,19 @@ export default function TimelineView() {
   >(() => {
     if (!plans.length) return [undefined, undefined];
     const firstPlan = plans[0];
-    const lastPlan = plans[plans.length - 1];
+    const lastPlan = plans.at(-1);
     const candidates = [
       firstPlan.firstExpense?.date,
-      lastPlan.lastExpense?.date,
+      lastPlan?.lastExpense?.date,
       firstPlan.executionRange?.from,
-      lastPlan.executionRange?.to,
+      lastPlan?.executionRange?.to,
     ].filter(Boolean) as (string | Date)[];
 
     if (!candidates.length) return [undefined, undefined];
     const sorted = candidates.toSorted(
       (a, b) => dayjs(a).valueOf() - dayjs(b).valueOf()
     );
-    return [sorted[0], sorted[sorted.length - 1]];
+    return [sorted[0], sorted.at(-1)];
   }, [plans]);
 
   const navigate = useNavigate();
@@ -104,7 +104,7 @@ export default function TimelineView() {
 
   const chartConfig = {
     textStyle: {
-      fontFamily: window.getComputedStyle(document.body).fontFamily,
+      fontFamily: globalThis.getComputedStyle(document.body).fontFamily,
     },
     title: {
       text: props.showClosed
@@ -221,7 +221,7 @@ export default function TimelineView() {
           p.executionRange?.to,
           p._id,
         ]),
-        },
+      },
 
       // Series: Expenses Range
       {
