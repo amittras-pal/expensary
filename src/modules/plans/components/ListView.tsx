@@ -1,28 +1,28 @@
+import { useState } from "react";
 import {
-    ActionIcon,
-    Alert,
-    Divider,
-    Group,
-    Modal,
-    SimpleGrid,
-    Text,
-    Tooltip,
-    useMantineTheme
+  ActionIcon,
+  Alert,
+  Divider,
+  Group,
+  Modal,
+  SimpleGrid,
+  Text,
+  Tooltip,
+  useMantineTheme,
 } from "@mantine/core";
 import { useDisclosure, useHotkeys } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import { IconCheck, IconPlus, IconX } from "@tabler/icons-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
 import ContainedLoader from "../../../components/loaders/ContainedLoader";
 import { _20Min } from "../../../constants/app";
 import { useErrorHandler } from "../../../hooks/error-handler";
 import { useMediaMatch } from "../../../hooks/media-match";
 import {
-    IExpensePlanAggregate,
-    getPlans,
-    updatePlan,
+  IExpensePlanAggregate,
+  getPlans,
+  updatePlan,
 } from "../../../services/plans.service";
 import DeletePlan from "./DeletePlan";
 import { LoadingView, NoPlansView } from "./EmptyStates";

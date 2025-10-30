@@ -48,7 +48,7 @@ export default function Plans() {
           color={primaryColor}
           checked={showClosed}
           onChange={(e) => handleShowClosedToggle(e.currentTarget.checked)}
-          label={showClosed ? "Showing All Plans": "Closed Plans Hidden"}
+          label={showClosed ? "Showing All Plans" : "Closed Plans Hidden"}
         />
       </Group>
       {viewMode === "list" && (
