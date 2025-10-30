@@ -96,6 +96,12 @@ export default function TimelineView() {
     return [sorted[0], sorted[sorted.length - 1]];
   }, [plans]);
 
+  const navigate = useNavigate();
+  const handleChartClick = useCallback((e: any) => {
+    navigate(`/plans/${e.data.at(3)}`);
+  }, []);
+  const events = useMemo(() => ({ click: handleChartClick }), []);
+
   const chartConfig = {
     textStyle: {
       fontFamily: window.getComputedStyle(document.body).fontFamily,
@@ -305,6 +311,7 @@ export default function TimelineView() {
     <Box>
       <ReactECharts
         option={chartConfig}
+        onEvents={events}
         style={{
           borderRadius: "var(--mantine-radius-md)",
           padding: "var(--mantine-spacing-xs)",
@@ -347,6 +354,7 @@ function getTooltipContent(
     `<div style="font-size:14px;"><span style="color:var(--mantine-color-${execLabelColor}-5)">Schedule Days:</span> <span style="color:var(--mantine-color-${execValueColor}-2)">${execFrom} → ${execTo}</span></div>`,
     `<div style="font-size:14px;"><span style="color:var(--mantine-color-${expensesLabelColor}-5)">Expenses added between:</span> <span style="color:var(--mantine-color-${expensesValueColor}-2)">${planningStart} → ${planningEnd}</span></div>`,
     `<div style="font-size:14px;"><span style="color:var(--mantine-color-gray-5)">Total spent:</span> <span style="color:var(--mantine-color-gray-2)">${formatCurrency(totalExpense)}</span></div>`,
+    `<div style="font-size:12px;color:var(--mantine-color-gray-6); font-style:italic;margin-top:var(--mantine-spacing-xs)">Click to view details</div>`,
     `</div>`,
   ].join("");
 }
