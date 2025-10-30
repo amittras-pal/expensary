@@ -128,7 +128,10 @@ export default function TimelineView() {
       },
     },
     legend: {
-      show: false,
+      show: true,
+      right: 0,
+      textStyle: { color: colors.dark[2] },
+      itemStyle: { color: colors[primaryColor][5] },
       data: ["Schedule", "Expenses"],
     },
     grid: {
@@ -188,6 +191,7 @@ export default function TimelineView() {
       },
     },
     series: [
+      // Series: Scheduling Range
       {
         type: "custom",
         name: "Schedule",
@@ -198,9 +202,7 @@ export default function TimelineView() {
           const height = api.size([0, 1])[1] * 0.5;
           const plan = plans[categoryIndex];
           const color = getColor(plan, colors);
-
-          // Main block (execution range)
-          const block = {
+          return {
             type: "rect",
             shape: {
               x: start[0],
@@ -211,53 +213,17 @@ export default function TimelineView() {
             // api.style deprecated; provide literal style object
             style: { fill: color },
           } as any;
-
-          // Wick line (firstExpense.date to lastExpense.date)
-          let wick: any = null;
-          if (plan?.firstExpense?.date && plan?.lastExpense?.date) {
-            const wickStart = api.coord([
-              plan.firstExpense.date,
-              categoryIndex,
-            ]);
-            const wickEnd = api.coord([plan.lastExpense.date, categoryIndex]);
-            wick = {
-              type: "rect",
-              shape: {
-                x: wickStart[0],
-                y: start[1] - 1, // 2px high centered-ish
-                width: wickEnd[0] - wickStart[0],
-                height: 1,
-              },
-              style: { fill: color, opacity: 0.9 },
-            };
-          }
-
-          if (wick) return { type: "group", children: [block, wick] } as any;
-          return block;
         },
         encode: { x: [1, 2], y: 0 },
         data: plans.map((p, i) => [
           i,
           p.executionRange?.from,
           p.executionRange?.to,
+          p._id,
         ]),
-        markLine: {
-          symbol: "none",
-          label: {
-            formatter: dayjs().format("DD MMM, 'YY"),
-            position: "end",
-            color: colors.gray[5],
-          },
-          lineStyle: {
-            type: "dashed",
-            color: colors.dark[2],
-            width: 1,
-          },
-          silent: true,
-          data: [{ xAxis: dayjs().startOf("day").toISOString() }],
         },
-      },
-      // Separate series just for wick lines so they don't disappear when execution range is outside zoom
+
+      // Series: Expenses Range
       {
         type: "custom",
         name: "Expenses",
@@ -283,10 +249,18 @@ export default function TimelineView() {
         data: plans
           .map((p, i) =>
             p.firstExpense?.date && p.lastExpense?.date
-              ? [i, p.firstExpense.date, p.lastExpense.date]
+              ? [i, p.firstExpense.date, p.lastExpense.date, p._id]
               : null
           )
           .filter(Boolean),
+      },
+
+      // Series: Invisible, just for the individual markline
+      {
+        type: "custom",
+        data: [],
+        renderItem: () => null,
+        markLine: markLine(colors),
       },
     ],
   };
@@ -377,6 +351,23 @@ function getState(plan: IExpensePlanAggregate) {
     return "[Open; Past Schedule]";
   return "[Open]";
 }
+
+const markLine = (colors: Record<DefaultMantineColor, MantineColorsTuple>) => ({
+  symbol: "none",
+  label: {
+    formatter: dayjs().format("DD MMM, 'YY"),
+    position: "end",
+    color: colors.gray[5],
+  },
+  lineStyle: {
+    type: "dashed",
+    color: colors.dark[2],
+    opacity: 0.8,
+    width: 1,
+  },
+  silent: true,
+  data: [{ xAxis: dayjs().startOf("day").toISOString() }],
+});
 
 const dataZooConfig = [
   // Horizontal (time axis)
