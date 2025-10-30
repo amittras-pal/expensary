@@ -130,9 +130,9 @@ export default function ExpensePlanForm({
       </Text>
       <DatePickerInput
         type="range"
-        label="Execution Range"
-        placeholder="Select start and end date"
-        description="You can add/edit expenses outside of this range. This is just a remark indicating when this plan was in effect (e.g. trip start/end)."
+        label="Schedule Days"
+        placeholder="Start & End of this plan"
+        description="You can add/edit expenses outside of schedule range too. This is just a remark indicating when this plan was in effect (e.g. trip start/end)."
         value={(() => {
           const range = watch("executionRange") as any;
           return [range?.from ?? null, range?.to ?? null];

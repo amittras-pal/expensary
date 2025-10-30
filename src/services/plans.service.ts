@@ -2,9 +2,17 @@ import axios from "../config/axios";
 import { ENDPOINTS } from "../constants/endpoints";
 import { ResponseBody } from "./response.type";
 
+export type IExpensePlanAggregate = IExpensePlan & {
+  totalExpense?: number;
+  firstExpense?: IExpense;
+  lastExpense?: IExpense;
+};
+
+type ListResponse = ResponseBody<IExpensePlanAggregate[]>;
+
 export function getPlans(open: "true" | "false" = "false") {
   return axios
-    .get<ResponseBody<IExpensePlan[]>>(ENDPOINTS.plans, { params: { open } })
+    .get<ListResponse>(ENDPOINTS.plans, { params: { open } })
     .then((res) => res.data);
 }
 
