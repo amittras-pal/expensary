@@ -8,6 +8,7 @@ import {
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import ReactECharts from "echarts-for-react";
+import { useOutletContext } from "react-router-dom";
 import { _20Min } from "../../../constants/app";
 import { useErrorHandler } from "../../../hooks/error-handler";
 import {
@@ -15,11 +16,11 @@ import {
   getPlans,
 } from "../../../services/plans.service";
 import { formatCurrency } from "../../../utils";
-import { LoadingView, NoPlansView } from "./EmptyStates";
+import { LoadingView, NoPlansView } from "../components/EmptyStates";
+import { PlansViewContext } from "../types";
 
-export default function TimelineView(
-  props: Readonly<{ showClosed: boolean; onShowClosedClick: () => void }>
-) {
+export default function TimelineView() {
+  const props = useOutletContext<PlansViewContext>();
   const { onError } = useErrorHandler();
   const { colors } = useMantineTheme();
   const client = useQueryClient();

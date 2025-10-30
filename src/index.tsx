@@ -18,6 +18,9 @@ const GlobalSearch = lazy(() => import("./modules/search/GlobalSearch"));
 const About = lazy(() => import("./components/app-info/About"));
 const StatsEngine = lazy(() => import("./modules/statistics"));
 
+const PlansList = lazy(() => import("./modules/plans/views/ListView"));
+const PlansTimeline = lazy(() => import("./modules/plans/views/TimelineView"));
+
 const root = ReactDOM.createRoot(document.getElementById("root")!);
 const client = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } },
@@ -35,7 +38,15 @@ const router = createBrowserRouter([
           { path: "/", index: true, element: <Home /> },
           { path: "/home", element: <Home /> },
           { path: "/expenses", element: <Expenses /> },
-          { path: "/plans", element: <Plans /> },
+          {
+            path: "/plans",
+            element: <Plans />,
+            children: [
+              { path: "", index: true, element: <PlansList /> },
+              { path: "list", element: <PlansList /> },
+              { path: "timeline", element: <PlansTimeline /> },
+            ],
+          },
           { path: "/plans/:id", element: <PlanDetails /> },
           { path: "/export", element: <ExportExpenses /> },
           { path: "/account", element: <User /> },

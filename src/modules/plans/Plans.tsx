@@ -1,26 +1,21 @@
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { Group, Select, Switch, useMantineTheme } from "@mantine/core";
 import { useDocumentTitle } from "@mantine/hooks";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import ContainedLoader from "../../components/loaders/ContainedLoader";
 import { APP_TITLE } from "../../constants/app";
-import ListView from "./components/ListView";
-import TimelineView from "./components/TimelineView";
 
 export default function Plans() {
   useDocumentTitle(`${APP_TITLE} | Vacations & Plans`);
-
   const { primaryColor } = useMantineTheme();
-
   const [showClosed, setShowClosed] = useState(
     () => sessionStorage.getItem("showClosedPlans") === "true"
   );
-  const [viewMode, setViewMode] = useState<"list" | "timeline">(() => {
-    const stored = sessionStorage.getItem("plans_viewMode");
-    return stored === "timeline" ? "timeline" : "list";
-  });
+
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
 
   const handleShowClosedToggle = (checked: boolean) => {
-    console.log("Calledwith", checked);
-
     setShowClosed(checked);
     sessionStorage.setItem("showClosedPlans", checked ? "true" : "false");
   };
@@ -30,11 +25,9 @@ export default function Plans() {
       <Group gap="sm" align="center" mb="sm">
         <Select
           mb={0}
-          value={viewMode}
+          value={pathname.split("/").at(-1)}
           onChange={(val) => {
-            const next = (val as "list" | "timeline") || "list";
-            setViewMode(next);
-            sessionStorage.setItem("plans_viewMode", next);
+            navigate(val ?? "list");
           }}
           data={[
             { value: "list", label: "List" },
@@ -51,18 +44,14 @@ export default function Plans() {
           label={showClosed ? "Showing All Plans" : "Closed Plans Hidden"}
         />
       </Group>
-      {viewMode === "list" && (
-        <ListView
-          showClosed={showClosed}
-          onShowClosedClick={() => handleShowClosedToggle(true)}
+      <Suspense fallback={<ContainedLoader size={50} />}>
+        <Outlet
+          context={{
+            showClosed,
+            onShowClosedClick: () => handleShowClosedToggle(true),
+          }}
         />
-      )}
-      {viewMode === "timeline" && (
-        <TimelineView
-          showClosed={showClosed}
-          onShowClosedClick={() => handleShowClosedToggle(true)}
-        />
-      )}
+      </Suspense>
     </>
   );
 }

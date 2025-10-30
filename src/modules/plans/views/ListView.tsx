@@ -15,6 +15,7 @@ import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import { IconCheck, IconPlus, IconX } from "@tabler/icons-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useOutletContext } from "react-router-dom";
 import ContainedLoader from "../../../components/loaders/ContainedLoader";
 import { _20Min } from "../../../constants/app";
 import { useErrorHandler } from "../../../hooks/error-handler";
@@ -24,14 +25,15 @@ import {
   getPlans,
   updatePlan,
 } from "../../../services/plans.service";
-import DeletePlan from "./DeletePlan";
-import { LoadingView, NoPlansView } from "./EmptyStates";
-import ExpensePlan from "./ExpensePlan";
-import ExpensePlanForm from "./ExpensePlanForm";
+import DeletePlan from "../components/DeletePlan";
+import { LoadingView, NoPlansView } from "../components/EmptyStates";
+import ExpensePlan from "../components/ExpensePlan";
+import ExpensePlanForm from "../components/ExpensePlanForm";
+import { PlansViewContext } from "../types";
 
-export default function ListView(
-  props: Readonly<{ showClosed: boolean; onShowClosedClick: () => void }>
-) {
+export default function ListView() {
+  const props = useOutletContext<PlansViewContext>();
+
   const { primaryColor } = useMantineTheme();
   const isMobile = useMediaMatch();
   const { onError } = useErrorHandler();

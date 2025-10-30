@@ -24,9 +24,9 @@ import { useErrorHandler } from "../../hooks/error-handler";
 import { exportPlan } from "../../services/export.service";
 import { getPlanDetails } from "../../services/plans.service";
 import { downloadFile } from "../../utils";
-import PlanDetailsPanel from "./components/PlanDetailsPanel";
-import PlanExpensesList from "./components/PlanExpensesList";
-import PlanSummary from "./components/PlanSummary";
+import PlanDetailsPanel from "./views/PlanDetailsPanel";
+import PlanExpensesList from "./views/PlanExpensesList";
+import PlanSummary from "./views/PlanSummary";
 
 export default function PlanDetails() {
   const params = useParams();
