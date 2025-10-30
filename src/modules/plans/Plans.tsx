@@ -13,6 +13,7 @@ export default function Plans() {
   );
 
   const { pathname } = useLocation();
+  const view = pathname.endsWith("plans") ? "list" : pathname.split("/").at(-1);
   const navigate = useNavigate();
 
   const handleShowClosedToggle = (checked: boolean) => {
@@ -25,7 +26,7 @@ export default function Plans() {
       <Group gap="sm" align="center" mb="sm">
         <Select
           mb={0}
-          value={pathname.split("/").at(-1)}
+          value={view}
           onChange={(val) => {
             navigate(val ?? "list");
           }}
