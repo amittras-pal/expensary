@@ -1,16 +1,19 @@
-import { useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import {
   Box,
   DefaultMantineColor,
   MantineColorsTuple,
   useMantineTheme,
 } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
+import { IconInfoCircle } from "@tabler/icons-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import ReactECharts from "echarts-for-react";
-import { useOutletContext } from "react-router-dom";
-import { _20Min } from "../../../constants/app";
+import { useNavigate, useOutletContext } from "react-router-dom";
+import { _20Min, primaryColor } from "../../../constants/app";
 import { useErrorHandler } from "../../../hooks/error-handler";
+import { useMediaMatch } from "../../../hooks/media-match";
 import {
   IExpensePlanAggregate,
   getPlans,
@@ -24,6 +27,7 @@ export default function TimelineView() {
   const { onError } = useErrorHandler();
   const { colors } = useMantineTheme();
   const client = useQueryClient();
+  const isMobile = useMediaMatch();
 
   const { data: closedPlansRes, isLoading: loadingClosedPlans } = useQuery({
     queryKey: ["plans-list", false],
@@ -41,6 +45,15 @@ export default function TimelineView() {
     staleTime: _20Min,
     onError,
   });
+
+  useEffect(() => {
+    if (isMobile)
+      notifications.show({
+        title: "Desktop Preferred",
+        message: "Timeline View is best viewed on desktop screens.",
+        icon: <IconInfoCircle size={20} />,
+      });
+  }, []);
 
   const plans: IExpensePlanAggregate[] = useMemo(() => {
     const merged: IExpensePlanAggregate[] = [
