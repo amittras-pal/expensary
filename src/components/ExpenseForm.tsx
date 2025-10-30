@@ -139,6 +139,7 @@ export default function ExpenseForm({
     queryFn: () => getPlans("true"),
     enabled: watch("addToPlan"),
     refetchOnMount: false,
+    staleTime: _20Min,
     onError,
     onSuccess: (res) => {
       if (res?.response?.length === 1) setValue("plan", res.response[0]._id);
