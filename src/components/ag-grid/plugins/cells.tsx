@@ -19,6 +19,7 @@ import {
 } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { ICellRendererParams } from "ag-grid-community";
+import Highlighter from "react-highlight-words";
 import { useCurrentUser } from "../../../context/user.context";
 import { formatCurrency } from "../../../utils";
 import { MenuCellProps, MetaCellProps } from "../interfaces";
@@ -179,6 +180,21 @@ export function AmountCell({
   return (
     <Text component="span" fw="bold" c={amountColor(value)} fz="sm">
       {formatCurrency(value)}
+    </Text>
+  );
+}
+
+export function TitleCell({
+  value,
+  api,
+}: Readonly<ICellRendererParams<IExpense, string>>) {
+  return (
+    <Text size="sm" component="div">
+      <Highlighter
+        searchWords={[api.getFilterInstance("title")?.getModel() ?? ""]}
+        textToHighlight={value}
+        autoEscape
+      />
     </Text>
   );
 }
