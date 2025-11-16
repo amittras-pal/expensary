@@ -1,7 +1,16 @@
 import { ColDef } from "ag-grid-community";
 import { dateFormatter } from "../../../utils";
-import { AmountCell, CategoryCell, MetaCell } from "../plugins/cells";
-import { CategoryFilter, SubCategoryFilter } from "../plugins/filters";
+import {
+  AmountCell,
+  CategoryCell,
+  MetaCell,
+  TitleCell,
+} from "../plugins/cells";
+import {
+  CategoryFilter,
+  SubCategoryFilter,
+  TitleFilter,
+} from "../plugins/filters";
 import { MetaHeader, RowCountHeader } from "../plugins/headers";
 
 const rowMenuColumn: ColDef = {
@@ -57,6 +66,9 @@ const descriptionColumn: ColDef = {
 const titleColumn: ColDef = {
   headerName: "Title",
   field: "title",
+  filter: TitleFilter,
+  cellRenderer: TitleCell,
+  cellClass: "title-cell",
 };
 
 const categoryColumn: ColDef = {
@@ -109,6 +121,6 @@ export default function generateColDef(
 ): ColDef[] {
   return defs.map((def) => ({
     ...coloumnConfigMap[def[0]], // add the default properties defined for the given column.
-    ...(def[1] ?? {}), // override or add config using custom definitions.
+    ...def[1], // override or add config using custom definitions.
   }));
 }

@@ -81,6 +81,23 @@
         border-radius: 0.5rem;
         overflow: hidden;
       }
+      // Expense title column custom styling & highlight.
+      &.title-cell {
+        display: flex;
+        align-items: center;
+        mark {
+          color: var(
+            --mantine-color-primary-2,
+            var(--mantine-primary-color-filled)
+          );
+          background-color: color-mix(
+            in srgb,
+            var(--mantine-color-primary-9, var(--mantine-primary-color-filled))
+              40%,
+            transparent
+          );
+        }
+      }
     }
     .ag-cell.ag-cell-last-left-pinned:not(.ag-cell-range-right):not(
         .ag-cell-range-single-cell
