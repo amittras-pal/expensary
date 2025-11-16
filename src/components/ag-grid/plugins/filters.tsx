@@ -263,6 +263,77 @@ function SubCategory(props: IFilterParams<IExpense>, ref: any) {
     </Box>
   );
 }
+
+function Title(props: IFilterParams<IExpense>, ref: any) {
+  const [query, setQuery] = useState<string>("");
+  const input = useRef<HTMLInputElement>(null);
+
+  useImperativeHandle(ref, (): IFilterReactComp => {
+    return {
+      doesFilterPass(params) {
+        console.log(query.length);
+        return query.length
+          ? params.data.title.toLowerCase().includes(query.toLowerCase())
+          : true;
+      },
+
+      isFilterActive() {
+        return query.length > 0;
+      },
+
+      getModel() {
+        return query;
+      },
+
+      setModel(_model) {},
+      afterGuiAttached() {
+        input.current?.focus();
+      },
+    };
+  });
+
+  const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    const value = e.target.value.trim();
+    setQuery(value);
+    setTimeout(() => {
+      props.filterChangedCallback();
+    }, 0);
+  };
+
+  const handleClear = () => {
+    setQuery("");
+    setTimeout(() => {
+      props.filterChangedCallback();
+    }, 0);
+  };
+
+  return (
+    <Box className={classes.wrapper}>
+      <TextInput
+        variant="default"
+        mb={0}
+        ref={input}
+        rightSection={
+          <ActionIcon
+            size="sm"
+            variant="light"
+            color="red"
+            disabled={!query.length}
+            onClick={handleClear}
+          >
+            <IconX size={18} />
+          </ActionIcon>
+        }
+        label="Filter by Expense Title"
+        placeholder="Enter Title"
+        value={query}
+        autoFocus
+        onChange={handleChange}
+      />
+    </Box>
+  );
+}
+
 const FilterHeader = (
   props: Readonly<{
     label: string;
@@ -293,3 +364,4 @@ export const CategoryFilter = forwardRef<any, IFilterParams<IExpense>>(
 export const SubCategoryFilter = forwardRef<any, IFilterParams<IExpense>>(
   SubCategory
 );
+export const TitleFilter = forwardRef<any, IFilterParams<IExpense>>(Title);
