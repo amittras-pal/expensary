@@ -1,11 +1,24 @@
 import {
+  ChangeEventHandler,
   Fragment,
+  MouseEventHandler,
   forwardRef,
   useImperativeHandle,
   useMemo,
+  useRef,
   useState,
 } from "react";
-import { Box, Button, Checkbox, Group, ScrollArea, Text } from "@mantine/core";
+import {
+  ActionIcon,
+  Box,
+  Button,
+  Checkbox,
+  Group,
+  ScrollArea,
+  Text,
+  TextInput,
+} from "@mantine/core";
+import { IconSelectAll, IconX } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
 import { IFilterParams } from "ag-grid-community";
 import { IFilterReactComp } from "ag-grid-react";
@@ -18,6 +31,7 @@ import { SubCategoryOption } from "../interfaces";
 
 function Category(props: IFilterParams<IExpense>, ref: any) {
   const { onError } = useErrorHandler();
+  const checkbox = useRef<HTMLInputElement>(null);
   const [selection, setSelection] = useState<string[]>([]);
 
   const { isLoading, data: catRes } = useQuery({
@@ -56,6 +70,10 @@ function Category(props: IFilterParams<IExpense>, ref: any) {
       },
 
       setModel(_model) {},
+
+      afterGuiAttached() {
+        checkbox.current?.focus();
+      },
     };
   });
 
@@ -74,18 +92,27 @@ function Category(props: IFilterParams<IExpense>, ref: any) {
     cleanup();
   };
 
+  const invertSelection = () => {
+    setSelection((prev) =>
+      categoryOptions.filter((opt) => !prev.includes(opt))
+    );
+  };
+
   return (
     <Box className={classes.wrapper}>
-      <Text fw="bold" mb="sm" fz="sm">
-        Filter Categories
-      </Text>
+      <FilterHeader
+        label="Filter Categories"
+        disabled={!selection.length}
+        onClick={invertSelection}
+      />
       <Checkbox.Group value={selection} onChange={setSelection}>
         <Group gap="xs" className={classes.selectionGroup}>
           {isLoading ? (
             <ContainedLoader size={150} />
           ) : (
-            categoryOptions.map((opt) => (
+            categoryOptions.map((opt, i) => (
               <Checkbox
+                ref={i === 0 ? checkbox : null}
                 key={opt}
                 label={opt}
                 value={opt}
@@ -95,7 +122,14 @@ function Category(props: IFilterParams<IExpense>, ref: any) {
           )}
         </Group>
       </Checkbox.Group>
-      <Group grow mt="sm" style={{ position: "sticky", bottom: 0 }}>
+      <Group
+        grow
+        mt="sm"
+        style={{ position: "sticky", bottom: 0, flexDirection: "row-reverse" }}
+      >
+        <Button size="xs" onClick={apply} disabled={!selection.length}>
+          Apply
+        </Button>
         <Button
           size="xs"
           variant="light"
@@ -103,9 +137,6 @@ function Category(props: IFilterParams<IExpense>, ref: any) {
           disabled={!selection.length}
         >
           Clear
-        </Button>
-        <Button size="xs" onClick={apply} disabled={!selection.length}>
-          Apply
         </Button>
       </Group>
     </Box>
@@ -115,6 +146,7 @@ function Category(props: IFilterParams<IExpense>, ref: any) {
 function SubCategory(props: IFilterParams<IExpense>, ref: any) {
   const [selection, setSelection] = useState<string[]>([]);
   const { onError } = useErrorHandler();
+  const checkbox = useRef<HTMLInputElement>(null);
 
   const { isLoading, data: catRes } = useQuery({
     queryKey: ["categories"],
@@ -166,6 +198,10 @@ function SubCategory(props: IFilterParams<IExpense>, ref: any) {
       },
 
       setModel(_model) {},
+
+      afterGuiAttached() {
+        checkbox.current?.focus();
+      },
     };
   });
 
@@ -179,11 +215,20 @@ function SubCategory(props: IFilterParams<IExpense>, ref: any) {
     props.api.hidePopupMenu();
   };
 
+  const invertSelection = () => {
+    const items = categoryOptions.flatMap((grp) =>
+      grp.children.map((v) => v._id ?? "")
+    );
+    setSelection((prev) => items.filter((opt) => !prev.includes(opt)));
+  };
+
   return (
     <Box className={classes.wrapper}>
-      <Text fw="bold" mb="sm" fz="sm">
-        Filter Sub Categories
-      </Text>
+      <FilterHeader
+        label="Filter Sub Categories"
+        disabled={!selection.length}
+        onClick={invertSelection}
+      />
       <ScrollArea h={categoryOptions.length > 0 ? 200 : 75}>
         {categoryOptions.length > 0 ? (
           <Checkbox.Group value={selection} onChange={setSelection}>
@@ -191,11 +236,12 @@ function SubCategory(props: IFilterParams<IExpense>, ref: any) {
               {isLoading ? (
                 <ContainedLoader size={150} />
               ) : (
-                categoryOptions.map((opt) => (
+                categoryOptions.map((opt, i) => (
                   <Fragment key={opt.group}>
                     <Text fz="xs">{opt.group}</Text>
-                    {opt.children.map((child) => (
+                    {opt.children.map((child, j) => (
                       <Checkbox
+                        ref={i === 0 && j === 0 ? checkbox : null}
                         key={child._id}
                         label={child.label}
                         value={child._id}
@@ -216,7 +262,18 @@ function SubCategory(props: IFilterParams<IExpense>, ref: any) {
         )}
       </ScrollArea>
       {categoryOptions.length > 0 && (
-        <Group grow mt="sm" style={{ position: "sticky", bottom: 0 }}>
+        <Group
+          grow
+          mt="sm"
+          style={{
+            position: "sticky",
+            bottom: 0,
+            flexDirection: "row-reverse",
+          }}
+        >
+          <Button size="xs" onClick={apply} disabled={!selection.length}>
+            Apply
+          </Button>
           <Button
             size="xs"
             variant="light"
@@ -225,14 +282,105 @@ function SubCategory(props: IFilterParams<IExpense>, ref: any) {
           >
             Clear
           </Button>
-          <Button size="xs" onClick={apply} disabled={!selection.length}>
-            Apply
-          </Button>
         </Group>
       )}
     </Box>
   );
 }
+
+function Title(props: IFilterParams<IExpense>, ref: any) {
+  const [query, setQuery] = useState<string>("");
+  const input = useRef<HTMLInputElement>(null);
+
+  useImperativeHandle(ref, (): IFilterReactComp => {
+    return {
+      doesFilterPass(params) {
+        console.log(query.length);
+        return query.length
+          ? params.data.title.toLowerCase().includes(query.toLowerCase())
+          : true;
+      },
+
+      isFilterActive() {
+        return query.length > 0;
+      },
+
+      getModel() {
+        return query;
+      },
+
+      setModel(_model) {},
+      afterGuiAttached() {
+        input.current?.focus();
+      },
+    };
+  });
+
+  const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    const value = e.target.value;
+    setQuery(value);
+    setTimeout(() => {
+      props.filterChangedCallback();
+    }, 0);
+  };
+
+  const handleClear = () => {
+    setQuery("");
+    setTimeout(() => {
+      props.filterChangedCallback();
+    }, 0);
+  };
+
+  return (
+    <Box className={classes.wrapper}>
+      <TextInput
+        variant="default"
+        mb={0}
+        ref={input}
+        rightSection={
+          <ActionIcon
+            size="sm"
+            variant="light"
+            color="red"
+            disabled={!query.length}
+            onClick={handleClear}
+          >
+            <IconX size={18} />
+          </ActionIcon>
+        }
+        label="Filter by Expense Title"
+        placeholder="Enter Title"
+        value={query}
+        autoFocus
+        onChange={handleChange}
+      />
+    </Box>
+  );
+}
+
+const FilterHeader = (
+  props: Readonly<{
+    label: string;
+    onClick: MouseEventHandler;
+    disabled: boolean;
+  }>
+) => {
+  return (
+    <Group justify="space-between" mb="sm">
+      <Text fw="bold" fz="sm">
+        {props.label}
+      </Text>
+      <ActionIcon
+        disabled={props.disabled}
+        onClick={props.onClick}
+        color="light"
+        variant="subtle"
+      >
+        <IconSelectAll size={18} />
+      </ActionIcon>
+    </Group>
+  );
+};
 
 export const CategoryFilter = forwardRef<any, IFilterParams<IExpense>>(
   Category
@@ -240,3 +388,4 @@ export const CategoryFilter = forwardRef<any, IFilterParams<IExpense>>(
 export const SubCategoryFilter = forwardRef<any, IFilterParams<IExpense>>(
   SubCategory
 );
+export const TitleFilter = forwardRef<any, IFilterParams<IExpense>>(Title);
