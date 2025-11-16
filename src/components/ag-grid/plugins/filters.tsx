@@ -31,6 +31,7 @@ import { SubCategoryOption } from "../interfaces";
 
 function Category(props: IFilterParams<IExpense>, ref: any) {
   const { onError } = useErrorHandler();
+  const checkbox = useRef<HTMLInputElement>(null);
   const [selection, setSelection] = useState<string[]>([]);
 
   const { isLoading, data: catRes } = useQuery({
@@ -69,6 +70,10 @@ function Category(props: IFilterParams<IExpense>, ref: any) {
       },
 
       setModel(_model) {},
+
+      afterGuiAttached() {
+        checkbox.current?.focus();
+      },
     };
   });
 
@@ -105,8 +110,9 @@ function Category(props: IFilterParams<IExpense>, ref: any) {
           {isLoading ? (
             <ContainedLoader size={150} />
           ) : (
-            categoryOptions.map((opt) => (
+            categoryOptions.map((opt, i) => (
               <Checkbox
+                ref={i === 0 ? checkbox : null}
                 key={opt}
                 label={opt}
                 value={opt}
@@ -116,7 +122,14 @@ function Category(props: IFilterParams<IExpense>, ref: any) {
           )}
         </Group>
       </Checkbox.Group>
-      <Group grow mt="sm" style={{ position: "sticky", bottom: 0 }}>
+      <Group
+        grow
+        mt="sm"
+        style={{ position: "sticky", bottom: 0, flexDirection: "row-reverse" }}
+      >
+        <Button size="xs" onClick={apply} disabled={!selection.length}>
+          Apply
+        </Button>
         <Button
           size="xs"
           variant="light"
@@ -124,9 +137,6 @@ function Category(props: IFilterParams<IExpense>, ref: any) {
           disabled={!selection.length}
         >
           Clear
-        </Button>
-        <Button size="xs" onClick={apply} disabled={!selection.length}>
-          Apply
         </Button>
       </Group>
     </Box>
@@ -136,6 +146,7 @@ function Category(props: IFilterParams<IExpense>, ref: any) {
 function SubCategory(props: IFilterParams<IExpense>, ref: any) {
   const [selection, setSelection] = useState<string[]>([]);
   const { onError } = useErrorHandler();
+  const checkbox = useRef<HTMLInputElement>(null);
 
   const { isLoading, data: catRes } = useQuery({
     queryKey: ["categories"],
@@ -187,6 +198,10 @@ function SubCategory(props: IFilterParams<IExpense>, ref: any) {
       },
 
       setModel(_model) {},
+
+      afterGuiAttached() {
+        checkbox.current?.focus();
+      },
     };
   });
 
@@ -221,11 +236,12 @@ function SubCategory(props: IFilterParams<IExpense>, ref: any) {
               {isLoading ? (
                 <ContainedLoader size={150} />
               ) : (
-                categoryOptions.map((opt) => (
+                categoryOptions.map((opt, i) => (
                   <Fragment key={opt.group}>
                     <Text fz="xs">{opt.group}</Text>
-                    {opt.children.map((child) => (
+                    {opt.children.map((child, j) => (
                       <Checkbox
+                        ref={i === 0 && j === 0 ? checkbox : null}
                         key={child._id}
                         label={child.label}
                         value={child._id}
@@ -246,7 +262,18 @@ function SubCategory(props: IFilterParams<IExpense>, ref: any) {
         )}
       </ScrollArea>
       {categoryOptions.length > 0 && (
-        <Group grow mt="sm" style={{ position: "sticky", bottom: 0 }}>
+        <Group
+          grow
+          mt="sm"
+          style={{
+            position: "sticky",
+            bottom: 0,
+            flexDirection: "row-reverse",
+          }}
+        >
+          <Button size="xs" onClick={apply} disabled={!selection.length}>
+            Apply
+          </Button>
           <Button
             size="xs"
             variant="light"
@@ -254,9 +281,6 @@ function SubCategory(props: IFilterParams<IExpense>, ref: any) {
             disabled={!selection.length}
           >
             Clear
-          </Button>
-          <Button size="xs" onClick={apply} disabled={!selection.length}>
-            Apply
           </Button>
         </Group>
       )}
