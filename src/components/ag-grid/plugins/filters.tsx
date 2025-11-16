@@ -317,7 +317,7 @@ function Title(props: IFilterParams<IExpense>, ref: any) {
   });
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    const value = e.target.value.trim();
+    const value = e.target.value;
     setQuery(value);
     setTimeout(() => {
       props.filterChangedCallback();
