@@ -1,11 +1,24 @@
 import {
+  ChangeEventHandler,
   Fragment,
+  MouseEventHandler,
   forwardRef,
   useImperativeHandle,
   useMemo,
+  useRef,
   useState,
 } from "react";
-import { Box, Button, Checkbox, Group, ScrollArea, Text } from "@mantine/core";
+import {
+  ActionIcon,
+  Box,
+  Button,
+  Checkbox,
+  Group,
+  ScrollArea,
+  Text,
+  TextInput,
+} from "@mantine/core";
+import { IconSelectAll, IconX } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
 import { IFilterParams } from "ag-grid-community";
 import { IFilterReactComp } from "ag-grid-react";
@@ -74,11 +87,19 @@ function Category(props: IFilterParams<IExpense>, ref: any) {
     cleanup();
   };
 
+  const invertSelection = () => {
+    setSelection((prev) =>
+      categoryOptions.filter((opt) => !prev.includes(opt))
+    );
+  };
+
   return (
     <Box className={classes.wrapper}>
-      <Text fw="bold" mb="sm" fz="sm">
-        Filter Categories
-      </Text>
+      <FilterHeader
+        label="Filter Categories"
+        disabled={!selection.length}
+        onClick={invertSelection}
+      />
       <Checkbox.Group value={selection} onChange={setSelection}>
         <Group gap="xs" className={classes.selectionGroup}>
           {isLoading ? (
@@ -179,11 +200,20 @@ function SubCategory(props: IFilterParams<IExpense>, ref: any) {
     props.api.hidePopupMenu();
   };
 
+  const invertSelection = () => {
+    const items = categoryOptions.flatMap((grp) =>
+      grp.children.map((v) => v._id ?? "")
+    );
+    setSelection((prev) => items.filter((opt) => !prev.includes(opt)));
+  };
+
   return (
     <Box className={classes.wrapper}>
-      <Text fw="bold" mb="sm" fz="sm">
-        Filter Sub Categories
-      </Text>
+      <FilterHeader
+        label="Filter Sub Categories"
+        disabled={!selection.length}
+        onClick={invertSelection}
+      />
       <ScrollArea h={categoryOptions.length > 0 ? 200 : 75}>
         {categoryOptions.length > 0 ? (
           <Checkbox.Group value={selection} onChange={setSelection}>
@@ -233,6 +263,29 @@ function SubCategory(props: IFilterParams<IExpense>, ref: any) {
     </Box>
   );
 }
+const FilterHeader = (
+  props: Readonly<{
+    label: string;
+    onClick: MouseEventHandler;
+    disabled: boolean;
+  }>
+) => {
+  return (
+    <Group justify="space-between" mb="sm">
+      <Text fw="bold" fz="sm">
+        {props.label}
+      </Text>
+      <ActionIcon
+        disabled={props.disabled}
+        onClick={props.onClick}
+        color="light"
+        variant="subtle"
+      >
+        <IconSelectAll size={18} />
+      </ActionIcon>
+    </Group>
+  );
+};
 
 export const CategoryFilter = forwardRef<any, IFilterParams<IExpense>>(
   Category
