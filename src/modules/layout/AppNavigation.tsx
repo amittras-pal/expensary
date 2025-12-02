@@ -17,6 +17,7 @@ import { ROUTES } from "../../constants/routes";
 import { useLogoutHandler } from "../../hooks/logout";
 import { useMediaMatch } from "../../hooks/media-match";
 import classes from "../../theme/modules/Layout.module.scss";
+import { useCurrentUser } from "../../context/user.context";
 
 type AppNavigationProps = {
   sidebarOpen: boolean;
@@ -26,6 +27,8 @@ type AppNavigationProps = {
 export default function AppNavigation(props: Readonly<AppNavigationProps>) {
   const isMobile = useMediaMatch();
   const { logout, loggingOut } = useLogoutHandler();
+  const { userData } = useCurrentUser();
+
   const confirmLogout = () => {
     modals.openConfirmModal({
       title: "Confirm Logout",
@@ -59,6 +62,7 @@ export default function AppNavigation(props: Readonly<AppNavigationProps>) {
         {ROUTES.map((route) => (
           <NavLink
             {...route}
+            label={route.path === "/account" ? (userData?.userName ?? route.label) : route.label}
             key={route.label}
             onChange={() => {
               props.setSidebarOpen(false);
