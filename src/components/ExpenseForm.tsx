@@ -55,6 +55,7 @@ export default function ExpenseForm({
   const { onError } = useErrorHandler();
   const params = useParams();
   const [amount, setAmount] = useState<string>(data?.amount.toString() ?? "0");
+  const [addMore, setAddMore] = useState(false);
 
   const minDate = useMemo(() => {
     const userDate = dayjs(userData?.createdAt).toDate().getTime();
@@ -66,7 +67,7 @@ export default function ExpenseForm({
   }, [userData]);
 
   const handleClose = () => {
-    onComplete(false);
+    onComplete(addMore);
     reset();
   };
 
@@ -92,7 +93,8 @@ export default function ExpenseForm({
     setValue,
     setError,
     watch,
-    formState: { errors, isValid },
+    setFocus,
+    formState: { errors, isValid, submitCount },
   } = useForm<FormSchema>({
     mode: "onChange",
     shouldFocusError: true,
@@ -123,7 +125,12 @@ export default function ExpenseForm({
       color: "green",
       icon: <IconCheck />,
     });
-    onComplete(res?.response ?? true);
+    if (addMore) {
+      setAmount("0");
+      setFocus("title");
+    } else {
+      onComplete(res?.response ?? true);
+    }
     reset();
   };
 
@@ -216,13 +223,10 @@ export default function ExpenseForm({
   }, [categoryRes?.response]);
 
   return (
-    <Box
-      component="form"
-      onReset={handleClose}
-      onSubmit={handleSubmit(handleSave)}
-    >
+    <Box component="form" onSubmit={handleSubmit(handleSave)}>
       <Text fz="lg" fw="bold" c={primaryColor} mb="sm">
-        {data ? "Edit Expense" : "Add a new Expense"}
+        {data ? "Edit Expense" : "Add a new Expense"} | Category:{" "}
+        {watch("categoryId")}
       </Text>
       <Divider mb="sm" />
       {data?.linked && (
@@ -271,6 +275,7 @@ export default function ExpenseForm({
         />
         {categoryRes?.response && (
           <Select
+            key={`category-${submitCount}`}
             searchable
             required
             comboboxProps={{ zIndex: 1000 }}
@@ -298,19 +303,28 @@ export default function ExpenseForm({
           error={errors.date?.message}
           required
         />
-        <Checkbox
-          {...register("addToPlan")}
-          label="Add to Plan"
-          description={
-            data?.linked && !params.id
-              ? "Cannot add to plan as it a copied expense."
-              : ""
-          }
-          mb="md"
-          disabled={Boolean(!!params.id || data?.linked)}
-        />
+        <Group justify="space-between" mb="md">
+          <Checkbox
+            {...register("addToPlan")}
+            label="Add to Plan"
+            description={
+              data?.linked && !params.id
+                ? "Cannot add to plan as it a copied expense."
+                : ""
+            }
+            disabled={Boolean(!!params.id || data?.linked)}
+          />
+          {data === null && (
+            <Checkbox
+              label="Add another"
+              checked={addMore}
+              onChange={(e) => setAddMore(e.target.checked)}
+            />
+          )}
+        </Group>
         {watch("addToPlan") && (
           <Select
+            key={`plan-${submitCount}`}
             label="Select Plan"
             required
             comboboxProps={{ zIndex: 1000 }}
@@ -333,7 +347,12 @@ export default function ExpenseForm({
         <Button type="submit" loading={creating || editing} disabled={!isValid}>
           Save
         </Button>
-        <Button type="reset" variant="outline" disabled={creating || editing}>
+        <Button
+          type="button"
+          onClick={handleClose}
+          variant="outline"
+          disabled={creating || editing}
+        >
           Cancel
         </Button>
       </Group>
