@@ -225,8 +225,7 @@ export default function ExpenseForm({
   return (
     <Box component="form" onSubmit={handleSubmit(handleSave)}>
       <Text fz="lg" fw="bold" c={primaryColor} mb="sm">
-        {data ? "Edit Expense" : "Add a new Expense"} | Category:{" "}
-        {watch("categoryId")}
+        {data ? "Edit Expense" : "Add a new Expense"}
       </Text>
       <Divider mb="sm" />
       {data?.linked && (
