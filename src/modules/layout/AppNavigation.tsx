@@ -14,10 +14,10 @@ import { IconLogout, IconPower } from "@tabler/icons-react";
 import { Link, useLocation } from "react-router-dom";
 import AppInfo from "../../components/app-info/AppInfo";
 import { ROUTES } from "../../constants/routes";
+import { useCurrentUser } from "../../context/user.context";
 import { useLogoutHandler } from "../../hooks/logout";
 import { useMediaMatch } from "../../hooks/media-match";
 import classes from "../../theme/modules/Layout.module.scss";
-import { useCurrentUser } from "../../context/user.context";
 
 type AppNavigationProps = {
   sidebarOpen: boolean;
@@ -62,7 +62,11 @@ export default function AppNavigation(props: Readonly<AppNavigationProps>) {
         {ROUTES.map((route) => (
           <NavLink
             {...route}
-            label={route.path === "/account" ? (userData?.userName ?? route.label) : route.label}
+            label={
+              route.path === "/account"
+                ? (userData?.userName ?? route.label)
+                : route.label
+            }
             key={route.label}
             onChange={() => {
               props.setSidebarOpen(false);
