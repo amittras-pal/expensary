@@ -1,6 +1,17 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Divider, Drawer, Group, Select, useMantineTheme } from "@mantine/core";
+import {
+  ActionIcon,
+  Divider,
+  Drawer,
+  Flex,
+  Group,
+  Select,
+  Text,
+  Tooltip,
+  useMantineTheme,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { IconChevronLeft, IconChevronRight, IconX } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { BarSeriesOption, type EChartsOption, LineSeriesOption } from "echarts";
@@ -69,6 +80,15 @@ export default function YearTrend() {
       }),
     [statsRes?.response]
   );
+
+  const budgetIndexRange = useMemo((): [number, number] => {
+    const firstIndex = budgets.findIndex((b) => b.value > 0);
+    const lastIndex = budgets.reduceRight((acc, b, idx) => {
+      if (acc === -1 && b.value > 0) return idx;
+      return acc;
+    }, -1);
+    return [firstIndex, lastIndex];
+  }, [budgets]);
 
   const spends = useMemo(
     () =>
@@ -307,7 +327,7 @@ export default function YearTrend() {
         style={{
           borderRadius: "var(--mantine-radius-md)",
           padding: "var(--mantine-spacing-xs)",
-          backgroundColor: " var(--mantine-color-dark-6)",
+          backgroundColor: "var(--mantine-color-dark-6)",
           width: "100%",
           height: "calc(100vh - 150px)",
         }}
@@ -316,10 +336,42 @@ export default function YearTrend() {
         opened={focusDrawerOpen}
         onClose={close}
         position="right"
+        withCloseButton={false}
         size={isMobile ? "100vw" : "50vw"}
-        title={`Breakdown for ${dayjs().month(focusMonth).format("MMMM")}, 
-            ${dayjs().year(parseInt(year)).format("YYYY")}`}
       >
+        <Flex justify={"space-between"} align={"center"} w={"100%"}>
+          <Text mb={0} fz="lg">
+            Breakdown for {dayjs().month(focusMonth).format("MMMM")},{" "}
+            {dayjs().year(parseInt(year)).format("YYYY")}
+          </Text>
+          <Flex gap={"xs"}>
+            <Tooltip label="Previous month">
+              <ActionIcon
+                onClick={() => setFocusMonth((v) => --v)}
+                radius={"xl"}
+                variant="default"
+                disabled={focusMonth === budgetIndexRange[0]}
+              >
+                <IconChevronLeft size={16} />
+              </ActionIcon>
+            </Tooltip>
+            <Tooltip label="Next month">
+              <ActionIcon
+                onClick={() => setFocusMonth((v) => ++v)}
+                radius={"xl"}
+                variant="default"
+                disabled={focusMonth === budgetIndexRange[1]}
+              >
+                <IconChevronRight size={16} />
+              </ActionIcon>
+            </Tooltip>
+            <Tooltip label="Close">
+              <ActionIcon onClick={close} radius={"xl"} variant="default">
+                <IconX size={16} />
+              </ActionIcon>
+            </Tooltip>
+          </Flex>
+        </Flex>
         {focusMonth > -1 && (
           <MonthBreakdown
             year={parseInt(year)}
