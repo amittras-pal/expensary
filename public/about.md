@@ -1,62 +1,72 @@
 # Expensary
 
-A simple, powerful way to stay on top of everyday spending—without spreadsheets or distractions.
+Track your daily spending with clarity and control—no spreadsheets, no clutter, just what matters.
 
-The app uses a clear budget-first flow so expenses are easy to add, organize, and review in minutes, not hours. It’s minimal by design, so the focus stays on decisions, not data entry.
-
----
-
-## Top Features
+Built on a budget-first approach, Expensary makes adding expenses quick and reviewing them even quicker. Everything is designed to keep you focused on your spending decisions, not buried in data entry.
 
 ---
 
-#### 1. 40+ Categories
-
-Start with 40+ ready-to-use categories grouped into 6 parent buckets, so the dashboard instantly shows where money actually goes at a glance.
+## Key Features
 
 ---
 
-#### 2. Budget Summarization
+#### 1. 41 Pre-Built Categories
 
-See this month’s spend by category with shares and totals on a single screen—no digging required. Quickly toggle to combine select categories and understand what’s driving the bill this month.
-
----
-
-#### 3. Statistics
-
-Track patterns over time with clean, interactive charts that highlight how spending shifts across the year—great for planning and correcting course early. More granular category breakdowns are on the roadmap to deepen insights further.
+Choose from 41 ready-to-use categories organized into 7 parent groups (Entertainment, Finance, Food & Drinks, House & Utilities, Lifestyle, Travel, and Uncategorized). Your dashboard shows exactly where your money goes—at a glance.
 
 ---
 
-#### 4. Listing and Archival
+#### 2. Dashboard Summary
 
-Browse any month with fast sort and filter controls, from the very first expense to the latest entry—perfect for audits, claims, or quick checks before big purchases.
-
----
-
-#### 5. Search
-
-Lost a line item from months ago? Find it by keyword, category, or date range in seconds, even if only a few details are remembered.
+See your current month's spending broken down by category with visual progress bars and percentage shares. Select specific categories to view combined totals and spot what's driving your monthly spending.
 
 ---
 
-#### 6. Vacations \& Plans
+#### 3. Recent Transactions
 
-Keep trips, events, or special projects separate from the monthly budget while retaining full control and visibility over those expenses. When done, move selected items back into the main budget with a click for complete records.
-
----
-
-#### 7. Exporting expenses list and summary
-
-Need a deeper dive in Excel? Export by month or custom date range and analyze exactly the way that works best for the workflow.
+Quickly access your most recent expenses right from the dashboard. Set your preferred editing window (5-25 days) to control how far back you can add or modify entries.
 
 ---
 
-#### Keyboard Shortcuts for Desktop
+#### 4. Monthly Expense List
 
-Work fast with keyboard-first controls for major actions—press “i” anytime to discover shortcuts and stay in flow. Accessibility support ensures smooth navigation with just the keyboard when needed.
+Browse all expenses for any month with powerful sorting and filtering. Apply filters by parent category and subcategory, clear them instantly with a keyboard shortcut, and see your filtered totals update in real-time.
 
 ---
+
+#### 5. Global Search
+
+Find any expense in seconds. Search by title, description, category, or date range—perfect when you need to locate that one transaction from months ago.
+
+---
+
+#### 6. Plans & Events
+
+Track trips, events, and special projects separately from your regular budget. View your plans as a list or timeline, keep them open while active, and close them when complete. Each plan has its own summary and expense list.
+
+---
+
+#### 7. Year-Over-Year Statistics
+
+Visualize your spending patterns across the year with interactive charts showing monthly totals against budget, plus category breakdowns for each month. Drill down into any month with an interactive sunburst chart that shows parent and subcategories. Statistics unlock after 3 months of usage.
+
+---
+
+#### 8. Export to Excel
+
+Download detailed expense reports as Excel files. Export by custom date range, month range, or for specific plans. Choose whether to include the full expense list or just the summary—formatted and ready for deeper analysis.
+
+---
+
+#### 9. Personalization
+
+Customize your experience with theme color selection, adjust your expense editing window and reset your password.
+
+---
+
+#### 10. Keyboard Shortcuts
+
+Navigate faster with keyboard shortcuts for common actions. Press **I** to view all available shortcuts. Quick actions include adding new expenses (**N**), clearing filters (**X**), toggling category selection (**Shift+S**), and more.
 
 ---
 
