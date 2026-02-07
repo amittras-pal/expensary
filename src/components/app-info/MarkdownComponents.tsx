@@ -26,28 +26,28 @@ const CodeBlock = (props: JSX.IntrinsicElements["code"] & ExtraProps) => {
 // Render 'hX' tags,
 const Heading1 = (props: JSX.IntrinsicElements["h1"] & ExtraProps) => {
   return (
-    <Text component="h1" fz="2.5rem" fw="normal">
+    <Text component="h1" fz="2.5rem" fw="normal" my="sm">
       <AddLinksInGFM>{props.children}</AddLinksInGFM>
     </Text>
   );
 };
 const Heading2 = (props: JSX.IntrinsicElements["h2"] & ExtraProps) => {
   return (
-    <Text component="h2" fz="2rem" fw="normal">
+    <Text component="h2" fz="2rem" fw="normal" my="sm">
       <AddLinksInGFM>{props.children}</AddLinksInGFM>
     </Text>
   );
 };
 const Heading3 = (props: JSX.IntrinsicElements["h3"] & ExtraProps) => {
   return (
-    <Text component="h3" fz="1.75rem" fw="normal">
+    <Text component="h3" fz="1.75rem" fw="normal" my="sm">
       <AddLinksInGFM>{props.children}</AddLinksInGFM>
     </Text>
   );
 };
 const Heading4 = (props: JSX.IntrinsicElements["h4"] & ExtraProps) => {
   return (
-    <Text component="h4" fz="1.5rem" fw="normal">
+    <Text component="h4" fz="1.5rem" fw="normal" my="sm">
       <AddLinksInGFM>{props.children}</AddLinksInGFM>
     </Text>
   );
@@ -56,6 +56,11 @@ const Heading4 = (props: JSX.IntrinsicElements["h4"] & ExtraProps) => {
 // Render 'ul' tags
 const UnorderedList = (props: JSX.IntrinsicElements["ul"] & ExtraProps) => {
   return <List type="unordered">{props.children}</List>;
+};
+
+// Render 'ul' tags
+const OrderedList = (props: JSX.IntrinsicElements["ol"] & ExtraProps) => {
+  return <List type="ordered">{props.children}</List>;
 };
 
 // Render 'li' tags
@@ -243,6 +248,7 @@ export const components: Components = {
   h3: Heading3,
   h4: Heading4,
   ul: UnorderedList,
+  ol: OrderedList,
   li: ListItem,
   p: Paragraph,
   code: CodeBlock,
