@@ -342,7 +342,7 @@ export default function YearTrend() {
         <Flex justify={"space-between"} align={"center"} w={"100%"}>
           <Text mb={0} fz="lg">
             Breakdown for {dayjs().month(focusMonth).format("MMMM")},{" "}
-            {dayjs().year(parseInt(year)).format("YYYY")}
+            {dayjs().year(Number.parseInt(year)).format("YYYY")}
           </Text>
           <Flex gap={"xs"}>
             <Tooltip label="Previous month">
@@ -374,7 +374,7 @@ export default function YearTrend() {
         </Flex>
         {focusMonth > -1 && (
           <MonthBreakdown
-            year={parseInt(year)}
+            year={Number.parseInt(year)}
             budget={
               statsRes?.response.budgets.find(
                 (b) => b.month === focusMonth + 1
@@ -428,7 +428,7 @@ function useDefaultChartConfig(): EChartsOption {
           label: {
             formatter: (params) => {
               return dayjs()
-                .set("month", parseInt(params.value.toString()))
+                .set("month", Number.parseInt(params.value.toString()))
                 .format("MMMM");
             },
           },

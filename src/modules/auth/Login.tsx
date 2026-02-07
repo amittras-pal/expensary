@@ -97,7 +97,7 @@ export default function Login() {
             mask
             onEnterDown={handleSubmit(handleLogin)}
             onChange={(e) =>
-              setValue("pin", parseInt(e), {
+              setValue("pin", Number.parseInt(e), {
                 shouldTouch: true,
                 shouldDirty: true,
                 shouldValidate: true,
