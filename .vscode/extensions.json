@@ -1,0 +1,14 @@
+{
+  "recommendations": [
+    "eamodio.gitlens",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "gruntfuggly.todo-tree",
+    "usernamehw.errorlens",
+    "dsznajder.es7-react-js-snippets",
+    "steoates.autoimport",
+    "pkief.material-icon-theme",
+    "antfu.icons-carbon",
+    "zhuangtongfa.material-theme"
+  ]
+}
