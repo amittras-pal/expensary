@@ -12,7 +12,7 @@ export const ENDPOINTS = Object.freeze({
   list: "/expenses/list",
   search: "/expenses/search",
   plans: "/expense-plan",
-  plansLite: '/expense-plan/list-lite',
+  plansLite: "/expense-plan/list-lite",
   planDetails: "/expense-plan/details",
   copyExpenses: "/expense-plan/copy-to-budget",
   exportRange: "/export/range",

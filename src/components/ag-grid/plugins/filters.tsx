@@ -78,7 +78,7 @@ function Category(props: IFilterParams<IExpense>, ref: any) {
 
       afterGuiDetached() {
         setSelection(appliedSelection.current);
-      }
+      },
     };
   });
 
@@ -213,7 +213,7 @@ function SubCategory(props: IFilterParams<IExpense>, ref: any) {
 
       afterGuiDetached() {
         setSelection(appliedSelection.current);
-      }
+      },
     };
   });
 
@@ -331,7 +331,7 @@ function Title(props: IFilterParams<IExpense>, ref: any) {
 
       afterGuiDetached() {
         setQuery(appliedQuery.current);
-      }
+      },
     };
   });
 
