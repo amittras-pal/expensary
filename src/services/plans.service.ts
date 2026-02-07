@@ -10,6 +10,8 @@ export type IExpensePlanAggregate = IExpensePlan & {
 
 type ListResponse = ResponseBody<IExpensePlanAggregate[]>;
 
+type ListLiteResponse = ResponseBody<{executionRange: {from: string, to: string}, _id: string, name: string}[]>
+
 export function getPlans(open: "true" | "false" = "false") {
   return axios
     .get<ListResponse>(ENDPOINTS.plans, { params: { open } })
@@ -42,4 +44,8 @@ export function updatePlan(payload: Partial<IExpensePlan>) {
 
 export function copyExpensesToBudget(data: { expenses: string[] }) {
   return axios.post<ResponseBody<undefined>>(ENDPOINTS.copyExpenses, data);
+}
+
+export function getPlansLite(open: "true" | "false" = "false") {
+  return axios.get<ListLiteResponse>(ENDPOINTS.plansLite, {params: {open}}).then(res => res.data);
 }
