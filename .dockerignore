@@ -1,0 +1,9 @@
+dist
+node_modules
+.git
+.gitignore
+.dockerignore
+.env
+.env.local
+.DS_Store
+coverage
