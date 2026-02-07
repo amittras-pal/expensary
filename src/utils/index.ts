@@ -29,7 +29,7 @@ export function dateFormatter({ value }: { value: string }) {
 }
 
 export function getPercentage(amount: number = 0, total: number = 0): number {
-  return parseInt(((amount / total) * 100).toFixed(0));
+  return Number.parseInt(((amount / total) * 100).toFixed(0));
 }
 
 export function roundOff(num: number) {

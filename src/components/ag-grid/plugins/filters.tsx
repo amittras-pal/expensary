@@ -33,6 +33,7 @@ function Category(props: IFilterParams<IExpense>, ref: any) {
   const { onError } = useErrorHandler();
   const checkbox = useRef<HTMLInputElement>(null);
   const [selection, setSelection] = useState<string[]>([]);
+  const appliedSelection = useRef<string[]>([]);
 
   const { isLoading, data: catRes } = useQuery({
     queryKey: ["categories"],
@@ -74,6 +75,10 @@ function Category(props: IFilterParams<IExpense>, ref: any) {
       afterGuiAttached() {
         checkbox.current?.focus();
       },
+
+      afterGuiDetached() {
+        setSelection(appliedSelection.current);
+      },
     };
   });
 
@@ -83,11 +88,13 @@ function Category(props: IFilterParams<IExpense>, ref: any) {
   };
 
   const apply = () => {
+    appliedSelection.current = selection;
     props.filterChangedCallback();
     cleanup();
   };
 
   const clear = () => {
+    appliedSelection.current = [];
     props.api.destroyFilter("category.group");
     cleanup();
   };
@@ -147,6 +154,7 @@ function SubCategory(props: IFilterParams<IExpense>, ref: any) {
   const [selection, setSelection] = useState<string[]>([]);
   const { onError } = useErrorHandler();
   const checkbox = useRef<HTMLInputElement>(null);
+  const appliedSelection = useRef<string[]>([]);
 
   const { isLoading, data: catRes } = useQuery({
     queryKey: ["categories"],
@@ -202,15 +210,21 @@ function SubCategory(props: IFilterParams<IExpense>, ref: any) {
       afterGuiAttached() {
         checkbox.current?.focus();
       },
+
+      afterGuiDetached() {
+        setSelection(appliedSelection.current);
+      },
     };
   });
 
   const apply = () => {
+    appliedSelection.current = selection;
     props.filterChangedCallback();
     props.api.hidePopupMenu();
   };
 
   const clear = () => {
+    appliedSelection.current = [];
     props.api.destroyFilter("category._id");
     props.api.hidePopupMenu();
   };
@@ -291,6 +305,7 @@ function SubCategory(props: IFilterParams<IExpense>, ref: any) {
 function Title(props: IFilterParams<IExpense>, ref: any) {
   const [query, setQuery] = useState<string>("");
   const input = useRef<HTMLInputElement>(null);
+  const appliedQuery = useRef<string>("");
 
   useImperativeHandle(ref, (): IFilterReactComp => {
     return {
@@ -313,12 +328,17 @@ function Title(props: IFilterParams<IExpense>, ref: any) {
       afterGuiAttached() {
         input.current?.focus();
       },
+
+      afterGuiDetached() {
+        setQuery(appliedQuery.current);
+      },
     };
   });
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     const value = e.target.value;
     setQuery(value);
+    appliedQuery.current = value;
     setTimeout(() => {
       props.filterChangedCallback();
     }, 0);
@@ -326,6 +346,7 @@ function Title(props: IFilterParams<IExpense>, ref: any) {
 
   const handleClear = () => {
     setQuery("");
+    appliedQuery.current = "";
     setTimeout(() => {
       props.filterChangedCallback();
     }, 0);

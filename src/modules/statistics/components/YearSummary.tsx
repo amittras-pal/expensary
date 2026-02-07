@@ -22,7 +22,8 @@ export default function YearSummary({
     (exc, curr, i) => exc + (curr > budgets[i] ? 1 : 0),
     0
   );
-  const avgBudget = budgets.reduce((a, b) => a + b, 0) / budgets.length;
+  const avgBudget =
+    budgets.reduce((a, b) => a + b, 0) / budgets.filter((v) => v > 0).length;
   const maxMonth = spends.findIndex((v) => v === Math.max(...spends));
 
   return (

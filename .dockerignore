@@ -1,0 +1,55 @@
+# Build outputs
+dist
+node_modules
+coverage
+
+# Git
+.git
+.github
+.gitignore
+.gitattributes
+
+# Environment files
+.env
+.env.*
+*.env
+
+# IDE & Editor
+.vscode
+.idea
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Docker
+.dockerignore
+Dockerfile
+docker-compose*.yml
+
+# CI/CD
+.github
+
+# Documentation
+README.md
+*.md
+CHANGELOG.md
+LICENSE
+
+# Config files not needed in build
+.prettierrc*
+.eslintrc*
+.editorconfig
+
+# Logs
+*.log
+npm-debug.log*
+logs
+
+# Firebase (deployment config)
+.firebase
+.firebaserc
+firebase.json
+
+# OS files
+Thumbs.db
