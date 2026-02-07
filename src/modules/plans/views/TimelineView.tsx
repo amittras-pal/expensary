@@ -32,7 +32,7 @@ export default function TimelineView() {
   const { data: closedPlansRes, isLoading: loadingClosedPlans } = useQuery({
     queryKey: ["plans-list", false],
     queryFn: () => getPlans("false"),
-    refetchOnMount: false,
+    refetchOnMount: true,
     staleTime: _20Min,
     enabled: props.showClosed,
     onError,
@@ -41,7 +41,7 @@ export default function TimelineView() {
   const { data: openPlansRes, isLoading: loadingOpenPlans } = useQuery({
     queryKey: ["plans-list", true],
     queryFn: () => getPlans("true"),
-    refetchOnMount: false,
+    refetchOnMount: true,
     staleTime: _20Min,
     onError,
   });

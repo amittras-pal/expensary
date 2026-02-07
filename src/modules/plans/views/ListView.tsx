@@ -44,7 +44,7 @@ export default function ListView() {
     queryKey: ["plans-list", false],
     queryFn: () => getPlans("false"),
     enabled: props.showClosed,
-    refetchOnMount: false,
+    refetchOnMount: true,
     staleTime: _20Min,
     onError,
   });
@@ -52,7 +52,7 @@ export default function ListView() {
   const { data: openPlansRes, isLoading: loadingOpenPlans } = useQuery({
     queryKey: ["plans-list", true],
     queryFn: () => getPlans("true"),
-    refetchOnMount: false,
+    refetchOnMount: true,
     staleTime: _20Min,
     onError,
   });

@@ -1,4 +1,3 @@
-import { useMemo, useState } from "react";
 import {
   Button,
   Checkbox,
@@ -19,12 +18,13 @@ import { notifications } from "@mantine/notifications";
 import { IconDownload, IconTableDown } from "@tabler/icons-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import dayjs, { OpUnitType } from "dayjs";
+import { useMemo, useState } from "react";
 import { APP_TITLE, _20Min } from "../../constants/app";
 import { useCurrentUser } from "../../context/user.context";
 import { useErrorHandler } from "../../hooks/error-handler";
 import { useMediaMatch } from "../../hooks/media-match";
 import { exportPlan, exportRange } from "../../services/export.service";
-import { getPlans } from "../../services/plans.service";
+import { getPlansLite } from "../../services/plans.service";
 import classes from "../../theme/modules/report.module.scss";
 import { downloadFile } from "../../utils";
 
@@ -117,8 +117,8 @@ export default function DownloadReport() {
   });
 
   const { data: closedPlansRes, isLoading: loadingOpenPlans } = useQuery({
-    queryKey: ["plans-list", false],
-    queryFn: () => getPlans("false"),
+    queryKey: ["plans-list-lite", false],
+    queryFn: () => getPlansLite("false"),
     refetchOnMount: false,
     staleTime: _20Min,
     enabled: view === "plan",
@@ -126,8 +126,8 @@ export default function DownloadReport() {
   });
 
   const { data: openPlansRes, isLoading: loadingClosedPlans } = useQuery({
-    queryKey: ["plans-list", true],
-    queryFn: () => getPlans("true"),
+    queryKey: ["plans-list-lite", true],
+    queryFn: () => getPlansLite("true"),
     refetchOnMount: false,
     staleTime: _20Min,
     enabled: view === "plan",

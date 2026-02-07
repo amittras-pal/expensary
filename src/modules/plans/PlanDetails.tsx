@@ -62,8 +62,14 @@ export default function PlanDetails() {
     if (confirm) deleteModal.close();
 
     if (refreshData) {
+      // clear the listing data cache
+      client.invalidateQueries(["plans-list", true]);
+      client.invalidateQueries(["plans-list", false]);
+      // clear expenses list cache
       client.invalidateQueries(["list", payload]);
+      // clear expense summary cache
       client.invalidateQueries(["plan-summary", params.id]);
+      // clear details view cache
       client.invalidateQueries(["plan-details", params.id]);
     }
 

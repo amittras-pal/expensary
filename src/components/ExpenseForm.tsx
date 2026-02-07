@@ -1,10 +1,4 @@
-import {
-  FocusEventHandler,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Alert,
   Box,
@@ -25,9 +19,15 @@ import {
   IconChevronRight,
   IconCurrencyRupee,
 } from "@tabler/icons-react";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
+import {
+  FocusEventHandler,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { _20Min, eqSanityRX } from "../constants/app";
@@ -36,7 +36,7 @@ import { useErrorHandler } from "../hooks/error-handler";
 import { ExpenseForm as FormSchema, expenseSchema } from "../schemas/schemas";
 import { getCategories } from "../services/categories.service";
 import { createExpense, editExpense } from "../services/expense.service";
-import { getPlans } from "../services/plans.service";
+import { getPlansLite } from "../services/plans.service";
 import { ResponseBody } from "../services/response.type";
 import { groupCategories, roundOff } from "../utils";
 import CategorySelectItem from "./CategorySelectItem";
@@ -142,8 +142,8 @@ export default function ExpenseForm({
   });
 
   const { data: plansRes, isLoading: loadingPlans } = useQuery({
-    queryKey: ["plans-list", true],
-    queryFn: () => getPlans("true"),
+    queryKey: ["plans-list-lite", true],
+    queryFn: () => getPlansLite("true"),
     enabled: watch("addToPlan"),
     refetchOnMount: false,
     staleTime: _20Min,
