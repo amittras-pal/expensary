@@ -23,9 +23,15 @@
 .mantine-PinInput-input:focus,
 .mantine-TimePicker-input:focus,
 .mantine-DateTimePicker-input:focus-within,
-.mantine-TimeInput-input:focus-within {
+.mantine-TimeInput-input:focus-within,
+.mantine-YearPickerInput-input:focus-within,
+.mantine-TimePicker-input:focus-within {
   outline: none;
   --input-bd: var(--mantine-color-primary-7);
+}
+
+.mantine-TimePicker-field:focus {
+  background-color: var(--mantine-color-primary-8);
 }
 
 /* Filled variant input wrappers - sets focus border to primary color */
@@ -41,7 +47,8 @@
 .mantine-DateTimePicker-day,
 .mantine-DatePickerInput-day,
 .mantine-MonthPicker-monthsListControl,
-.mantine-MonthPickerInput-monthsListControl {
+.mantine-MonthPickerInput-monthsListControl,
+.mantine-YearPickerInput-yearsListControl {
   /* Dates/months in selected range - semi-transparent primary color background */
   &[data-in-range="true"] {
     background-color: color-mix(
