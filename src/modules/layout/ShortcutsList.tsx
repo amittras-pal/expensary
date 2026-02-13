@@ -7,19 +7,13 @@ import {
   ThemeIcon,
   useMantineTheme,
 } from "@mantine/core";
-import {
-  IconArrowLeft,
-  IconArrowRight,
-  IconMapPinFilled,
-} from "@tabler/icons-react";
+import { IconMapPinFilled } from "@tabler/icons-react";
 import { useLocation } from "react-router-dom";
 import { planDetailsPath } from "../../constants/app";
-import classes from "../../theme/modules/Layout.module.scss";
+import { ROUTES } from "../../constants/routes";
 
 export default function ShortcutsList() {
   const { pathname } = useLocation();
-  const cx = (...classes: (string | false | undefined)[]) =>
-    classes.filter(Boolean).join(" ");
   const { primaryColor } = useMantineTheme();
 
   return (
@@ -31,13 +25,17 @@ export default function ShortcutsList() {
         <Kbd>I</Kbd> - Open Keyboard Shortcuts.
       </Text>
       <Divider my="sm" />
+      <Text fz="md" fw="bold" mb="sm">
+        Navigation
+      </Text>
+      {ROUTES.map((route) => (
+        <Text fz="xs" mb="xs" key={route.path}>
+          <Kbd>{route.shortcut}</Kbd> - Navigate to "{route.label}".
+        </Text>
+      ))}
+      <Divider my="sm" />
       <SimpleGrid cols={2} spacing="sm" mb="sm">
-        <Box
-          className={cx(
-            classes.shortcutBlock,
-            pathname === "/" && classes.shortcutHighlight
-          )}
-        >
+        <Box mb="sm">
           <Text
             fz="md"
             fw="bold"
@@ -53,12 +51,7 @@ export default function ShortcutsList() {
             <Kbd>Shift+S</Kbd> - Toggle category selection
           </Text>
         </Box>
-        <Box
-          className={cx(
-            classes.shortcutBlock,
-            pathname === "/expenses" && classes.shortcutHighlight
-          )}
-        >
+        <Box mb="sm">
           <Text
             fz="md"
             fw="bold"
@@ -71,12 +64,7 @@ export default function ShortcutsList() {
             <Kbd>X</Kbd> - Clear Applied Filters on Table.
           </Text>
         </Box>
-        <Box
-          className={cx(
-            classes.shortcutBlock,
-            pathname === "/plans" && classes.shortcutHighlight
-          )}
-        >
+        <Box mb="sm">
           <Text
             fz="md"
             fw="bold"
@@ -89,13 +77,7 @@ export default function ShortcutsList() {
             <Kbd>N</Kbd> - Create New Plan.
           </Text>
         </Box>
-        <Box
-          className={cx(
-            classes.shortcutBlock,
-            !!RegExp(planDetailsPath).exec(pathname) &&
-              classes.shortcutHighlight
-          )}
-        >
+        <Box mb="sm">
           <Text
             fz="md"
             fw="bold"
@@ -107,36 +89,6 @@ export default function ShortcutsList() {
           </Text>
           <Text fz="xs" mb="xs">
             <Kbd>N</Kbd> - Add New Expense to plan.
-          </Text>
-        </Box>
-        <Box
-          className={cx(
-            classes.shortcutBlock,
-            pathname === "/statistics" && classes.shortcutHighlight
-          )}
-        >
-          <Text
-            fz="md"
-            fw="bold"
-            mb="sm"
-            c={pathname === "/statistics" ? primaryColor : ""}
-          >
-            Spend Statistics {pathname === "/statistics" && <YouAreHere />}
-          </Text>
-          <Text fz="xs" mb="xs">
-            <Kbd>Backspace</Kbd> - In Month View: Go back to yeat view.
-          </Text>
-          <Text fz="xs" mb="xs">
-            <Kbd>
-              <IconArrowRight size={14} style={{ marginBottom: -3 }} />
-            </Kbd>{" "}
-            - In Month View; Go to next month.
-          </Text>
-          <Text fz="xs" mb="xs">
-            <Kbd>
-              <IconArrowLeft size={14} style={{ marginBottom: -3 }} />
-            </Kbd>{" "}
-            - In Month View; Go to previous month.
           </Text>
         </Box>
       </SimpleGrid>
