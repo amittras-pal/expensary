@@ -5,11 +5,11 @@ import {
   Drawer,
   Flex,
   Group,
-  Select,
   Text,
   Tooltip,
   useMantineTheme,
 } from "@mantine/core";
+import { YearPickerInput } from "@mantine/dates";
 import { useDisclosure } from "@mantine/hooks";
 import { IconChevronLeft, IconChevronRight, IconX } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
@@ -59,15 +59,6 @@ export default function YearTrend() {
     onError,
     enabled: !!categoryGroupsRes,
   });
-
-  const yearOptions = useMemo(() => {
-    const start = dayjs(userData?.createdAt).year();
-    const end = dayjs().year();
-
-    return [...Array(end - start + 1).keys()].map((v) =>
-      (v + start).toString()
-    );
-  }, []);
 
   const budgets = useMemo(
     () =>
@@ -294,14 +285,15 @@ export default function YearTrend() {
   return (
     <>
       <Group gap="sm">
-        <Select
+        <YearPickerInput
           variant="filled"
           size="xs"
-          style={{ flexGrow: 0, flexShrink: 1, flexBasis: "75px" }}
-          value={year}
-          onChange={(e) => setYear(e ?? "")}
-          data={yearOptions}
-          allowDeselect={false}
+          style={{ flexGrow: 0, flexShrink: 1, flexBasis: "95px" }}
+          value={year ? dayjs(year).toDate() : null}
+          onChange={(d) => setYear(d ? dayjs(d).year().toString() : "")}
+          minDate={dayjs(userData?.createdAt).startOf("year").toDate()}
+          maxDate={dayjs().endOf("year").toDate()}
+          clearable={false}
           mb={0}
           autoFocus
         />
