@@ -48,7 +48,12 @@ export default function AppInfo(
   return (
     <>
       {props.type === "text" && (
-        <Group {...props} gap="xs" justify="flex-start" w="100%">
+        <Group
+          {...props}
+          gap="xs"
+          justify={isMobile ? "flex-start" : "center"}
+          w="100%"
+        >
           <Text
             component={Link}
             to={userData ? "/about-app" : "/about"}
