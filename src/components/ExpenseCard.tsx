@@ -69,7 +69,7 @@ function ExpenseCard({
         gap={0}
         justify="space-between"
         align="flex-start"
-        style={{ height: "100%" }}
+        style={{ height: "100%", flexWrap: "nowrap" }}
       >
         <Group
           gap={6}
