@@ -39,8 +39,6 @@
     "build": "tsc && vite build",
     "serve": "vite preview",
     "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "format:staged": "prettier --write .",
     "type-check": "tsc --noEmit",
     "type-check:watch": "tsc --noEmit --watch"
   },
