@@ -109,6 +109,7 @@ export default function ExpenseForm({
       addToPlan: addToPlan,
       plan: plan,
       linked: data?.linked ?? "",
+      auto: data?.auto ?? false,
     },
     resolver: yupResolver(expenseSchema(userData?.editWindow ?? 7)),
   });

@@ -52,6 +52,7 @@ export const expenseSchema = (expenseWindow: number) =>
         otherwise: () => yup.string().notRequired(),
       }),
     linked: yup.string(),
+    auto: yup.bool()
   });
 
 export const loginSchema = yup.object().shape({
