@@ -76,9 +76,9 @@ export default function AccountInfo() {
           }}
         >
           {userData?.userName}
-        <Text fz="xs" fs="italic" c="dimmed" ml="xs" component="span">
-          (Click to edit)
-        </Text>
+          <Text fz="xs" fs="italic" c="dimmed" ml="xs" component="span">
+            (Click to edit)
+          </Text>
         </Text>
       )}
       <Group gap="sm" wrap="wrap">
@@ -104,6 +104,6 @@ export default function AccountInfo() {
           </>
         )}
       </Group>
-      </>
+    </>
   );
 }

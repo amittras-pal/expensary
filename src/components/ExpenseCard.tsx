@@ -13,6 +13,7 @@ import {
 import {
   IconBookmark,
   IconCalendarCode,
+  IconRefresh,
   IconCalendarTime,
   IconChevronRight,
   IconDotsVertical,
@@ -225,6 +226,19 @@ function ExpenseCard({
               >
                 <IconBookmark size={14} stroke={1.5} />
               </ThemeIcon>
+            </Tooltip>
+          )}
+          {data.auto === true && (
+            <Tooltip
+              position="left"
+              label={
+                <Text component="span" fw="normal" size="sm">
+                  Auto-Created from recurring expense Rule. <br /> You can
+                  configure recurring expense rules in your account settings.
+                </Text>
+              }
+            >
+              <IconRefresh size={14} stroke={1.5} />
             </Tooltip>
           )}
         </Group>

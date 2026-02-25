@@ -5,6 +5,7 @@ import classes from "../../theme/modules/account.module.scss";
 import AccountInfo from "./AccountInfo";
 import ChangePassword from "./ChangePassword";
 import Preferences from "./Preferences";
+import RecurringExpenses from "./RecurringExpenses";
 
 export default function User() {
   useDocumentTitle(`${APP_TITLE} | My Account`);
@@ -17,15 +18,21 @@ export default function User() {
     >
       <Paper className={classes.tile}>
         <Title order={4} mb="xs">
-                Account Info
-              </Title>
-      <AccountInfo />
+          Account Info
+        </Title>
+        <AccountInfo />
       </Paper>
       <Paper className={classes.tile}>
         <Title order={3} mb="xs">
           Preferences
         </Title>
         <Preferences />
+      </Paper>
+      <Paper className={classes.tile}>
+        <Title order={3} mb="xs">
+          Recurring Expenses
+        </Title>
+        <RecurringExpenses />
       </Paper>
       <Paper className={classes.tile}>
         <Title order={3} mb="xs">

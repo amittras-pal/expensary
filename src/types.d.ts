@@ -78,6 +78,7 @@ interface IExpense {
   amount: number;
   reverted: boolean;
   linked: string | null;
+  auto?: boolean;
 }
 
 interface IExpensePlan {
@@ -96,6 +97,23 @@ interface IExpensePlan {
     | "Expense Updated"
     | "Expense Removed"
     | "Closed";
+}
+
+interface IRecurringExpense {
+  _id?: string;
+  title: string;
+  description: string;
+  categoryId: string;
+  category?: ICategory;
+  user: string;
+  amount: number;
+  dayOfMonth: number;
+  active: boolean;
+  lastCreatedMonth: number;
+  lastCreatedYear: number;
+  lastProcessedAt: string | null;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 interface SummaryCategory extends ICategory {

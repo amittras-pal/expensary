@@ -138,6 +138,30 @@ export const gSearchSchema = yup.object().shape({
   categories: yup.array().of(yup.string().required()),
 });
 
+export const recurringExpenseSchema = yup.object().shape({
+  title: yup
+    .string()
+    .required("Title is required")
+    .max(80, "Title can't be longer than 80 characters"),
+  description: yup
+    .string()
+    .nullable()
+    .optional()
+    .max(400, "Description can't be longer than 400 characters"),
+  amount: yup
+    .number()
+    .typeError("Amount has to be a number")
+    .required("Amount is required")
+    .min(0, "Amount can't be negative"),
+  categoryId: yup.string().required("Category is required."),
+  dayOfMonth: yup
+    .number()
+    .typeError("Day must be a number")
+    .required("Day of month is required")
+    .min(1, "Day must be between 1 and 28")
+    .max(28, "Day must be between 1 and 28"),
+});
+
 export type LoginForm = yup.InferType<typeof loginSchema>;
 export type RegisterForm = yup.InferType<typeof registerSchema>;
 export type BudgetForm = yup.InferType<typeof budgetFormSchema>;
@@ -146,3 +170,4 @@ export type ExpensePlanForm = yup.InferType<typeof expensePlanSchema>;
 export type PreferenceForm = yup.InferType<typeof preferencesSchema>;
 export type PwdChangeForm = yup.InferType<typeof pwdChangeSchema>;
 export type GlobalSearchForm = yup.InferType<typeof gSearchSchema>;
+export type RecurringExpenseForm = yup.InferType<typeof recurringExpenseSchema>;
