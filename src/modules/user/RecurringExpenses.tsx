@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Box, Button, Group, Loader, Stack, Text } from "@mantine/core";
-import { IconPlus, IconRefresh } from "@tabler/icons-react";
+import { modals } from "@mantine/modals";
+import { IconPlayerPlay, IconPlus } from "@tabler/icons-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { _20Min } from "../../constants/app";
 import { useErrorHandler } from "../../hooks/error-handler";
@@ -8,10 +9,12 @@ import EmptyState from "../../resources/empty-state.svg?react";
 import {
   deleteRecurringExpense,
   getRecurringExpenses,
+  processRecurringExpenses,
   updateRecurringExpense,
 } from "../../services/recurring-expense.service";
 import ExpenseRule from "./ExpenseRule";
 import RecurringExpenseForm from "./RecurringExpenseForm";
+import { notifications } from "@mantine/notifications";
 
 export default function RecurringExpenses() {
   const { onError } = useErrorHandler();
@@ -22,8 +25,6 @@ export default function RecurringExpenses() {
   const {
     data: response,
     isLoading,
-    refetch,
-    isFetching,
   } = useQuery({
     queryKey: ["recurring-expenses"],
     queryFn: getRecurringExpenses,
@@ -40,6 +41,18 @@ export default function RecurringExpenses() {
   const { mutate: removeRule } = useMutation({
     mutationFn: deleteRecurringExpense,
     onSuccess: () => client.invalidateQueries(["recurring-expenses"]),
+    onError,
+  });
+
+  const { mutate: processRules, isLoading: isProcessing } = useMutation({
+    mutationFn: processRecurringExpenses,
+    onSuccess: (res) => {
+      notifications.show({
+        title: res.message,
+        color: res.response === 0 ? "indigo" : "green",
+        message: undefined
+      })
+      client.invalidateQueries(["recurring-expenses"])},
     onError,
   });
 
@@ -77,11 +90,11 @@ export default function RecurringExpenses() {
           <Button
             variant="subtle"
             size="sm"
-            leftSection={<IconRefresh size={16} />}
-            onClick={() => refetch()}
-            loading={isFetching && !isLoading}
+            leftSection={<IconPlayerPlay size={16} />}
+            onClick={() => processRules()}
+            loading={isProcessing}
           >
-            Refresh
+            Process
           </Button>
           <Button
             size="sm"
@@ -134,7 +147,22 @@ export default function RecurringExpenses() {
               onEdit={() => openEditForm(rule)}
               onDelete={(e) => {
                 e.stopPropagation();
-                if (rule._id) removeRule(rule._id);
+                modals.openConfirmModal({
+                  title: "Delete Recurring Rule",
+                  withCloseButton: false,
+                  closeOnCancel: true,
+                  children: (
+                    <Text fz="sm">
+                      Are you sure you want to delete this rule? Any expenses
+                      already created from this rule will not be affected.
+                    </Text>
+                  ),
+                  labels: { confirm: "Delete", cancel: "Cancel" },
+                  confirmProps: { color: "red" },
+                  onConfirm: () => {
+                    if (rule._id) removeRule(rule._id);
+                  },
+                });
               }}
               rule={rule}
             />

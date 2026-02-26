@@ -30,6 +30,6 @@ export function deleteRecurringExpense(id: string) {
 
 export function processRecurringExpenses() {
   return axios
-    .post<ResponseBody<undefined>>(ENDPOINTS.processRecurringExpenses)
+    .post<ResponseBody<number>>(ENDPOINTS.processRecurringExpenses)
     .then((res) => res.data);
 }
