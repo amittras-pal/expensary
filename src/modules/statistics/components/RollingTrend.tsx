@@ -149,6 +149,17 @@ export default function RollingTrend() {
     return map;
   }, [categoryGroupsRes?.response]);
 
+  // Midpoints between Dec and Jan where the year changes.
+  const yearChangeMarkers = useMemo(
+    () =>
+      slots.reduce<{ xAxis: number }[]>((acc, s, i) => {
+        if (i > 0 && s.year !== slots[i - 1].year)
+          acc.push({ xAxis: i });
+        return acc;
+      }, []),
+    [slots]
+  );
+
   // Update chart when data changes.
   useEffect(() => {
     const legends = [
@@ -190,6 +201,17 @@ export default function RollingTrend() {
             borderWidth: 3,
             borderColor: colors.dark[6],
           },
+          markLine: {
+            silent: true,
+            symbol: "none",
+            label: { show: false },
+            lineStyle: {
+              type: "solid",
+              width: 1,
+              color: colors.dark[3],
+            },
+            data: yearChangeMarkers,
+          },
         },
         {
           name: "Spent",
@@ -223,7 +245,7 @@ export default function RollingTrend() {
       ],
     };
     instance?.setOption(chartOpts, { notMerge: true });
-  }, [budgets, categoriesSeries, spends]);
+  }, [budgets, categoriesSeries, spends, yearChangeMarkers]);
 
   const handleChartClick = useCallback(
     (event: BarLineClickParams) => {
