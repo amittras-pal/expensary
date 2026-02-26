@@ -33,7 +33,6 @@ export default function RollingTrend() {
   const [focusDrawerOpen, { open, close }] = useDisclosure(false, {
     onClose: () => setFocusIndex(-1),
   });
-
   const { onError } = useErrorHandler();
   const isMobile = useMediaMatch();
   const { colors } = useMantineTheme();
@@ -287,12 +286,14 @@ export default function RollingTrend() {
               value={months.toString()}
               mb={0}
               size="xs"
-              onChange={(v) => v && setMonths(parseInt(v))}
+              onChange={(v) => v && setMonths(Number.parseInt(v))}
               data={[
-                { label: "3 Months", value: "3" },
                 { label: "6 Months", value: "6" },
                 { label: "9 Months", value: "9" },
-                { label: "12 Months", value: "12" },
+                { label: "1 Year", value: "12" },
+                { label: "2 Years", value: "24" },
+                // TODO
+                // { label: "All Time", value: dayjs().diff(dayjs(userData?.createdAt), "months").toString()}
               ]}
               allowDeselect={false}
               style={{ width: 140 }}
