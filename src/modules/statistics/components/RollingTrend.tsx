@@ -4,11 +4,11 @@ import {
   ActionIcon,
   Drawer,
   Flex,
+  Select,
   Text,
   Tooltip,
   useMantineTheme,
 } from "@mantine/core";
-import { YearPickerInput } from "@mantine/dates";
 import { useDisclosure } from "@mantine/hooks";
 import { IconChevronLeft, IconChevronRight, IconX } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
@@ -16,32 +16,50 @@ import dayjs from "dayjs";
 import { BarSeriesOption, type EChartsOption, LineSeriesOption } from "echarts";
 import ReactECharts from "echarts-for-react";
 import { _20Min } from "../../../constants/app";
-import { useCurrentUser } from "../../../context/user.context";
 import { useErrorHandler } from "../../../hooks/error-handler";
 import { useMediaMatch } from "../../../hooks/media-match";
 import { getCategoryGroups } from "../../../services/categories.service";
-import { getYearStats } from "../../../services/statistics.service";
+import { getRollingStats } from "../../../services/statistics.service";
 import { BarLineClickParams, LegendSelection } from "../types";
 import { useDefaultChartConfig } from "../utils/chart-config";
 import MonthBreakdown from "./MonthBreakdown";
-import YearSummary from "./YearSummary";
+import RollingSummary from "./RollingSummary";
 
-const Arr12 = [...Array(12).keys()];
+type Slot = { month: number; year: number };
 
-export default function YearTrend() {
-  const [year, setYear] = useState<string>(dayjs().year().toString());
-  const [focusMonth, setFocusMonth] = useState<number>(-1);
+export default function RollingTrend() {
+  const [months, setMonths] = useState<number>(6);
+  const [focusIndex, setFocusIndex] = useState<number>(-1);
   const [focusDrawerOpen, { open, close }] = useDisclosure(false, {
-    onClose: () => setFocusMonth(-1),
+    onClose: () => setFocusIndex(-1),
   });
 
   const { onError } = useErrorHandler();
-
   const isMobile = useMediaMatch();
   const { colors } = useMantineTheme();
-  const { userData } = useCurrentUser();
 
-  const chartConfig = useDefaultChartConfig(Arr12);
+  // Compute the ordered month/year slots for the selected window.
+  const slots = useMemo<Slot[]>(
+    () =>
+      Array.from({ length: months }, (_, i) => {
+        const d = dayjs().subtract(months - 1 - i, "month");
+        return { month: d.month() + 1, year: d.year() };
+      }),
+    [months]
+  );
+
+  const xAxisLabels = useMemo(
+    () =>
+      slots.map((s) =>
+        dayjs()
+          .month(s.month - 1)
+          .year(s.year)
+          .format("MMM 'YY")
+      ),
+    [slots]
+  );
+
+  const chartConfig = useDefaultChartConfig(xAxisLabels, (v: string) => v);
   const chartRef = useRef<ReactECharts>(null);
   const getChart = () => chartRef.current?.getEchartsInstance();
 
@@ -53,22 +71,21 @@ export default function YearTrend() {
   });
 
   const { data: statsRes, isLoading: loadingStats } = useQuery({
-    queryKey: ["stats", year],
-    queryFn: () => getYearStats(year),
+    queryKey: ["rolling-stats", months],
+    queryFn: () => getRollingStats(months),
     onError,
     enabled: !!categoryGroupsRes,
   });
 
   const budgets = useMemo(
     () =>
-      Arr12.map((k) => {
-        return {
-          value:
-            statsRes?.response.budgets.find((m) => m.month === k + 1)?.amount ??
-            0,
-        };
-      }),
-    [statsRes?.response]
+      slots.map((s) => ({
+        value:
+          statsRes?.response.budgets.find(
+            (b) => b.month === s.month && b.year === s.year
+          )?.amount ?? 0,
+      })),
+    [statsRes?.response, slots]
   );
 
   const budgetIndexRange = useMemo((): [number, number] => {
@@ -82,9 +99,11 @@ export default function YearTrend() {
 
   const spends = useMemo(
     () =>
-      Arr12.map((k, i) => {
+      slots.map((s, i) => {
         const value =
-          statsRes?.response.trend.find((m) => m.month === k + 1)?.total ?? 0;
+          statsRes?.response.trend.find(
+            (t) => t.month === s.month && t.year === s.year
+          )?.total ?? 0;
 
         let itemColor = colors.indigo[6];
         if (value > budgets[i].value) itemColor = colors.red[6];
@@ -99,69 +118,28 @@ export default function YearTrend() {
           },
         };
       }),
-    [budgets, statsRes?.response]
+    [budgets, statsRes?.response, slots]
   );
 
   const categoriesSeries = useMemo(() => {
     if (!categoryGroupsRes || !statsRes) return {};
 
     const series: Record<string, { value: number }[]> = Object.fromEntries(
-      categoryGroupsRes?.response.map((c) => [c.name, []]) ?? []
+      categoryGroupsRes.response.map((c) => [c.name, []])
     );
-    Arr12.forEach((k) => {
-      const list = statsRes?.response.trend.find((m) => m.month === k + 1);
-      if (!list) {
-        series.Entertainment.push({ value: 0 });
-        series.Finance.push({ value: 0 });
-        series["Food & Drinks"].push({ value: 0 });
-        series["House & Utilities"].push({ value: 0 });
-        series.Lifestyle.push({ value: 0 });
-        series["Travel/Transportation"].push({ value: 0 });
-        series.Uncategorized.push({ value: 0 });
-      } else {
-        const Entertainment = list.categories.find(
-          (c) => c.name === "Entertainment"
-        );
-        const Finance = list.categories.find((c) => c.name === "Finance");
-        const FoodnDrinks = list.categories.find(
-          (c) => c.name === "Food & Drinks"
-        );
-        const HousenUtilities = list.categories.find(
-          (c) => c.name === "House & Utilities"
-        );
-        const Lifestyle = list.categories.find((c) => c.name === "Lifestyle");
-        const Travel = list.categories.find(
-          (c) => c.name === "Travel/Transportation"
-        );
-        const Uncategorized = list.categories.find(
-          (c) => c.name === "Uncategorized"
-        );
 
-        series.Entertainment.push({
-          value: Entertainment?.amount ?? 0,
-        });
-        series.Finance.push({
-          value: Finance?.amount ?? 0,
-        });
-        series["Food & Drinks"].push({
-          value: FoodnDrinks?.amount ?? 0,
-        });
-        series["House & Utilities"].push({
-          value: HousenUtilities?.amount ?? 0,
-        });
-        series.Lifestyle.push({
-          value: Lifestyle?.amount ?? 0,
-        });
-        series["Travel/Transportation"].push({
-          value: Travel?.amount ?? 0,
-        });
-        series.Uncategorized.push({
-          value: Uncategorized?.amount ?? 0,
-        });
-      }
+    slots.forEach((s) => {
+      const list = statsRes.response.trend.find(
+        (t) => t.month === s.month && t.year === s.year
+      );
+      categoryGroupsRes.response.forEach((cat) => {
+        const found = list?.categories.find((c) => c.name === cat.name);
+        series[cat.name].push({ value: found?.amount ?? 0 });
+      });
     });
+
     return series;
-  }, [statsRes?.response, categoryGroupsRes?.response]);
+  }, [statsRes?.response, categoryGroupsRes?.response, slots]);
 
   const categoryColorMap = useMemo(() => {
     const map: Record<string, string> = {};
@@ -171,8 +149,7 @@ export default function YearTrend() {
     return map;
   }, [categoryGroupsRes?.response]);
 
-  // Update Chart when any API response changes.
-  // This is to avoid re-rendering the whole chart component.
+  // Update chart when data changes.
   useEffect(() => {
     const legends = [
       "Budget",
@@ -186,18 +163,15 @@ export default function YearTrend() {
 
     const chartOpts: EChartsOption = {
       ...chartConfig,
-      // Configure legends for categories.
       legend: {
         ...(chartConfig?.legend ?? {}),
         data: legends,
         selected:
-          // Maintain the selection from previous alterations, if any.
           legends?.reduce(
             (acc, curr) => ({ ...acc, [curr]: legend?.[curr] ?? false }),
             {}
           ) ?? {},
       },
-      // Configure bar data and line data
       series: [
         {
           name: "Budget",
@@ -248,7 +222,6 @@ export default function YearTrend() {
         ),
       ],
     };
-    // Update the chart.
     instance?.setOption(chartOpts, { notMerge: true });
   }, [budgets, categoriesSeries, spends]);
 
@@ -269,7 +242,7 @@ export default function YearTrend() {
       if (isFocusable) {
         const instance = getChart();
         instance?.dispatchAction({ type: "hideTip" });
-        setFocusMonth(event.dataIndex);
+        setFocusIndex(event.dataIndex);
         open();
       }
     },
@@ -281,30 +254,32 @@ export default function YearTrend() {
     [handleChartClick]
   );
 
+  const focusSlot = focusIndex > -1 ? slots[focusIndex] : null;
+
   return (
     <>
       {document.getElementById("control-space") &&
         createPortal(
           <>
-            <YearPickerInput
-              variant="filled"
-              size="xs"
-              style={{ flexGrow: 0, flexShrink: 1, flexBasis: "95px" }}
-              value={year ? dayjs(year).toDate() : null}
-              onChange={(d) => setYear(d ? dayjs(d).year().toString() : "")}
-              minDate={dayjs(userData?.createdAt).startOf("year").toDate()}
-              maxDate={dayjs().endOf("year").toDate()}
-              clearable={false}
+            <Select
+              value={months.toString()}
               mb={0}
-              autoFocus
+              size="xs"
+              onChange={(v) => v && setMonths(parseInt(v))}
+              data={[
+                { label: "3 Months", value: "3" },
+                { label: "6 Months", value: "6" },
+                { label: "9 Months", value: "9" },
+                { label: "12 Months", value: "12" },
+              ]}
+              allowDeselect={false}
+              style={{ width: 140 }}
             />
-            {/* CHECK: 
-            Use the 'CategoryConfig' here if category bars are required on the same chart. 
-            Computation is already implemented. */}
-            <YearSummary
-              year={year}
+            <RollingSummary
+              months={months}
               spends={spends.map((v) => v.value)}
               budgets={budgets.map((v) => v.value)}
+              slots={slots}
             />
           </>,
           document.getElementById("control-space")!
@@ -335,26 +310,31 @@ export default function YearTrend() {
       >
         <Flex justify={"space-between"} align={"center"} w={"100%"}>
           <Text mb={0} fz="lg">
-            Breakdown for {dayjs().month(focusMonth).format("MMMM")},{" "}
-            {dayjs().year(Number.parseInt(year)).format("YYYY")}
+            Breakdown for{" "}
+            {focusSlot
+              ? dayjs()
+                  .month(focusSlot.month - 1)
+                  .format("MMMM")
+              : ""}
+            , {focusSlot?.year ?? ""}
           </Text>
           <Flex gap={"xs"}>
             <Tooltip label="Previous month">
               <ActionIcon
-                onClick={() => setFocusMonth((v) => --v)}
+                onClick={() => setFocusIndex((v) => --v)}
                 radius={"xl"}
                 variant="default"
-                disabled={focusMonth === budgetIndexRange[0]}
+                disabled={focusIndex === budgetIndexRange[0]}
               >
                 <IconChevronLeft size={16} />
               </ActionIcon>
             </Tooltip>
             <Tooltip label="Next month">
               <ActionIcon
-                onClick={() => setFocusMonth((v) => ++v)}
+                onClick={() => setFocusIndex((v) => ++v)}
                 radius={"xl"}
                 variant="default"
-                disabled={focusMonth === budgetIndexRange[1]}
+                disabled={focusIndex === budgetIndexRange[1]}
               >
                 <IconChevronRight size={16} />
               </ActionIcon>
@@ -366,12 +346,12 @@ export default function YearTrend() {
             </Tooltip>
           </Flex>
         </Flex>
-        {focusMonth > -1 && (
+        {focusSlot && (
           <MonthBreakdown
-            year={Number.parseInt(year)}
+            year={focusSlot.year}
             budget={
               statsRes?.response.budgets.find(
-                (b) => b.month === focusMonth + 1
+                (b) => b.month === focusSlot.month && b.year === focusSlot.year
               ) ?? null
             }
           />

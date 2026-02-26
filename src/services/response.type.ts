@@ -28,3 +28,16 @@ export type YearStatsResponse = {
   trend: YearStatsItem[];
   budgets: BudgetForm[];
 };
+
+export type RollingStatsItem = {
+  total: number;
+  month: number;
+  year: number;
+  categories: CategoryStats[];
+};
+
+export type RollingStatsResponse = {
+  trend: RollingStatsItem[];
+  budgets: (BudgetForm & { year: number })[];
+  months: number;
+};
