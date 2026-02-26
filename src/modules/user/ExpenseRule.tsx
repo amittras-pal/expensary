@@ -63,7 +63,8 @@ export default function ExpenseRule({
           {formatCurrency(rule.amount)}
         </Text>
         <Text fz="xs" c="dimmed">
-          {rule.dayOfMonth}{daySuffix[rule.dayOfMonth] ?? daySuffix[0]} /m
+          {rule.dayOfMonth}
+          {daySuffix[rule.dayOfMonth] ?? daySuffix[0]} /m
         </Text>
       </Stack>
       <ActionIcon variant="subtle" color="red" size="sm" onClick={onDelete}>
