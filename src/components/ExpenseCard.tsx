@@ -13,11 +13,11 @@ import {
 import {
   IconBookmark,
   IconCalendarCode,
-  IconRefresh,
   IconCalendarTime,
   IconChevronRight,
   IconDotsVertical,
   IconEdit,
+  IconRefresh,
   IconTrash,
   IconX,
 } from "@tabler/icons-react";
@@ -238,7 +238,14 @@ function ExpenseCard({
                 </Text>
               }
             >
-              <IconRefresh size={14} stroke={1.5} />
+              <ThemeIcon
+                radius="lg"
+                size="sm"
+                color={primaryColor}
+                variant="light"
+              >
+              <IconRefresh size={14} stroke={1.5}  />
+              </ThemeIcon>
             </Tooltip>
           )}
         </Group>
