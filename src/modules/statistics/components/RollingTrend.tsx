@@ -174,7 +174,7 @@ export default function RollingTrend() {
     const chartOpts: EChartsOption = {
       ...chartConfig,
       legend: {
-        ...(chartConfig?.legend ?? {}),
+        ...(chartConfig?.legend),
         data: legends,
         selected:
           legends?.reduce(

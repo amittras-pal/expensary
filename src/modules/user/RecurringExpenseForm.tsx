@@ -34,6 +34,8 @@ import {
 } from "../../services/recurring-expense.service";
 import { groupCategories, roundOff } from "../../utils";
 
+const expression = new RegExp(/[^\d.]/);
+
 interface RecurringExpenseFormProps {
   data: IRecurringExpense | null;
   onClose: () => void;
@@ -136,7 +138,7 @@ export default function RecurringExpenseForm({
 
   useEffect(() => {
     if (!amount) return;
-    if (RegExp(/[^\d.]/).exec(amount)) {
+    if (expression.exec(amount)) {
       const equation = amount.replaceAll(eqSanityRX, "");
       if (equation.length > 0)
         try {
@@ -148,7 +150,7 @@ export default function RecurringExpenseForm({
             type: "pattern",
           });
         }
-    } else updateAmount(parseFloat(amount));
+    } else updateAmount(Number.parseFloat(amount));
   }, [amount, setError, updateAmount]);
 
   const onAmountBlur = () => {

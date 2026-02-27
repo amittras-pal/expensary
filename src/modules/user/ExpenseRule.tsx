@@ -26,7 +26,7 @@ export default function ExpenseRule({
   onToggle,
   onEdit,
   onDelete,
-}: ExpenseRuleProps) {
+}: Readonly<ExpenseRuleProps>) {
   const Icon =
     Icons[(rule.category?.icon as keyof typeof Icons) ?? ""] ??
     IconCalendarRepeat;

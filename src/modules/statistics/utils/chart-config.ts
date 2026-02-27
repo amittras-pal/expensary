@@ -15,7 +15,7 @@ export function useDefaultChartConfig(
   return useMemo(
     () => ({
       textStyle: {
-        fontFamily: window.getComputedStyle(document.body).fontFamily,
+        fontFamily: globalThis.getComputedStyle(document.body).fontFamily,
       },
       dataZoom: { type: "inside", zoomLock: true },
       legend: {

@@ -29,7 +29,8 @@ export default function RollingSummary({
     activeBudgets.length > 0
       ? activeBudgets.reduce((a, b) => a + b, 0) / activeBudgets.length
       : 0;
-  const maxIndex = spends.findIndex((v) => v === Math.max(...spends));
+  const max = Math.max(...spends);
+  const maxIndex = spends.indexOf(max);
   const maxSlot = slots[maxIndex];
 
   return (

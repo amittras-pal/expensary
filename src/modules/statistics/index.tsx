@@ -17,10 +17,5 @@ export default function StatsEngine() {
 
   if (accountAge < 3) return <ModuleLocked />;
 
-  return (
-    <>
-      
-      <RollingTrend />
-    </>
-  );
+  return <RollingTrend />;
 }
