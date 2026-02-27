@@ -86,7 +86,7 @@ export default function RecurringExpenses() {
             on a configured date.
           </Text>
         </Box>
-        <Group gap="xs" justify="flex-end" style={{ width: "100%" }}>
+        {rules.length > 0 && <Group gap="xs" justify="flex-end" style={{ width: "100%" }}>
           <Button
             variant="subtle"
             size="sm"
@@ -103,7 +103,7 @@ export default function RecurringExpenses() {
           >
             Add Rule
           </Button>
-        </Group>
+        </Group>}
       </Group>
 
       {isLoading && (
