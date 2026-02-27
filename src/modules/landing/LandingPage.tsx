@@ -18,6 +18,7 @@ import {
   IconArrowRight,
   IconBrandGithub,
   IconCalendarEvent,
+  IconCalendarRepeat,
   IconChartBar,
   IconChartPie,
   IconCheck,
@@ -251,9 +252,16 @@ const features = [
     color: "orange",
   },
   {
-    title: "Year-Over-Year Statistics",
+    title: "Recurring Expenses",
     description:
-      "Visualize your spending patterns across the year with interactive charts showing monthly totals against budget.",
+      "Set up rules for expenses that repeat every month—rent, subscriptions, EMIs—and have them created automatically on the day you choose.",
+    icon: IconCalendarRepeat,
+    color: "indigo",
+  },
+  {
+    title: "Spending Statistics",
+    description:
+      "Visualize rolling recent months of spending against your budget. Drill into any month's category breakdown with interactive charts.",
     icon: IconChartBar,
     color: "green",
   },
@@ -267,7 +275,7 @@ const features = [
   {
     title: "Personalization",
     description:
-      "Customize your experience with theme color selection and adjustable expense editing window.",
+      "Choose your theme color, adjust your editing window, update your display name, and manage your password—all in one place.",
     icon: IconPalette,
     color: "pink",
   },

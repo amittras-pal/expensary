@@ -46,27 +46,39 @@ Track trips, events, and special projects separately from your regular budget. V
 
 ---
 
-#### 7. Year-Over-Year Statistics
+#### 7. Recurring Expenses
 
-Visualize your spending patterns across the year with interactive charts showing monthly totals against budget, plus category breakdowns for each month. Drill down into any month with an interactive sunburst chart that shows parent and subcategories. Statistics unlock after 3 months of usage.
+Set up rules for expenses that repeat every month—rent, subscriptions, EMIs—and let Expensary create them automatically on the day you choose. Toggle rules on or off anytime, edit amounts or categories as things change, and spot auto-created entries at a glance with a subtle indicator on each expense card. Manage all your rules from Account Settings.
 
 ---
 
-#### 8. Export to Excel
+#### 8. Rolling Trends
+
+See how your spending has shifted over the last 3 months to 2 years with a dedicated "Recent" view in Statistics. A chart plots your actual spending against your budget for each month, with clear year-change markers so you never lose context. Tap any bar to drill into that month's category breakdown, and open the quick-summary popover for a natural-language snapshot—total spent, average budget, how many times you exceeded it, and your highest-spending month.
+
+---
+
+#### 9. Export to Excel
 
 Download detailed expense reports as Excel files. Export by custom date range, month range, or for specific plans. Choose whether to include the full expense list or just the summary—formatted and ready for deeper analysis.
 
 ---
 
-#### 9. Personalization
+#### 10. Personalization
 
-Customize your experience with theme color selection, adjust your expense editing window and reset your password.
+Customize your experience with theme color selection, adjust your expense editing window, update your display name inline, and reset your password—all from a single Account page.
 
 ---
 
-#### 10. Keyboard Shortcuts
+#### 11. Keyboard Shortcuts
 
 Navigate faster with keyboard shortcuts for common actions. Press **I** to view all available shortcuts. Quick actions include adding new expenses (**N**), clearing filters (**X**), toggling category selection (**Shift+S**), and more.
+
+---
+
+#### 12. Welcome Landing Page
+
+A clean, public-facing landing page introduces Expensary's key features at a glance before you sign in. Already logged in? You'll be redirected to your dashboard automatically.
 
 ---
 
