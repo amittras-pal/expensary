@@ -1,10 +1,10 @@
-import { useMemo } from "react";
 import { useDocumentTitle } from "@mantine/hooks";
 import dayjs from "dayjs";
+import { useMemo } from "react";
 import { APP_TITLE } from "../../constants/app";
 import { useCurrentUser } from "../../context/user.context";
 import ModuleLocked from "./components/ModuleLocked";
-import YearTrend from "./components/YearTrend";
+import RollingTrend from "./components/RollingTrend";
 
 export default function StatsEngine() {
   const { userData } = useCurrentUser();
@@ -15,5 +15,7 @@ export default function StatsEngine() {
 
   useDocumentTitle(`${APP_TITLE} | Spend Statistics`);
 
-  return accountAge >= 3 ? <YearTrend /> : <ModuleLocked />;
+  if (accountAge < 3) return <ModuleLocked />;
+
+  return <RollingTrend />;
 }

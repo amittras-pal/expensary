@@ -15,6 +15,7 @@ import {
   IconDotsVertical,
   IconEdit,
   IconInfoCircle,
+  IconRefresh,
   IconTrash,
 } from "@tabler/icons-react";
 import dayjs from "dayjs";
@@ -86,6 +87,22 @@ export function MetaCell({ data, page }: Readonly<MetaCellProps>) {
             </ThemeIcon>
             <Text component="span" size="xs" c="dimmed">
               Created to keep record; no money spent.
+            </Text>
+          </Group>
+        )}
+        {data?.auto === true && (
+          <Group gap={6} style={{ alignItems: "flex-start" }} mt={6}>
+            <ThemeIcon
+              radius="sm"
+              size="sm"
+              color={primaryColor}
+              variant="filled"
+            >
+              <IconRefresh size={14} stroke={1.5} />
+            </ThemeIcon>
+            <Text component="span" fw="normal" size="sm">
+              Auto-Created from recurring expense Rule. <br /> You can configure
+              recurring expense rules in your account settings.
             </Text>
           </Group>
         )}

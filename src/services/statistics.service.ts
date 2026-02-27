@@ -1,11 +1,14 @@
 import axios from "../config/axios";
 import { ENDPOINTS } from "../constants/endpoints";
-import { ResponseBody, YearStatsResponse } from "./response.type";
+import {
+  ResponseBody,
+  RollingStatsResponse,
+} from "./response.type";
 
-export function getYearStats(year: string) {
+export function getRollingStats(months: number = 6) {
   return axios
-    .get<ResponseBody<YearStatsResponse>>(ENDPOINTS.yearStats, {
-      params: { year },
+    .get<ResponseBody<RollingStatsResponse>>(ENDPOINTS.rollingStats, {
+      params: { months: months.toString() },
     })
     .then((res) => res.data);
 }

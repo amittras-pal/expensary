@@ -17,6 +17,7 @@ import {
   IconChevronRight,
   IconDotsVertical,
   IconEdit,
+  IconRefresh,
   IconTrash,
   IconX,
 } from "@tabler/icons-react";
@@ -69,7 +70,7 @@ function ExpenseCard({
         gap={0}
         justify="space-between"
         align="flex-start"
-        style={{ height: "100%" }}
+        style={{ height: "100%", flexWrap: "nowrap" }}
       >
         <Group
           gap={6}
@@ -224,6 +225,26 @@ function ExpenseCard({
                 variant="light"
               >
                 <IconBookmark size={14} stroke={1.5} />
+              </ThemeIcon>
+            </Tooltip>
+          )}
+          {data.auto === true && (
+            <Tooltip
+              position="left"
+              label={
+                <Text component="span" fw="normal" size="sm">
+                  Auto-Created from recurring expense Rule. <br /> You can
+                  configure recurring expense rules in your account settings.
+                </Text>
+              }
+            >
+              <ThemeIcon
+                radius="lg"
+                size="sm"
+                color={primaryColor}
+                variant="light"
+              >
+              <IconRefresh size={14} stroke={1.5}  />
               </ThemeIcon>
             </Tooltip>
           )}

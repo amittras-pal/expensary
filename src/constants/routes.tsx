@@ -12,7 +12,7 @@ export const ROUTES: RouteItem[] = [
   {
     icon: IconDashboard,
     label: "Dashboard",
-    path: "/",
+    path: "/home",
     exactMatch: true,
     shortcut: "D",
   },

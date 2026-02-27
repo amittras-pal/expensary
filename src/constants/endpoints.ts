@@ -21,5 +21,7 @@ export const ENDPOINTS = Object.freeze({
   contributor: "/sys-info/contributor",
   categories: "/categories/get-all",
   categoryGroups: "/categories/get-groups",
-  yearStats: "/statistics/year-stats",
+  rollingStats: "/statistics/rolling-stats",
+  recurringExpenses: "/recurring-expenses",
+  processRecurringExpenses: "/recurring-expenses/process",
 });

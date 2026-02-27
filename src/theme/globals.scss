@@ -22,10 +22,17 @@
 .mantine-Select-input:focus,
 .mantine-PinInput-input:focus,
 .mantine-TimePicker-input:focus,
+.mantine-NumberInput-input:focus,
 .mantine-DateTimePicker-input:focus-within,
-.mantine-TimeInput-input:focus-within {
+.mantine-TimeInput-input:focus-within,
+.mantine-YearPickerInput-input:focus-within,
+.mantine-TimePicker-input:focus-within {
   outline: none;
   --input-bd: var(--mantine-color-primary-7);
+}
+
+.mantine-TimePicker-field:focus {
+  background-color: var(--mantine-color-primary-8);
 }
 
 /* Filled variant input wrappers - sets focus border to primary color */
@@ -41,7 +48,8 @@
 .mantine-DateTimePicker-day,
 .mantine-DatePickerInput-day,
 .mantine-MonthPicker-monthsListControl,
-.mantine-MonthPickerInput-monthsListControl {
+.mantine-MonthPickerInput-monthsListControl,
+.mantine-YearPickerInput-yearsListControl {
   /* Dates/months in selected range - semi-transparent primary color background */
   &[data-in-range="true"] {
     background-color: color-mix(
@@ -69,7 +77,8 @@ textarea,
 // combine these below ones.
 button.mantine-DateTimePicker-input,
 button.mantine-DatePickerInput-input,
-button.mantine-MonthPickerInput-input {
+button.mantine-MonthPickerInput-input,
+button.mantine-YearPickerInput-input {
   font-family: "Josefin Sans Variable", sans-serif !important;
   font-style: normal;
   line-height: 1;

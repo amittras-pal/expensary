@@ -30,7 +30,7 @@ import PublicGuard from "../guards/PublicGuard";
 export default function Login() {
   const { setUserData } = useCurrentUser();
   const navigate = useNavigate();
-  const [target, setTarget] = useState("/");
+  const [target, setTarget] = useState("/home");
   useDocumentTitle(`${APP_TITLE} | Login`);
   const { onError } = useErrorHandler();
   const { primaryColor } = useMantineTheme();

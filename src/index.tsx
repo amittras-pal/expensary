@@ -17,6 +17,7 @@ const ExportExpenses = lazy(() => import("./modules/report/ExportExpenses"));
 const GlobalSearch = lazy(() => import("./modules/search/GlobalSearch"));
 const About = lazy(() => import("./components/app-info/About"));
 const StatsEngine = lazy(() => import("./modules/statistics"));
+const LandingPage = lazy(() => import("./modules/landing/LandingPage"));
 
 const PlansList = lazy(() => import("./modules/plans/views/ListView"));
 const PlansTimeline = lazy(() => import("./modules/plans/views/TimelineView"));
@@ -31,11 +32,10 @@ const router = createBrowserRouter([
     path: "/",
     element: <App />,
     children: [
+      { path: "/", index: true, element: <LandingPage /> },
       {
-        path: "/",
         element: <Layout />,
         children: [
-          { path: "/", index: true, element: <Home /> },
           { path: "/home", element: <Home /> },
           { path: "/expenses", element: <Expenses /> },
           {

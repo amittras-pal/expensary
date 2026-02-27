@@ -33,6 +33,7 @@ import { useParams } from "react-router-dom";
 import { _20Min, eqSanityRX } from "../constants/app";
 import { useCurrentUser } from "../context/user.context";
 import { useErrorHandler } from "../hooks/error-handler";
+import { useMediaMatch } from "../hooks/media-match";
 import { ExpenseForm as FormSchema, expenseSchema } from "../schemas/schemas";
 import { getCategories } from "../services/categories.service";
 import { createExpense, editExpense } from "../services/expense.service";
@@ -51,6 +52,7 @@ export default function ExpenseForm({
   onComplete,
 }: Readonly<IExpenseFormProps>) {
   const { primaryColor } = useMantineTheme();
+  const isMobile = useMediaMatch();
   const { userData } = useCurrentUser();
   const { onError } = useErrorHandler();
   const params = useParams();
@@ -107,6 +109,7 @@ export default function ExpenseForm({
       addToPlan: addToPlan,
       plan: plan,
       linked: data?.linked ?? "",
+      auto: data?.auto ?? false,
     },
     resolver: yupResolver(expenseSchema(userData?.editWindow ?? 7)),
   });
@@ -292,8 +295,9 @@ export default function ExpenseForm({
         )}
         <DateTimePicker
           label="Expense Date"
-          dropdownType="popover"
-          popoverProps={{ withinPortal: true, zIndex: 1000, returnFocus: true }}
+          dropdownType={isMobile ? "modal" : "popover"}
+          modalProps={{ withinPortal: true, zIndex: 2000, returnFocus: true }}
+          popoverProps={{ withinPortal: true, zIndex: 2000, returnFocus: true }}
           placeholder="Select Date"
           minDate={minDate}
           maxDate={dayjs().add(5, "minutes").toDate()}
