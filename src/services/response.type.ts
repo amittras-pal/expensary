@@ -18,17 +18,6 @@ export type CategoryStats = {
   color: MantineColor;
 };
 
-export type YearStatsItem = {
-  total: number;
-  month: number;
-  categories: CategoryStats[];
-};
-
-export type YearStatsResponse = {
-  trend: YearStatsItem[];
-  budgets: BudgetForm[];
-};
-
 export type RollingStatsItem = {
   total: number;
   month: number;

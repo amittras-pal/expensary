@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { createPortal } from "react-dom";
 import {
   ActionIcon,
+  Divider,
   Drawer,
   Flex,
   Select,
@@ -279,34 +279,31 @@ export default function RollingTrend() {
 
   return (
     <>
-      {document.getElementById("control-space") &&
-        createPortal(
-          <>
-            <Select
-              value={months.toString()}
-              mb={0}
-              size="xs"
-              onChange={(v) => v && setMonths(Number.parseInt(v))}
-              data={[
-                { label: "6 Months", value: "6" },
-                { label: "9 Months", value: "9" },
-                { label: "1 Year", value: "12" },
-                { label: "2 Years", value: "24" },
-                // TODO
-                // { label: "All Time", value: dayjs().diff(dayjs(userData?.createdAt), "months").toString()}
-              ]}
-              allowDeselect={false}
-              style={{ width: 140 }}
-            />
-            <RollingSummary
-              months={months}
-              spends={spends.map((v) => v.value)}
-              budgets={budgets.map((v) => v.value)}
-              slots={slots}
-            />
-          </>,
-          document.getElementById("control-space")!
-        )}
+      <Flex gap="sm" align="center" wrap="nowrap">
+        <Select
+          value={months.toString()}
+          mb={0}
+          size="xs"
+          onChange={(v) => v && setMonths(Number.parseInt(v))}
+          data={[
+            { label: "6 Months", value: "6" },
+            { label: "9 Months", value: "9" },
+            { label: "1 Year", value: "12" },
+            { label: "2 Years", value: "24" },
+            // TODO
+            // { label: "All Time", value: dayjs().diff(dayjs(userData?.createdAt), "months").toString()}
+          ]}
+          allowDeselect={false}
+          style={{ width: 140 }}
+        />
+        <RollingSummary
+          months={months}
+          spends={spends.map((v) => v.value)}
+          budgets={budgets.map((v) => v.value)}
+          slots={slots}
+        />
+      </Flex>
+      <Divider my="sm" style={{ width: "100%" }} />
       <ReactECharts
         showLoading={loadingStats}
         loadingOption={{
