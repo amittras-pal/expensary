@@ -13,6 +13,7 @@ import {
 import { useDisclosure, useHotkeys } from "@mantine/hooks";
 import { IconKeyboard, IconSearch, IconTallymark1 } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
+import AccountSwitcher from "../../components/account-switcher/AccountSwitcher";
 import { useMediaMatch } from "../../hooks/media-match";
 import { useTitleMonitor } from "../../hooks/title";
 import logoPath from "../../resources/app-logo.svg";
@@ -29,6 +30,7 @@ export default function AppHeader(props: Readonly<AppHeaderProps>) {
   const isMobile = useMediaMatch();
 
   const [showShortcuts, shortcuts] = useDisclosure(false);
+
   useHotkeys([["i", shortcuts.open]]);
 
   return (
@@ -50,7 +52,12 @@ export default function AppHeader(props: Readonly<AppHeaderProps>) {
       >
         <Image src={logoPath} />
       </ThemeIcon>
-      <Text fw="bold" component={Link} to="/" style={{ whiteSpace: "nowrap" }}>
+      <Text
+        fw="bold"
+        component={Link}
+        to="/home"
+        style={{ whiteSpace: "nowrap" }}
+      >
         {title[0]}
       </Text>
       <IconTallymark1 size={24} stroke={1} />
@@ -84,6 +91,7 @@ export default function AppHeader(props: Readonly<AppHeaderProps>) {
       )}
       <Tooltip label="Search Expenses" position="bottom" withArrow>
         <ActionIcon
+          mr="xs"
           size="md"
           variant="default"
           radius="lg"
@@ -94,6 +102,8 @@ export default function AppHeader(props: Readonly<AppHeaderProps>) {
           <IconSearch size={16} />
         </ActionIcon>
       </Tooltip>
+      <AccountSwitcher />
+
       <Modal
         size="lg"
         title="Keyboard Shortcuts"

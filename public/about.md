@@ -76,9 +76,13 @@ Navigate faster with keyboard shortcuts for common actions. Press **I** to view 
 
 ---
 
-#### 12. Welcome Landing Page
+#### 12. Multi-Account Sessions & Quick Switching
 
-A clean, public-facing landing page introduces Expensary's key features at a glance before you sign in. Already logged in? You'll be redirected to your dashboard automatically.
+Stay logged into multiple accounts on the same device and switch between them instantly from the header avatar menu. The active account is clearly indicated, and switching updates your full app context without manual logout/login cycles.
+
+If a target account session has expired, Expensary does not throw you back to a login screen. Instead, it opens an in-app PIN popup with the target account pre-selected as a read-only field, so you can re-authenticate and continue exactly where you were.
+
+You can also choose to log out only the current account or log out all accounts from this device.
 
 ---
 

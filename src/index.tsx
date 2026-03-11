@@ -2,9 +2,10 @@ import "@fontsource-variable/josefin-sans";
 import React, { lazy } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ReactDOM from "react-dom/client";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { Navigate, RouterProvider, createBrowserRouter } from "react-router-dom";
 import App from "./App";
 import Layout from "./modules/layout/Layout";
+import { isLoggedIn } from "./utils";
 
 const Login = lazy(() => import("./modules/auth/Login"));
 const RegistrationHold = lazy(() => import("./modules/auth/RegistrationHold"));
@@ -17,7 +18,6 @@ const ExportExpenses = lazy(() => import("./modules/report/ExportExpenses"));
 const GlobalSearch = lazy(() => import("./modules/search/GlobalSearch"));
 const About = lazy(() => import("./components/app-info/About"));
 const StatsEngine = lazy(() => import("./modules/statistics"));
-const LandingPage = lazy(() => import("./modules/landing/LandingPage"));
 
 const PlansList = lazy(() => import("./modules/plans/views/ListView"));
 const PlansTimeline = lazy(() => import("./modules/plans/views/TimelineView"));
@@ -27,12 +27,16 @@ const client = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } },
 });
 
+function RootRedirect() {
+  return <Navigate to={isLoggedIn() ? "/home" : "/login"} replace />;
+}
+
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
-      { path: "/", index: true, element: <LandingPage /> },
+      { index: true, element: <RootRedirect /> },
       {
         element: <Layout />,
         children: [

@@ -3,7 +3,9 @@ import { BudgetForm } from "../schemas/schemas";
 
 export type ResponseBody<T> = {
   message: string;
+  code?: string;
   response: T;
+  [key: string]: unknown;
 };
 
 export type SummaryResponse = {

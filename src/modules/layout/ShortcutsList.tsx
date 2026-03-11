@@ -40,9 +40,9 @@ export default function ShortcutsList() {
             fz="md"
             fw="bold"
             mb="sm"
-            c={pathname === "/" ? primaryColor : ""}
+            c={pathname === "/home" ? primaryColor : ""}
           >
-            Dashboard {pathname === "/" && <YouAreHere />}
+            Dashboard {pathname === "/home" && <YouAreHere />}
           </Text>
           <Text fz="xs" mb="xs">
             <Kbd>N</Kbd> - Create New Expense.

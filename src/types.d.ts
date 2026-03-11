@@ -33,6 +33,15 @@ interface GuardProps {
   children: JSX.Element;
 }
 
+interface IDeviceAccount {
+  accountId: string;
+  userName: string;
+  email: string;
+  initials: string;
+  color: string;
+  lastUsedAt: string;
+}
+
 /** ========================ENTITIES========================  */
 
 interface IUser {

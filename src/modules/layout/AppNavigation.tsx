@@ -1,21 +1,17 @@
-import { Dispatch, SetStateAction, useMemo, useRef } from "react";
 import {
   AppShell,
   Group,
   Kbd,
   Text,
-  ThemeIcon,
   Tooltip,
-  UnstyledButton,
+  UnstyledButton
 } from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
-import { modals } from "@mantine/modals";
-import { IconLogout, IconPower } from "@tabler/icons-react";
+import { Dispatch, SetStateAction, useMemo, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import AppInfo from "../../components/app-info/AppInfo";
 import { ROUTES } from "../../constants/routes";
 import { useCurrentUser } from "../../context/user.context";
-import { useLogoutHandler } from "../../hooks/logout";
 import { useMediaMatch } from "../../hooks/media-match";
 import classes from "../../theme/modules/Layout.module.scss";
 
@@ -26,25 +22,8 @@ type AppNavigationProps = {
 
 export default function AppNavigation(props: Readonly<AppNavigationProps>) {
   const isMobile = useMediaMatch();
-  const { logout, loggingOut } = useLogoutHandler();
   const { userData } = useCurrentUser();
 
-  const confirmLogout = () => {
-    modals.openConfirmModal({
-      title: "Confirm Logout",
-      children: <Text c="red">Are you sure you want to logout?</Text>,
-      withCloseButton: false,
-      closeOnCancel: true,
-      labels: { confirm: "Yes", cancel: "No" },
-      confirmProps: {
-        variant: "filled",
-        color: "red",
-        loading: loggingOut,
-        leftSection: <IconLogout />,
-      },
-      onConfirm: logout,
-    });
-  };
 
   return (
     <>
@@ -84,20 +63,6 @@ export default function AppNavigation(props: Readonly<AppNavigationProps>) {
           padding: 11,
         }}
       >
-        <Tooltip
-          label="Log Out"
-          position="right"
-          events={{ focus: true, hover: true, touch: false }}
-          disabled={isMobile}
-          offset={10}
-        >
-          <UnstyledButton onClick={confirmLogout} className={classes.navBtn}>
-            <ThemeIcon variant={"light"} color="red" size={36}>
-              <IconPower size={20} />
-            </ThemeIcon>
-            {isMobile && <Text size="sm">Log Out</Text>}
-          </UnstyledButton>
-        </Tooltip>
         <AppInfo type={isMobile ? "text" : "menu"} />
       </AppShell.Section>
     </>
