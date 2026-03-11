@@ -1,10 +1,22 @@
 import axios from "../config/axios";
+import { LogoutScope } from "../constants/auth";
 import { ENDPOINTS } from "../constants/endpoints";
 import { ResponseBody } from "./response.type";
 
+export type LoginResponse = ResponseBody<IUser> & {
+  sessionMeta?: {
+    activeAccountId: string;
+    maxDeviceAccounts: number;
+  };
+};
+
 export function loginUser(payload: { email: string; pin: string }) {
+  return axios.post<LoginResponse>(ENDPOINTS.login, payload).then((res) => res.data);
+}
+
+export function switchActiveAccount(payload: { accountId: string }) {
   return axios
-    .post<ResponseBody<IUser>>(ENDPOINTS.login, payload)
+    .post<ResponseBody<IUser>>(ENDPOINTS.switchActiveAccount, payload)
     .then((res) => res.data);
 }
 
@@ -37,6 +49,10 @@ export function changeUserPassword(payload: {
     .then((res) => res.data);
 }
 
-export function logoutUser() {
-  return axios.post<ResponseBody<undefined>>(ENDPOINTS.logout);
+export function logoutUser(scope: LogoutScope = "current") {
+  return axios
+    .post<ResponseBody<{ remainingAccountIds: string[] }>>(ENDPOINTS.logout, {
+      scope,
+    })
+    .then((res) => res.data);
 }
