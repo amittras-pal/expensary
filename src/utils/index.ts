@@ -1,9 +1,50 @@
 import { MantineColor } from "@mantine/core";
 import dayjs from "dayjs";
+import { AUTH_STORAGE_KEYS } from "../constants/auth";
 import { ResponseBody } from "../services/response.type";
 
+function parseStoredValue<T>(raw: string | null): T | null {
+  if (!raw) return null;
+
+  try {
+    return JSON.parse(raw) as T;
+  } catch {
+    return raw as unknown as T;
+  }
+}
+
 export function isLoggedIn() {
-  return localStorage.getItem("isAuthenticated");
+  const activeAccountId = getStoredActiveAccountId();
+  if (!activeAccountId) return false;
+
+  return getStoredDeviceAccounts().some(
+    (account) => account.accountId === activeAccountId,
+  );
+}
+
+export function getStoredActiveAccountId() {
+  const raw = localStorage.getItem(AUTH_STORAGE_KEYS.activeAccountId);
+  const parsed = parseStoredValue<string | null>(raw);
+
+  if (!parsed || parsed === "null" || parsed === "undefined") {
+    return null;
+  }
+
+  return parsed;
+}
+
+export function getStoredDeviceAccounts(): IDeviceAccount[] {
+  const raw = localStorage.getItem(AUTH_STORAGE_KEYS.deviceAccounts);
+  if (!raw) return [];
+
+  const parsed = parseStoredValue<IDeviceAccount[] | null>(raw);
+  if (!Array.isArray(parsed)) {
+    return [];
+  }
+
+  return parsed.filter(
+    (account) => Boolean(account?.accountId) && Boolean(account?.email),
+  );
 }
 
 const currencyFormat = new Intl.NumberFormat("en-IN", {

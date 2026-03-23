@@ -28,7 +28,7 @@ import classes from "../../theme/modules/auth.module.scss";
 import PublicGuard from "../guards/PublicGuard";
 
 export default function Login() {
-  const { setUserData } = useCurrentUser();
+  const { applyUserSession } = useCurrentUser();
   const navigate = useNavigate();
   const [target, setTarget] = useState("/home");
   useDocumentTitle(`${APP_TITLE} | Login`);
@@ -54,9 +54,11 @@ export default function Login() {
   const { mutate: login, isLoading: loggingIn } = useMutation({
     mutationFn: loginUser,
     onSuccess: (res) => {
-      localStorage.setItem("isAuthenticated", "true");
       setPrimaryColor(res.response.color);
-      setUserData(res?.response);
+      applyUserSession(
+        res.response,
+        res.sessionMeta?.activeAccountId ?? res.response._id ?? null,
+      );
       notifications.show({
         title: res.message,
         message: `Welcome, ${res.response.userName}`,
@@ -116,7 +118,7 @@ export default function Login() {
             value={target}
           >
             <Group justify="center" gap="xs" mb="md">
-              <Chip variant="filled" size="xs" value="/">
+              <Chip variant="filled" size="xs" value="/home">
                 Home
               </Chip>
               <Chip variant="filled" size="xs" value="/expenses">

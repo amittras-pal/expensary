@@ -1,6 +1,7 @@
 export const ENDPOINTS = Object.freeze({
   ping: "/wake",
   login: "/user/login",
+  switchActiveAccount: "/user/switch-active-account",
   register: "/user/register",
   userInfo: "/user/details",
   updateUser: "/user/update",
