@@ -46,7 +46,7 @@ export function useErrorHandler(func?: () => void) {
             icon: <IconX />,
           });
 
-          window.dispatchEvent(
+          globalThis.dispatchEvent(
             new CustomEvent(AUTH_EVENTS.reauthRequired, {
               detail: { accountId, reason: authCode },
             }),

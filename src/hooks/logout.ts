@@ -57,7 +57,7 @@ export const useLogoutHandler = () => {
           err.response?.status === 401 &&
           payload.code === AUTH_ERROR_CODES.reauthRequired
         ) {
-          window.dispatchEvent(
+          globalThis.dispatchEvent(
             new CustomEvent(AUTH_EVENTS.reauthRequired, {
               detail: { accountId: nextAccountId, reason: payload.code },
             }),

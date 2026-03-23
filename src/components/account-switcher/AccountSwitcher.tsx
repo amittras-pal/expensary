@@ -100,13 +100,13 @@ export default function AccountSwitcher() {
       reauth.open();
     };
 
-    window.addEventListener(
+    globalThis.addEventListener(
       AUTH_EVENTS.reauthRequired,
       listener as EventListener,
     );
 
     return () => {
-      window.removeEventListener(
+      globalThis.removeEventListener(
         AUTH_EVENTS.reauthRequired,
         listener as EventListener,
       );

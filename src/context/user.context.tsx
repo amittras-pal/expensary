@@ -14,8 +14,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import OverlayLoader from "../components/loaders/OverlayLoader";
 import { _20Min } from "../constants/app";
-import { AUTH_ERROR_CODES } from "../constants/auth";
-import { AUTH_STORAGE_KEYS } from "../constants/auth";
+import { AUTH_ERROR_CODES, AUTH_STORAGE_KEYS } from "../constants/auth";
 import { useErrorHandler } from "../hooks/error-handler";
 import { getUserData } from "../services/user.service";
 
@@ -50,7 +49,7 @@ function getInitials(userName: string): string {
     .filter(Boolean);
 
   const first = nameParts[0] ?? "";
-  const last = nameParts[nameParts.length - 1] ?? "";
+  const last = nameParts.at(-1) ?? "";
 
   const initials = [first[0], last[0]]
     .filter(Boolean)
