@@ -1,7 +1,6 @@
 export const AUTH_STORAGE_KEYS = Object.freeze({
-  deviceAccounts: "deviceAccounts.v1",
-  activeAccountId: "activeAccountId.v1",
-  legacyAuthenticated: "isAuthenticated",
+  deviceAccounts: "deviceAccounts.v2",
+  activeAccountId: "activeAccountId.v2",
 });
 
 export const AUTH_ERROR_CODES = Object.freeze({

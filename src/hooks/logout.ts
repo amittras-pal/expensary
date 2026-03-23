@@ -22,7 +22,6 @@ export const useLogoutHandler = () => {
     applyUserSession,
     removeAccountFromDevice,
     clearAccountRegistry,
-    setActiveAccount,
   } = useCurrentUser();
   const { onError } = useErrorHandler();
 
@@ -47,10 +46,9 @@ export const useLogoutHandler = () => {
     }
 
     try {
-      setActiveAccount(nextAccountId);
       const switched = await switchActiveAccount({ accountId: nextAccountId });
       client.clear();
-      applyUserSession(switched.response);
+      applyUserSession(switched.response, nextAccountId);
       navigate("/home");
     } catch (err) {
       if (axios.isAxiosError(err)) {

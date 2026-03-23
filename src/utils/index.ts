@@ -15,16 +15,10 @@ function parseStoredValue<T>(raw: string | null): T | null {
 
 export function isLoggedIn() {
   const activeAccountId = getStoredActiveAccountId();
-  if (activeAccountId) return true;
+  if (!activeAccountId) return false;
 
-  // Legacy compatibility: treat legacy auth as valid only if we also have a
-  // known account on this device. This prevents login redirect loops.
-  const hasDeviceAccounts = getStoredDeviceAccounts().length > 0;
-  const legacyAuthenticated =
-    localStorage.getItem(AUTH_STORAGE_KEYS.legacyAuthenticated) === "true";
-
-  return Boolean(
-    legacyAuthenticated && hasDeviceAccounts
+  return getStoredDeviceAccounts().some(
+    (account) => account.accountId === activeAccountId,
   );
 }
 

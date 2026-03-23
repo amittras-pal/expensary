@@ -7,7 +7,6 @@ import {
   Modal,
   Stack,
   Text,
-  TextInput,
   useMantineTheme,
 } from "@mantine/core";
 import { useDisclosure, useLocalStorage } from "@mantine/hooks";
@@ -116,10 +115,10 @@ export default function AccountSwitcher() {
 
   const { mutate: switchAccount, isLoading: switchingAccount } = useMutation({
     mutationFn: switchActiveAccount,
-    onSuccess: (res) => {
+    onSuccess: (res, vars) => {
       setPendingSwitchId(null);
       client.clear();
-      applyUserSession(res.response);
+      applyUserSession(res.response, vars.accountId);
       setPrimaryColor(res.response.color);
 
       notifications.show({
@@ -153,7 +152,10 @@ export default function AccountSwitcher() {
     mutationFn: loginUser,
     onSuccess: (res) => {
       client.clear();
-      applyUserSession(res.response);
+      applyUserSession(
+        res.response,
+        res.sessionMeta?.activeAccountId ?? res.response._id ?? null,
+      );
       setPrimaryColor(res.response.color);
 
       notifications.show({
@@ -180,6 +182,9 @@ export default function AccountSwitcher() {
 
     reAuthenticate({ email: reauthAccount.email, pin: reauthPin });
   };
+
+  const accountName = reauthAccount?.userName ?? "Unknown account";
+  const accountEmail = reauthAccount?.email ?? "No email available";
 
   return (
     <>
@@ -258,17 +263,12 @@ export default function AccountSwitcher() {
         closeOnClickOutside={false}
       >
         <Stack>
-          <TextInput
-            label="Target account"
-            value={
-              reauthAccount
-                ? `${reauthAccount.userName} (${reauthAccount.email})`
-                : "Unknown account"
-            }
-            readOnly
-          />
+          <Text>
+            Please enter the secure PIN for <Text span fw={700}>{accountName}</Text>{" "}
+            (<Text span fw={700}>{accountEmail}</Text>) to continue.
+          </Text>
           <PinInput
-          autoFocus
+            autoFocus
             label="Enter secure pin"
             length={6}
             mask

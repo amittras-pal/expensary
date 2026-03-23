@@ -10,13 +10,14 @@ import {
   useState,
 } from "react";
 import { useLocalStorage } from "@mantine/hooks";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
 import OverlayLoader from "../components/loaders/OverlayLoader";
 import { _20Min } from "../constants/app";
+import { AUTH_ERROR_CODES } from "../constants/auth";
 import { AUTH_STORAGE_KEYS } from "../constants/auth";
 import { useErrorHandler } from "../hooks/error-handler";
 import { getUserData } from "../services/user.service";
-import { isLoggedIn } from "../utils";
 
 type UserCtx = {
   userData: IUser | null;
@@ -24,7 +25,7 @@ type UserCtx = {
   accounts: IDeviceAccount[];
   activeAccountId: string | null;
   setActiveAccount: (accountId: string | null) => void;
-  applyUserSession: (user: IUser) => void;
+  applyUserSession: (user: IUser, accountIdHint?: string | null) => void;
   removeAccountFromDevice: (accountId: string) => void;
   clearAccountRegistry: () => void;
 };
@@ -63,6 +64,7 @@ export default function UserProvider({
   children,
 }: Readonly<PropsWithChildren>) {
   const [userData, setUserData] = useState<IUser | null>(null);
+  const queryClient = useQueryClient();
 
   const [accounts, setAccounts] = useLocalStorage<IDeviceAccount[]>({
     key: AUTH_STORAGE_KEYS.deviceAccounts,
@@ -77,17 +79,9 @@ export default function UserProvider({
 
   const [, setPrimaryColor] = useLocalStorage({ key: "primary-color" });
 
-  const setLegacyAuthFlag = useCallback((authenticated: boolean) => {
-    if (authenticated)
-      localStorage.setItem(AUTH_STORAGE_KEYS.legacyAuthenticated, "true");
-    else localStorage.removeItem(AUTH_STORAGE_KEYS.legacyAuthenticated);
-
-    window.dispatchEvent(new Event("storage"));
-  }, []);
-
   const upsertAccount = useCallback(
-    (user: IUser) => {
-      const accountId = user._id;
+    (user: IUser, targetAccountId?: string) => {
+      const accountId = targetAccountId ?? user._id;
       if (!accountId) return;
 
       const nextAccount: IDeviceAccount = {
@@ -115,20 +109,47 @@ export default function UserProvider({
 
   const setActiveAccount = useCallback(
     (accountId: string | null) => {
+      const accountChanged = accountId !== activeAccountId;
+
+      if (accountId) {
+        localStorage.setItem(
+          AUTH_STORAGE_KEYS.activeAccountId,
+          JSON.stringify(accountId),
+        );
+      } else {
+        localStorage.removeItem(AUTH_STORAGE_KEYS.activeAccountId);
+      }
+
+      if (accountChanged) {
+        queryClient.clear();
+      }
+
       setActiveAccountId(accountId);
-      setLegacyAuthFlag(Boolean(accountId));
     },
-    [setActiveAccountId, setLegacyAuthFlag],
+    [activeAccountId, queryClient, setActiveAccountId],
   );
 
   const applyUserSession = useCallback(
-    (user: IUser) => {
+    (user: IUser, accountIdHint?: string | null) => {
+      const resolvedAccountId =
+        accountIdHint ??
+        user._id ??
+        accounts.find(
+          (account) =>
+            account.email.trim().toLowerCase() ===
+            user.email.trim().toLowerCase(),
+        )?.accountId ??
+        activeAccountId ??
+        null;
+
       setUserData(user);
       setPrimaryColor(user.color);
-      upsertAccount(user);
-      setActiveAccount(user._id ?? null);
+      if (resolvedAccountId) {
+        upsertAccount(user, resolvedAccountId);
+      }
+      setActiveAccount(resolvedAccountId);
     },
-    [setPrimaryColor, upsertAccount, setActiveAccount],
+    [accounts, activeAccountId, setPrimaryColor, upsertAccount, setActiveAccount],
   );
 
   const removeAccountFromDevice = useCallback(
@@ -152,34 +173,42 @@ export default function UserProvider({
   }, [setAccounts, setActiveAccount]);
 
   useEffect(() => {
-    // Reconcile stale local state: no saved account means no active account.
-    if (accounts.length === 0 && activeAccountId) {
-      setActiveAccount(null);
-    }
-  }, [accounts.length, activeAccountId, setActiveAccount]);
-
-  useEffect(() => {
-    if (activeAccountId === null) {
-      localStorage.removeItem(AUTH_STORAGE_KEYS.activeAccountId);
-    }
-  }, [activeAccountId]);
-
-  useEffect(() => {
     if (userData?._id) {
-      upsertAccount(userData);
+      upsertAccount(userData, userData._id ?? activeAccountId ?? undefined);
     }
-  }, [upsertAccount, userData]);
+  }, [activeAccountId, upsertAccount, userData]);
 
-  const shouldFetchCurrentUser =
-    Boolean(activeAccountId) || Boolean(isLoggedIn());
+  const shouldFetchCurrentUser = Boolean(activeAccountId);
 
   const { isFetching: loadingUser } = useQuery({
-    queryKey: ["user-info", activeAccountId],
+    queryKey: ["user-info"],
     enabled: shouldFetchCurrentUser,
     staleTime: _20Min,
     queryFn: getUserData,
     onError: (err) => {
-      setUserData(null);
+      const recoverableAuthCodes = new Set<string>([
+        AUTH_ERROR_CODES.reauthRequired,
+        AUTH_ERROR_CODES.activeSessionExpired,
+        AUTH_ERROR_CODES.noActiveSession,
+      ]);
+
+      if (axios.isAxiosError(err)) {
+        const code = (err.response?.data as { code?: string } | undefined)
+          ?.code;
+        const recoverableAuthError =
+          err.response?.status === 401 &&
+          typeof code === "string" &&
+          recoverableAuthCodes.has(code);
+
+        // Keep current user/account context for recoverable auth flows
+        // (account switch + in-app re-auth modal).
+        if (!recoverableAuthError) {
+          setUserData(null);
+        }
+      } else {
+        setUserData(null);
+      }
+
       onError(err);
     },
     retry: 0,

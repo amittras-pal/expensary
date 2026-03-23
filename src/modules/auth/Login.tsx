@@ -55,7 +55,10 @@ export default function Login() {
     mutationFn: loginUser,
     onSuccess: (res) => {
       setPrimaryColor(res.response.color);
-      applyUserSession(res.response);
+      applyUserSession(
+        res.response,
+        res.sessionMeta?.activeAccountId ?? res.response._id ?? null,
+      );
       notifications.show({
         title: res.message,
         message: `Welcome, ${res.response.userName}`,
