@@ -1,6 +1,6 @@
 # Expensary
 
-Track your daily spending with clarity and control—no spreadsheets, no clutter, just what matters.
+Track your daily spending with clarity and control.
 
 Built on a budget-first approach, Expensary makes adding expenses quick and reviewing them even quicker. Everything is designed to keep you focused on your spending decisions, not buried in data entry.
 
@@ -54,7 +54,7 @@ Set up rules for expenses that repeat every month—rent, subscriptions, EMIs—
 
 #### 8. Rolling Trends
 
-See how your spending has shifted over the last 3 months to 2 years with a dedicated "Recent" view in Statistics. A chart plots your actual spending against your budget for each month, with clear year-change markers so you never lose context. Tap any bar to drill into that month's category breakdown, and open the quick-summary popover for a natural-language snapshot—total spent, average budget, how many times you exceeded it, and your highest-spending month.
+See how your spending has shifted over the last 6 months to 2 years in the Statistics trend view. Compare Budget vs Spent month by month in either chart mode or the new table layout, and switch between both instantly. In chart mode, you can turn on category stacking to see how each category contributes to your total spending; in table mode, each month is shown as columns with Budget, Spent, and category rows, including month-over-month deltas. Click a chart point or table cell to drill into that month, inspect category and subcategory breakdowns, and quickly review related expenses. You also get a quick-summary popover with total spent, average budget, budget overruns, and highest-spend month.
 
 ---
 
@@ -83,6 +83,12 @@ Stay logged into multiple accounts on the same device and switch between them in
 If a target account session has expired, Expensary does not throw you back to a login screen. Instead, it opens an in-app PIN popup with the target account pre-selected as a read-only field, so you can re-authenticate and continue exactly where you were.
 
 You can also choose to log out only the current account or log out all accounts from this device.
+
+---
+
+#### 13. Improved In-App Markdown Formatting
+
+Help and information content now renders ordered lists correctly, making structured instructions easier to read and follow.
 
 ---
 
