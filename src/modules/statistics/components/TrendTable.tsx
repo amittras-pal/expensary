@@ -35,7 +35,7 @@ export default function TrendTable({
   categoriesSeries,
   categoryColorMap,
   onAmountCellClick,
-}: Props) {
+}: Readonly<Props>) {
   const ref = useRef<HTMLDivElement>(null);
   const [containerHeight, setContainerHeight] = useState(0);
 

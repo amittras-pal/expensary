@@ -52,7 +52,7 @@ export default function BudgetVsSpentChart({
   categoriesSeries,
   categoryColorMap,
   onPointClick,
-}: Props) {
+}: Readonly<Props>) {
   const { colors } = useMantineTheme();
   const isMobile = useMediaMatch();
   const chartConfig = useDefaultChartConfig(xAxisLabels, (v: string) => v);
@@ -61,11 +61,11 @@ export default function BudgetVsSpentChart({
     () => ({
       ...chartConfig,
       yAxis: {
-        ...(chartConfig.yAxis ?? {}),
+        ...chartConfig.yAxis,
         boundaryGap: [0, "10%"],
       },
       legend: {
-        ...(chartConfig.legend ?? {}),
+        ...chartConfig.legend,
         show: true,
         data: showCategoryStack
           ? ["Budget", "Spent", ...Object.keys(categoriesSeries)]
@@ -74,9 +74,8 @@ export default function BudgetVsSpentChart({
           ? {
               Budget: true,
               Spent: true,
-              ...Object.keys(categoriesSeries).reduce(
-                (acc, key) => ({ ...acc, [key]: true }),
-                {}
+              ...Object.fromEntries(
+                Object.keys(categoriesSeries).map((key) => [key, true])
               ),
             }
           : { Budget: true, Spent: true },

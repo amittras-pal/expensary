@@ -262,26 +262,23 @@ export function TrendAmountCell({
   const { colors } = useMantineTheme();
   const amount = value?.amount ?? 0;
   const delta = value?.delta;
-  const deltaColor =
-    delta == null
-      ? colors.gray[5]
-      : delta > 0
-        ? colors.red[5]
-        : delta < 0
-          ? colors.green[5]
-          : colors.gray[4];
+  let deltaColor = colors.gray[5];
+  if (typeof delta === "number") {
+    if (delta > 0) deltaColor = colors.red[5];
+    else if (delta < 0) deltaColor = colors.green[5];
+    else deltaColor = colors.gray[4];
+  }
+
+  const hasDelta = typeof delta === "number" && Math.abs(delta) > 0;
+  const DeltaIcon = delta != null && delta > 0 ? IconArrowUp : IconArrowDown;
 
   return (
     <Flex gap={0} className="trend-amount-cell">
       <Text component="span">{formatCurrency(amount)}</Text>
-      {delta !== null && Math.abs(delta) > 0 && (
+      {hasDelta && (
         <>
           <ThemeIcon c={deltaColor} variant="transparent" size="sm">
-            {delta > 0 ? (
-              <IconArrowUp size={14} />
-            ) : (
-              <IconArrowDown size={14} />
-            )}
+            <DeltaIcon size={14} />
           </ThemeIcon>
           <Text fz="xs" c={deltaColor} component="span">
             {Math.abs(delta).toFixed(1)}%

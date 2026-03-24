@@ -27,6 +27,12 @@ import { useErrorHandler } from "../../../hooks/error-handler";
 import { useMediaMatch } from "../../../hooks/media-match";
 import { getRollingStats } from "../../../services/statistics.service";
 import { BarLineClickParams } from "../types";
+import {
+  buildCategorySeries,
+  isBudgetOrSpent,
+  PixelConvertibleChart,
+  resolveClickedIndexFromPixel,
+} from "../utils/chart-utils";
 import MonthBreakdown from "./MonthBreakdown";
 import RollingSummary from "./RollingSummary";
 
@@ -154,29 +160,7 @@ export default function RollingTrend() {
   const categoriesSeries = useMemo(() => {
     if (!statsRes) return {};
 
-    const categoryNames = Array.from(
-      new Set(
-        statsRes.response.trend.flatMap((month) =>
-          month.categories.map((category) => category.name)
-        )
-      )
-    );
-
-    const series: Record<string, { value: number }[]> = Object.fromEntries(
-      categoryNames.map((name) => [name, []])
-    );
-
-    slots.forEach((s) => {
-      const list = statsRes.response.trend.find(
-        (t) => t.month === s.month && t.year === s.year
-      );
-      categoryNames.forEach((name) => {
-        const found = list?.categories.find((c) => c.name === name);
-        series[name].push({ value: found?.amount ?? 0 });
-      });
-    });
-
-    return series;
+    return buildCategorySeries(statsRes.response.trend, slots);
   }, [statsRes?.response, slots]);
 
   const categoryColorMap = useMemo(() => {
@@ -211,55 +195,15 @@ export default function RollingTrend() {
   );
 
   const handleChartClick = useCallback(
-    (event: BarLineClickParams, chart?: any) => {
+    (event: BarLineClickParams, chart?: PixelConvertibleChart) => {
       if (event.componentSubType !== "line") {
         return;
       }
 
-      let clickedIndex = event.dataIndex;
-
-      if (typeof clickedIndex !== "number" && chart && event.event) {
-        const zrEvent = event.event as any;
-        const nativeEvent = zrEvent?.event as PointerEvent | undefined;
-        const offsetX =
-          typeof zrEvent?.offsetX === "number"
-            ? zrEvent.offsetX
-            : nativeEvent?.offsetX;
-        const offsetY =
-          typeof zrEvent?.offsetY === "number"
-            ? zrEvent.offsetY
-            : nativeEvent?.offsetY;
-
-        const hasValidOffsets =
-          typeof offsetX === "number" && typeof offsetY === "number";
-        let axisPoint: unknown = NaN;
-
-        if (hasValidOffsets) {
-          axisPoint = chart.convertFromPixel(
-            { seriesIndex: (event as any).seriesIndex ?? 0 },
-            [offsetX, offsetY]
-          );
-
-          // Fallback to axis finder if series finder does not resolve.
-          if (
-            !(
-              (Array.isArray(axisPoint) && Number.isFinite(axisPoint[0])) ||
-              (typeof axisPoint === "number" && Number.isFinite(axisPoint))
-            )
-          ) {
-            axisPoint = chart.convertFromPixel({ xAxisIndex: 0 }, [
-              offsetX,
-              offsetY,
-            ]);
-          }
-        }
-
-        const xValue = Array.isArray(axisPoint) ? axisPoint[0] : axisPoint;
-
-        if (typeof xValue === "number" && Number.isFinite(xValue)) {
-          clickedIndex = Math.round(xValue);
-        }
-      }
+      const clickedIndex =
+        typeof event.dataIndex === "number"
+          ? event.dataIndex
+          : resolveClickedIndexFromPixel(event, chart);
 
       if (typeof clickedIndex !== "number") {
         return;
@@ -270,15 +214,13 @@ export default function RollingTrend() {
       }
 
       const selectedBudget = budgets[clickedIndex]?.value ?? 0;
-
-      if (selectedBudget > 0) {
-        const isBudgetOrSpent =
-          event.seriesName === "Budget" || event.seriesName === "Spent";
-
-        setFocusIndex(clickedIndex);
-        setFocusCategory(isBudgetOrSpent ? null : event.seriesName);
-        open();
+      if (selectedBudget <= 0) {
+        return;
       }
+
+      setFocusIndex(clickedIndex);
+      setFocusCategory(isBudgetOrSpent(event.seriesName) ? null : event.seriesName);
+      open();
     },
     [budgets, open]
   );
