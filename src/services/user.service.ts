@@ -11,7 +11,9 @@ export type LoginResponse = ResponseBody<IUser> & {
 };
 
 export function loginUser(payload: { email: string; pin: string }) {
-  return axios.post<LoginResponse>(ENDPOINTS.login, payload).then((res) => res.data);
+  return axios
+    .post<LoginResponse>(ENDPOINTS.login, payload)
+    .then((res) => res.data);
 }
 
 export function switchActiveAccount(payload: { accountId: string }) {

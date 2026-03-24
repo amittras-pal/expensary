@@ -244,7 +244,7 @@ function ExpenseCard({
                 color={primaryColor}
                 variant="light"
               >
-              <IconRefresh size={14} stroke={1.5}  />
+                <IconRefresh size={14} stroke={1.5} />
               </ThemeIcon>
             </Tooltip>
           )}

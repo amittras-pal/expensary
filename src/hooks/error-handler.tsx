@@ -20,9 +20,10 @@ export function useErrorHandler(func?: () => void) {
       const message = payload.message || "Unknown error occurred";
 
       if (axiosError.response?.status === 401 && pathname !== "/login") {
-        const accountId = payload.response?.accountId || getStoredActiveAccountId();
+        const accountId =
+          payload.response?.accountId || getStoredActiveAccountId();
         const knownAccountIds = new Set(
-          getStoredDeviceAccounts().map((account) => account.accountId),
+          getStoredDeviceAccounts().map((account) => account.accountId)
         );
         const authCode = payload.code;
         const reauthCodes = new Set<string>([
@@ -49,7 +50,7 @@ export function useErrorHandler(func?: () => void) {
           globalThis.dispatchEvent(
             new CustomEvent(AUTH_EVENTS.reauthRequired, {
               detail: { accountId, reason: authCode },
-            }),
+            })
           );
 
           func?.();

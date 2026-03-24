@@ -3,14 +3,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { primaryColor } from "../constants/app";
-import {
-  AUTH_ERROR_CODES,
-  AUTH_EVENTS,
-  LogoutScope,
-} from "../constants/auth";
+import { AUTH_ERROR_CODES, AUTH_EVENTS, LogoutScope } from "../constants/auth";
 import { useCurrentUser } from "../context/user.context";
-import { useErrorHandler } from "./error-handler";
 import { logoutUser, switchActiveAccount } from "../services/user.service";
+import { useErrorHandler } from "./error-handler";
 
 export const useLogoutHandler = () => {
   const navigate = useNavigate();
@@ -33,7 +29,7 @@ export const useLogoutHandler = () => {
   };
 
   const fallbackToNextAccount = async (
-    remainingAccountIds: string[] = [],
+    remainingAccountIds: string[] = []
   ): Promise<void> => {
     const nextAccountId =
       remainingAccountIds[0] ||
@@ -60,7 +56,7 @@ export const useLogoutHandler = () => {
           globalThis.dispatchEvent(
             new CustomEvent(AUTH_EVENTS.reauthRequired, {
               detail: { accountId: nextAccountId, reason: payload.code },
-            }),
+            })
           );
           return;
         }

@@ -20,12 +20,12 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import PinInput from "../pin-input/PinInput";
 import { AUTH_ERROR_CODES, AUTH_EVENTS } from "../../constants/auth";
 import { useCurrentUser } from "../../context/user.context";
 import { useErrorHandler } from "../../hooks/error-handler";
 import { useLogoutHandler } from "../../hooks/logout";
 import { loginUser, switchActiveAccount } from "../../services/user.service";
+import PinInput from "../pin-input/PinInput";
 
 function getInitials(userName: string | undefined): string {
   if (!userName) return "U";
@@ -61,13 +61,13 @@ export default function AccountSwitcher() {
   const activeAccount = useMemo(
     () =>
       accounts.find((account) => account.accountId === activeAccountId) ?? null,
-    [accounts, activeAccountId],
+    [accounts, activeAccountId]
   );
 
   const reauthAccount = useMemo(
     () =>
       accounts.find((account) => account.accountId === reauthAccountId) ?? null,
-    [accounts, reauthAccountId],
+    [accounts, reauthAccountId]
   );
 
   const closeReauthModal = () => {
@@ -83,7 +83,7 @@ export default function AccountSwitcher() {
       if (!accountId) return;
 
       const knownAccount = accounts.find(
-        (account) => account.accountId === accountId,
+        (account) => account.accountId === accountId
       );
       if (!knownAccount) {
         notifications.show({
@@ -102,13 +102,13 @@ export default function AccountSwitcher() {
 
     globalThis.addEventListener(
       AUTH_EVENTS.reauthRequired,
-      listener as EventListener,
+      listener as EventListener
     );
 
     return () => {
       globalThis.removeEventListener(
         AUTH_EVENTS.reauthRequired,
-        listener as EventListener,
+        listener as EventListener
       );
     };
   }, [accounts, navigate, reauth]);
@@ -154,7 +154,7 @@ export default function AccountSwitcher() {
       client.clear();
       applyUserSession(
         res.response,
-        res.sessionMeta?.activeAccountId ?? res.response._id ?? null,
+        res.sessionMeta?.activeAccountId ?? res.response._id ?? null
       );
       setPrimaryColor(res.response.color);
 
@@ -191,14 +191,19 @@ export default function AccountSwitcher() {
       <Menu width={280} position="bottom-end" withArrow>
         <Menu.Target>
           <ActionIcon size="md" variant="default" radius="xl">
-            <Avatar size={24} color={activeAccount?.color || theme.primaryColor}>
+            <Avatar
+              size={24}
+              color={activeAccount?.color || theme.primaryColor}
+            >
               {activeAccount?.initials || getInitials(userData?.userName)}
             </Avatar>
           </ActionIcon>
         </Menu.Target>
         <Menu.Dropdown>
           <Menu.Label>Accounts on this device</Menu.Label>
-          {accounts.length === 0 && <Menu.Item disabled>No account found</Menu.Item>}
+          {accounts.length === 0 && (
+            <Menu.Item disabled>No account found</Menu.Item>
+          )}
           {accounts.map((account) => (
             <Menu.Item
               key={account.accountId}
@@ -264,8 +269,15 @@ export default function AccountSwitcher() {
       >
         <Stack>
           <Text>
-            Please enter the secure PIN for <Text span fw={700}>{accountName}</Text>{" "}
-            (<Text span fw={700}>{accountEmail}</Text>) to continue.
+            Please enter the secure PIN for{" "}
+            <Text span fw={700}>
+              {accountName}
+            </Text>{" "}
+            (
+            <Text span fw={700}>
+              {accountEmail}
+            </Text>
+            ) to continue.
           </Text>
           <PinInput
             autoFocus

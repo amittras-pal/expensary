@@ -94,7 +94,7 @@ export default function UserProvider({
 
       setAccounts((prev) => {
         const existingIndex = prev.findIndex(
-          (account) => account.accountId === accountId,
+          (account) => account.accountId === accountId
         );
         if (existingIndex === -1) return [nextAccount, ...prev];
 
@@ -103,7 +103,7 @@ export default function UserProvider({
         return updated;
       });
     },
-    [setAccounts],
+    [setAccounts]
   );
 
   const setActiveAccount = useCallback(
@@ -113,7 +113,7 @@ export default function UserProvider({
       if (accountId) {
         localStorage.setItem(
           AUTH_STORAGE_KEYS.activeAccountId,
-          JSON.stringify(accountId),
+          JSON.stringify(accountId)
         );
       } else {
         localStorage.removeItem(AUTH_STORAGE_KEYS.activeAccountId);
@@ -125,7 +125,7 @@ export default function UserProvider({
 
       setActiveAccountId(accountId);
     },
-    [activeAccountId, queryClient, setActiveAccountId],
+    [activeAccountId, queryClient, setActiveAccountId]
   );
 
   const applyUserSession = useCallback(
@@ -136,7 +136,7 @@ export default function UserProvider({
         accounts.find(
           (account) =>
             account.email.trim().toLowerCase() ===
-            user.email.trim().toLowerCase(),
+            user.email.trim().toLowerCase()
         )?.accountId ??
         activeAccountId ??
         null;
@@ -148,13 +148,19 @@ export default function UserProvider({
       }
       setActiveAccount(resolvedAccountId);
     },
-    [accounts, activeAccountId, setPrimaryColor, upsertAccount, setActiveAccount],
+    [
+      accounts,
+      activeAccountId,
+      setPrimaryColor,
+      upsertAccount,
+      setActiveAccount,
+    ]
   );
 
   const removeAccountFromDevice = useCallback(
     (accountId: string) => {
       setAccounts((prev) =>
-        prev.filter((account) => account.accountId !== accountId),
+        prev.filter((account) => account.accountId !== accountId)
       );
 
       if (activeAccountId === accountId) {
@@ -162,7 +168,7 @@ export default function UserProvider({
         setActiveAccount(null);
       }
     },
-    [activeAccountId, setAccounts, setActiveAccount],
+    [activeAccountId, setAccounts, setActiveAccount]
   );
 
   const clearAccountRegistry = useCallback(() => {
@@ -235,7 +241,7 @@ export default function UserProvider({
       removeAccountFromDevice,
       setActiveAccount,
       userData,
-    ],
+    ]
   );
 
   return (

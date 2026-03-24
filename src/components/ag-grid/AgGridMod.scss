@@ -131,3 +131,44 @@
     var(--ag-internal-padded-row-height)
   );
 }
+
+.stats-table.mtrace-ag-mod .ag-root-wrapper .ag-row.trend-row-budget,
+.stats-table.mtrace-ag-mod .ag-root-wrapper .ag-row.trend-row-spent {
+  background-color: var(--mantine-color-dark-8) !important;
+}
+
+.stats-table.mtrace-ag-mod
+  .ag-root-wrapper
+  .ag-row.trend-row-budget.ag-row-hover,
+.stats-table.mtrace-ag-mod
+  .ag-root-wrapper
+  .ag-row.trend-row-spent.ag-row-hover,
+.stats-table.mtrace-ag-mod
+  .ag-root-wrapper
+  .ag-row.trend-row-budget.ag-row-focus,
+.stats-table.mtrace-ag-mod
+  .ag-root-wrapper
+  .ag-row.trend-row-spent.ag-row-focus {
+  background-color: var(--mantine-color-dark-8) !important;
+}
+
+.stats-table.mtrace-ag-mod .ag-root-wrapper .trend-metric-cell {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  height: 100%;
+  line-height: 1.2;
+}
+
+.stats-table.mtrace-ag-mod .ag-root-wrapper .trend-amount-cell {
+  align-items: center;
+  height: 100%;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.stats-table.mtrace-ag-mod .ag-root-wrapper .ag-cell.trend-year-end-col,
+.stats-table.mtrace-ag-mod .ag-root-wrapper .ag-header-cell.trend-year-end-col {
+  border-right: 1px solid var(--mantine-color-dark-3) !important;
+}

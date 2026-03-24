@@ -1,13 +1,13 @@
+import { Dispatch, SetStateAction, useMemo, useRef } from "react";
 import {
   AppShell,
   Group,
   Kbd,
   Text,
   Tooltip,
-  UnstyledButton
+  UnstyledButton,
 } from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
-import { Dispatch, SetStateAction, useMemo, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import AppInfo from "../../components/app-info/AppInfo";
 import { ROUTES } from "../../constants/routes";
@@ -23,7 +23,6 @@ type AppNavigationProps = {
 export default function AppNavigation(props: Readonly<AppNavigationProps>) {
   const isMobile = useMediaMatch();
   const { userData } = useCurrentUser();
-
 
   return (
     <>

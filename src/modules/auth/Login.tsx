@@ -57,7 +57,7 @@ export default function Login() {
       setPrimaryColor(res.response.color);
       applyUserSession(
         res.response,
-        res.sessionMeta?.activeAccountId ?? res.response._id ?? null,
+        res.sessionMeta?.activeAccountId ?? res.response._id ?? null
       );
       notifications.show({
         title: res.message,

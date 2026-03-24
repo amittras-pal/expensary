@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import {
   ActionIcon,
   Badge,
+  Flex,
   Group,
   Menu,
   Popover,
@@ -10,6 +11,8 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import {
+  IconArrowDown,
+  IconArrowUp,
   IconBookmark,
   IconCalendarCode,
   IconDotsVertical,
@@ -213,5 +216,75 @@ export function TitleCell({
         autoEscape
       />
     </Text>
+  );
+}
+
+type TrendAmountCellValue = {
+  amount: number;
+  delta: number | null;
+};
+
+type TrendGridRow = {
+  metric: string;
+  color?: string;
+  isSummary?: boolean;
+};
+
+export function TrendMetricCell({
+  value,
+  data,
+}: Readonly<ICellRendererParams<TrendGridRow, string>>) {
+  const { colors } = useMantineTheme();
+  const isTopLevel = data?.isSummary || ["Budget", "Spent"].includes(value);
+
+  return (
+    <div className="trend-metric-cell">
+      <Text
+        fw={data?.isSummary ? 700 : 500}
+        ml={isTopLevel ? 0 : "lg"}
+        c={
+          isTopLevel
+            ? ""
+            : (colors[data?.color as keyof typeof colors]?.[4] ??
+              colors.gray[2])
+        }
+        size="sm"
+      >
+        {value}
+      </Text>
+    </div>
+  );
+}
+
+export function TrendAmountCell({
+  value,
+}: Readonly<ICellRendererParams<TrendGridRow, TrendAmountCellValue>>) {
+  const { colors } = useMantineTheme();
+  const amount = value?.amount ?? 0;
+  const delta = value?.delta;
+  let deltaColor = colors.gray[5];
+  if (typeof delta === "number") {
+    if (delta > 0) deltaColor = colors.red[5];
+    else if (delta < 0) deltaColor = colors.green[5];
+    else deltaColor = colors.gray[4];
+  }
+
+  const hasDelta = typeof delta === "number" && Math.abs(delta) > 0;
+  const DeltaIcon = delta != null && delta > 0 ? IconArrowUp : IconArrowDown;
+
+  return (
+    <Flex gap={0} className="trend-amount-cell">
+      <Text component="span">{formatCurrency(amount)}</Text>
+      {hasDelta && (
+        <>
+          <ThemeIcon c={deltaColor} variant="transparent" size="sm">
+            <DeltaIcon size={14} />
+          </ThemeIcon>
+          <Text fz="xs" c={deltaColor} component="span">
+            {Math.abs(delta).toFixed(1)}%
+          </Text>
+        </>
+      )}
+    </Flex>
   );
 }

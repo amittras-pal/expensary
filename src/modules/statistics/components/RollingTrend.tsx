@@ -1,41 +1,90 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useCallback, useMemo, useState } from "react";
 import {
   ActionIcon,
   Divider,
   Drawer,
   Flex,
   Select,
+  Switch,
   Text,
   Tooltip,
   useMantineTheme,
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import { IconChevronLeft, IconChevronRight, IconX } from "@tabler/icons-react";
+import { useDisclosure, useDocumentTitle } from "@mantine/hooks";
+import {
+  IconChartAreaLine,
+  IconChevronLeft,
+  IconChevronRight,
+  IconTable,
+  IconX,
+} from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import { BarSeriesOption, type EChartsOption, LineSeriesOption } from "echarts";
-import ReactECharts from "echarts-for-react";
-import { _20Min } from "../../../constants/app";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import OverlayLoader from "../../../components/loaders/OverlayLoader";
+import { APP_TITLE } from "../../../constants/app";
 import { useErrorHandler } from "../../../hooks/error-handler";
 import { useMediaMatch } from "../../../hooks/media-match";
-import { getCategoryGroups } from "../../../services/categories.service";
 import { getRollingStats } from "../../../services/statistics.service";
-import { BarLineClickParams, LegendSelection } from "../types";
-import { useDefaultChartConfig } from "../utils/chart-config";
+import { BarLineClickParams } from "../types";
+import {
+  PixelConvertibleChart,
+  buildCategorySeries,
+  isBudgetOrSpent,
+  resolveClickedIndexFromPixel,
+} from "../utils/chart-utils";
 import MonthBreakdown from "./MonthBreakdown";
 import RollingSummary from "./RollingSummary";
 
 type Slot = { month: number; year: number };
 
+export type RollingTrendOutletContext = {
+  xAxisLabels: string[];
+  budgets: { value: number }[];
+  spends: {
+    value: number;
+    itemStyle: { color: string; borderWidth: number; borderColor: string };
+  }[];
+  yearChangeMarkers: { xAxis: number }[];
+  loadingStats: boolean;
+  showCategoryStack: boolean;
+  categoriesSeries: Record<string, { value: number }[]>;
+  categoryColorMap: Record<string, string>;
+  handleChartClick: (event: BarLineClickParams, chart?: any) => void;
+  tableMonthLabels: string[];
+  tableBudgets: number[];
+  tableSpends: number[];
+  tableCategoriesSeries: Record<string, { value: number }[]>;
+  handleTableCellClick: ({
+    monthIndex,
+    metric,
+  }: {
+    monthIndex: number;
+    metric: string;
+  }) => void;
+};
+
 export default function RollingTrend() {
   const [months, setMonths] = useState<number>(6);
+  const [showCategoryStack, setShowCategoryStack] = useState<boolean>(false);
   const [focusIndex, setFocusIndex] = useState<number>(-1);
+  const [focusCategory, setFocusCategory] = useState<string | null>(null);
   const [focusDrawerOpen, { open, close }] = useDisclosure(false, {
-    onClose: () => setFocusIndex(-1),
+    onClose: () => {
+      setFocusIndex(-1);
+      setFocusCategory(null);
+    },
   });
   const { onError } = useErrorHandler();
   const isMobile = useMediaMatch();
   const { colors } = useMantineTheme();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const showTable = location.pathname.endsWith("/table");
+
+  useDocumentTitle(
+    `${APP_TITLE} | Analytics: ${showTable ? "Category Variation" : "Expense Trend"}`
+  );
 
   // Compute the ordered month/year slots for the selected window.
   const slots = useMemo<Slot[]>(
@@ -58,22 +107,10 @@ export default function RollingTrend() {
     [slots]
   );
 
-  const chartConfig = useDefaultChartConfig(xAxisLabels, (v: string) => v);
-  const chartRef = useRef<ReactECharts>(null);
-  const getChart = () => chartRef.current?.getEchartsInstance();
-
-  const { data: categoryGroupsRes } = useQuery({
-    queryKey: ["category-groups"],
-    queryFn: getCategoryGroups,
-    onError,
-    staleTime: _20Min,
-  });
-
   const { data: statsRes, isLoading: loadingStats } = useQuery({
     queryKey: ["rolling-stats", months],
     queryFn: () => getRollingStats(months),
     onError,
-    enabled: !!categoryGroupsRes,
   });
 
   const budgets = useMemo(
@@ -86,15 +123,6 @@ export default function RollingTrend() {
       })),
     [statsRes?.response, slots]
   );
-
-  const budgetIndexRange = useMemo((): [number, number] => {
-    const firstIndex = budgets.findIndex((b) => b.value > 0);
-    const lastIndex = budgets.reduceRight((acc, b, idx) => {
-      if (acc === -1 && b.value > 0) return idx;
-      return acc;
-    }, -1);
-    return [firstIndex, lastIndex];
-  }, [budgets]);
 
   const spends = useMemo(
     () =>
@@ -120,159 +148,130 @@ export default function RollingTrend() {
     [budgets, statsRes?.response, slots]
   );
 
+  const budgetIndexRange = useMemo((): [number, number] => {
+    const firstIndex = budgets.findIndex((b) => b.value > 0);
+    const lastIndex = budgets.reduceRight((acc, b, idx) => {
+      if (acc === -1 && b.value > 0) return idx;
+      return acc;
+    }, -1);
+    return [firstIndex, lastIndex];
+  }, [budgets]);
+
   const categoriesSeries = useMemo(() => {
-    if (!categoryGroupsRes || !statsRes) return {};
+    if (!statsRes) return {};
 
-    const series: Record<string, { value: number }[]> = Object.fromEntries(
-      categoryGroupsRes.response.map((c) => [c.name, []])
-    );
-
-    slots.forEach((s) => {
-      const list = statsRes.response.trend.find(
-        (t) => t.month === s.month && t.year === s.year
-      );
-      categoryGroupsRes.response.forEach((cat) => {
-        const found = list?.categories.find((c) => c.name === cat.name);
-        series[cat.name].push({ value: found?.amount ?? 0 });
-      });
-    });
-
-    return series;
-  }, [statsRes?.response, categoryGroupsRes?.response, slots]);
+    return buildCategorySeries(statsRes.response.trend, slots);
+  }, [statsRes?.response, slots]);
 
   const categoryColorMap = useMemo(() => {
     const map: Record<string, string> = {};
-    categoryGroupsRes?.response.forEach((category) => {
-      map[category.name] = category.color;
+    statsRes?.response.trend.forEach((month) => {
+      month.categories.forEach((category) => {
+        map[category.name] = category.color;
+      });
     });
     return map;
-  }, [categoryGroupsRes?.response]);
+  }, [statsRes?.response]);
+
+  const tableMonthLabels = useMemo(() => xAxisLabels, [xAxisLabels]);
+
+  const tableBudgets = useMemo(() => budgets.map((v) => v.value), [budgets]);
+
+  const tableSpends = useMemo(() => spends.map((v) => v.value), [spends]);
+
+  const tableCategoriesSeries = useMemo(
+    () => categoriesSeries,
+    [categoriesSeries]
+  );
 
   // Midpoints between Dec and Jan where the year changes.
   const yearChangeMarkers = useMemo(
     () =>
       slots.reduce<{ xAxis: number }[]>((acc, s, i) => {
-        if (i > 0 && s.year !== slots[i - 1].year)
-          acc.push({ xAxis: i });
+        if (i > 0 && s.year !== slots[i - 1].year) acc.push({ xAxis: i });
         return acc;
       }, []),
     [slots]
   );
 
-  // Update chart when data changes.
-  useEffect(() => {
-    const legends = [
-      "Budget",
-      "Spent",
-      ...(categoryGroupsRes?.response ?? []).map((cat) => cat.name),
-    ];
-
-    const instance = getChart();
-    const legend = (instance?.getOption().legend as any)[0]
-      ?.selected as LegendSelection;
-
-    const chartOpts: EChartsOption = {
-      ...chartConfig,
-      legend: {
-        ...(chartConfig?.legend),
-        data: legends,
-        selected:
-          legends?.reduce(
-            (acc, curr) => ({ ...acc, [curr]: legend?.[curr] ?? false }),
-            {}
-          ) ?? {},
-      },
-      series: [
-        {
-          name: "Budget",
-          type: "line",
-          smooth: true,
-          data: budgets,
-          symbol: "circle",
-          symbolSize: 10,
-          lineStyle: {
-            type: "dashed",
-            width: 1,
-            color: colors.gray[6],
-          },
-          itemStyle: {
-            color: colors.gray[6],
-            borderWidth: 3,
-            borderColor: colors.dark[6],
-          },
-          markLine: {
-            silent: true,
-            symbol: "none",
-            label: { show: false },
-            lineStyle: {
-              type: "solid",
-              width: 1,
-              color: colors.dark[3],
-            },
-            data: yearChangeMarkers,
-          },
-        },
-        {
-          name: "Spent",
-          type: "line",
-          smooth: true,
-          data: spends,
-          symbol: "circle",
-          symbolSize: 14,
-          lineStyle: {
-            width: 1,
-            color: colors.gray[3],
-          },
-        },
-        ...Object.entries(categoriesSeries).map(
-          ([name, data]): BarSeriesOption => ({
-            name,
-            type: "bar",
-            data: data,
-            stack: "total",
-            barWidth: isMobile ? 15 : 35,
-            emphasis: {
-              itemStyle: {
-                color: colors[categoryColorMap[name]][4] ?? colors.gray[4],
-              },
-            },
-            itemStyle: {
-              color: colors[categoryColorMap[name]][6] ?? colors.gray[6],
-            },
-          })
-        ),
-      ],
-    };
-    instance?.setOption(chartOpts, { notMerge: true });
-  }, [budgets, categoriesSeries, spends, yearChangeMarkers]);
-
   const handleChartClick = useCallback(
-    (event: BarLineClickParams) => {
-      let isFocusable: boolean = false;
-      if (event.seriesName === "Budget") {
-        isFocusable = event.value > 0;
-      } else {
-        const series = getChart()?.getOption().series as LineSeriesOption[];
-        const bSeries = series.find((s) => s.name === "Budget");
-        const budgetValue = bSeries?.data?.[event.dataIndex]?.valueOf() as {
-          value: number;
-        };
-        isFocusable = budgetValue.value > 0;
+    (event: BarLineClickParams, chart?: PixelConvertibleChart) => {
+      if (event.componentSubType !== "line") {
+        return;
       }
 
-      if (isFocusable) {
-        const instance = getChart();
-        instance?.dispatchAction({ type: "hideTip" });
-        setFocusIndex(event.dataIndex);
-        open();
+      const clickedIndex =
+        typeof event.dataIndex === "number"
+          ? event.dataIndex
+          : resolveClickedIndexFromPixel(event, chart);
+
+      if (typeof clickedIndex !== "number") {
+        return;
       }
+
+      if (clickedIndex < 0 || clickedIndex >= budgets.length) {
+        return;
+      }
+
+      const selectedBudget = budgets[clickedIndex]?.value ?? 0;
+      if (selectedBudget <= 0) {
+        return;
+      }
+
+      setFocusIndex(clickedIndex);
+      setFocusCategory(
+        isBudgetOrSpent(event.seriesName) ? null : event.seriesName
+      );
+      open();
     },
-    [open]
+    [budgets, open]
   );
 
-  const events = useMemo(
-    () => ({ click: handleChartClick }),
-    [handleChartClick]
+  const handleTableCellClick = useCallback(
+    ({ monthIndex, metric }: { monthIndex: number; metric: string }) => {
+      if (monthIndex < 0 || monthIndex >= slots.length) return;
+
+      const isBudgetOrSpent = metric === "Budget" || metric === "Spent";
+      setFocusIndex(monthIndex);
+      setFocusCategory(isBudgetOrSpent ? null : metric);
+      open();
+    },
+    [open, slots.length]
+  );
+
+  const outletContext = useMemo<RollingTrendOutletContext>(
+    () => ({
+      xAxisLabels,
+      budgets,
+      spends,
+      yearChangeMarkers,
+      loadingStats,
+      showCategoryStack,
+      categoriesSeries,
+      categoryColorMap,
+      handleChartClick,
+      tableMonthLabels,
+      tableBudgets,
+      tableSpends,
+      tableCategoriesSeries,
+      handleTableCellClick,
+    }),
+    [
+      xAxisLabels,
+      budgets,
+      spends,
+      yearChangeMarkers,
+      loadingStats,
+      showCategoryStack,
+      categoriesSeries,
+      categoryColorMap,
+      handleChartClick,
+      tableMonthLabels,
+      tableBudgets,
+      tableSpends,
+      tableCategoriesSeries,
+      handleTableCellClick,
+    ]
   );
 
   const focusSlot = focusIndex > -1 ? slots[focusIndex] : null;
@@ -296,31 +295,45 @@ export default function RollingTrend() {
           allowDeselect={false}
           style={{ width: 140 }}
         />
-        <RollingSummary
-          months={months}
-          spends={spends.map((v) => v.value)}
-          budgets={budgets.map((v) => v.value)}
-          slots={slots}
-        />
+        {!showTable && (
+          <Switch
+            checked={showCategoryStack}
+            onChange={(event) =>
+              setShowCategoryStack(event.currentTarget.checked)
+            }
+            label="Show categories"
+            size="xs"
+          />
+        )}
+        <Flex ml="auto" gap="xs" align="center">
+          <Tooltip label={showTable ? "Switch to chart" : "Switch to table"}>
+            <ActionIcon
+              size="md"
+              variant="default"
+              onClick={() =>
+                navigate(showTable ? "/statistics" : "/statistics/table")
+              }
+            >
+              {showTable ? (
+                <IconChartAreaLine size={18} />
+              ) : (
+                <IconTable size={18} />
+              )}
+            </ActionIcon>
+          </Tooltip>
+          <RollingSummary
+            months={months}
+            spends={spends.map((v) => v.value)}
+            budgets={budgets.map((v) => v.value)}
+            slots={slots}
+            mlAuto={false}
+          />
+        </Flex>
       </Flex>
       <Divider my="sm" style={{ width: "100%" }} />
-      <ReactECharts
-        showLoading={loadingStats}
-        loadingOption={{
-          maskColor: colors.dark[7],
-          textColor: colors.gray[2],
-        }}
-        option={chartConfig}
-        ref={chartRef}
-        onEvents={events}
-        style={{
-          borderRadius: "var(--mantine-radius-md)",
-          padding: "var(--mantine-spacing-xs)",
-          backgroundColor: "var(--mantine-color-dark-6)",
-          width: "100%",
-          height: "calc(100vh - 150px)",
-        }}
-      />
+      <Suspense fallback={<OverlayLoader visible />}>
+        <Outlet context={outletContext} />
+      </Suspense>
       <Drawer
         opened={focusDrawerOpen}
         onClose={close}
@@ -341,7 +354,11 @@ export default function RollingTrend() {
           <Flex gap={"xs"}>
             <Tooltip label="Previous month">
               <ActionIcon
-                onClick={() => setFocusIndex((v) => --v)}
+                onClick={() =>
+                  setFocusIndex((v) =>
+                    v <= budgetIndexRange[0] ? v : Math.max(v - 1, 0)
+                  )
+                }
                 radius={"xl"}
                 variant="default"
                 disabled={focusIndex === budgetIndexRange[0]}
@@ -351,7 +368,13 @@ export default function RollingTrend() {
             </Tooltip>
             <Tooltip label="Next month">
               <ActionIcon
-                onClick={() => setFocusIndex((v) => ++v)}
+                onClick={() =>
+                  setFocusIndex((v) =>
+                    v >= budgetIndexRange[1]
+                      ? v
+                      : Math.min(v + 1, slots.length - 1)
+                  )
+                }
                 radius={"xl"}
                 variant="default"
                 disabled={focusIndex === budgetIndexRange[1]}
@@ -369,11 +392,13 @@ export default function RollingTrend() {
         {focusSlot && (
           <MonthBreakdown
             year={focusSlot.year}
+            month={focusSlot.month}
             budget={
               statsRes?.response.budgets.find(
                 (b) => b.month === focusSlot.month && b.year === focusSlot.year
               ) ?? null
             }
+            initialCategory={focusCategory}
           />
         )}
       </Drawer>
