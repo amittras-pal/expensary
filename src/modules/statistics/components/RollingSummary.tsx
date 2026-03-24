@@ -9,6 +9,7 @@ type RollingSummaryProps = {
   spends: number[];
   budgets: number[];
   slots: { month: number; year: number }[];
+  mlAuto?: boolean;
 };
 
 export default function RollingSummary({
@@ -16,6 +17,7 @@ export default function RollingSummary({
   spends,
   budgets,
   slots,
+  mlAuto = true,
 }: Readonly<RollingSummaryProps>) {
   const isMobile = useMediaMatch();
 
@@ -36,7 +38,11 @@ export default function RollingSummary({
   return (
     <Popover position="bottom-end" withinPortal zIndex={10000000}>
       <Popover.Target>
-        <ActionIcon ml="auto" size="md" variant="default">
+        <ActionIcon
+          ml={mlAuto ? "auto" : undefined}
+          size="md"
+          variant="default"
+        >
           <IconSparkles size={18} />
         </ActionIcon>
       </Popover.Target>

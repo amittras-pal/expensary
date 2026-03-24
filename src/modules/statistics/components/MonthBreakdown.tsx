@@ -1,4 +1,4 @@
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { Box, Divider, Text, useMantineTheme } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
@@ -13,23 +13,25 @@ import ListDetails, { ListDetailsHandle } from "./MonthBreakdownDetails";
 
 type MonthDonutProps = {
   year: number;
+  month: number;
   budget: BudgetForm | null;
+  initialCategory?: string | null;
 };
 export default function MonthBreakdown({
   budget,
   year,
+  month,
+  initialCategory = null,
 }: Readonly<MonthDonutProps>) {
   const { onError } = useErrorHandler();
   const { colors } = useMantineTheme();
   const payload = useMemo(() => {
-    const date = dayjs()
-      .month((budget?.month ?? 0) - 1)
-      .year(year);
+    const date = dayjs().month(month - 1).year(year);
     return {
       startDate: date.startOf("month").toDate(),
       endDate: date.endOf("month").toDate(),
     };
-  }, [budget]);
+  }, [month, year]);
 
   const { data: summary, isLoading } = useQuery({
     queryKey: ["month-breakdown", payload],
@@ -37,21 +39,42 @@ export default function MonthBreakdown({
     onError,
   });
 
+  const conditioned = useMemo(
+    () =>
+      summary?.response
+        ? Object.entries(summary.response.summary).map(([category, breakdown]) => ({
+            name: category,
+            total: breakdown.total,
+            color: breakdown.subCategories[0]?.color,
+            children: breakdown.subCategories.map((subc) => ({
+              name: subc.label,
+              value: subc.value,
+              color: subc.color,
+            })),
+          }))
+        : [],
+    [summary?.response]
+  );
+
+  const initialCategoryNode = useMemo(
+    () => conditioned.find((entry) => entry.name === initialCategory),
+    [conditioned, initialCategory]
+  );
+
   const config = useMemo(() => {
-    const conditioned = summary?.response
-      ? Object.entries(summary.response.summary)
-      : [];
+    const chartData = initialCategoryNode ? [initialCategoryNode] : conditioned;
 
     const option: EChartsOption = {
       series: {
         type: "sunburst",
-        data: conditioned.map(([category, breakdown]) => ({
-          name: category,
+        data: chartData.map((category) => ({
+          name: category.name,
+          value: category.total,
           itemStyle: {
-            color: colors[breakdown.subCategories[0].color][7],
+            color: colors[category.color ?? "gray"][7],
           },
-          children: breakdown.subCategories.map((subc) => ({
-            name: subc.label,
+          children: category.children.map((subc) => ({
+            name: subc.name,
             value: subc.value,
             itemStyle: {
               color: colors[subc.color][5],
@@ -78,9 +101,23 @@ export default function MonthBreakdown({
     };
 
     return option;
-  }, [summary?.response]);
+  }, [conditioned, colors, initialCategoryNode]);
 
   const listDetails = useRef<ListDetailsHandle>(null);
+
+  useEffect(() => {
+    if (!summary?.response || !initialCategoryNode) return;
+
+    listDetails.current?.update([
+      { name: "", value: summary.response.total, dataIndex: 0 },
+      {
+        name: initialCategoryNode.name,
+        value: initialCategoryNode.total,
+        dataIndex: 0,
+      },
+    ]);
+  }, [initialCategoryNode, summary?.response]);
+
   const handleClick = (e: SunBurstClickParams) => {
     listDetails.current?.update(e.treePathInfo);
   };
@@ -123,7 +160,7 @@ export default function MonthBreakdown({
         ref={listDetails}
         defaultTotal={summary?.response.total ?? 0}
         budget={budget?.amount ?? 0}
-        month={budget?.month ?? 0}
+        month={month}
         year={year}
       />
     </Box>

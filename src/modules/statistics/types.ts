@@ -7,12 +7,13 @@ export type BarLineClickParams = {
   componentIndex: number;
   componentSubType: "line" | "bar"; // determine if the click was on the line or the bar segment.
   componentType: string;
-  dataIndex: number; // translates to month for us,
+  dataIndex?: number; // translates to month for us,
   seriesName: string;
   seriesType: "line" | "bar";
+  seriesIndex?: number;
   type: "click";
   value: number;
-  event: { event: PointerEvent };
+  event: unknown;
 };
 
 export type TreePathInfo = { name: string; dataIndex: number; value: number };

@@ -14,6 +14,7 @@ export function useDefaultChartConfig(
 
   return useMemo(
     () => ({
+      darkMode: true,
       textStyle: {
         fontFamily: globalThis.getComputedStyle(document.body).fontFamily,
       },
@@ -21,6 +22,11 @@ export function useDefaultChartConfig(
       legend: {
         show: false,
         data: ["Budget", "Spent"],
+        textStyle: {
+          color: colors.gray[2],
+          fontSize: 11,
+        },
+        inactiveColor: colors.gray[6],
         selected:
           ["Budget", "Spent"]?.reduce(
             (acc, curr) => ({ ...acc, [curr]: true }),
@@ -105,27 +111,50 @@ export function useDefaultChartConfig(
 }
 
 export function tooltipFormatter(series: any) {
-  const hasBudget =
-    (series.find((o: any) => o.seriesName === "Budget")?.value ?? 0) > 0;
+  const resolveValue = (item: any): number => {
+    const raw = item?.value;
+    if (typeof raw === "number") return raw;
+    if (raw && typeof raw === "object" && typeof raw.value === "number")
+      return raw.value;
+    return 0;
+  };
+
+  const budget = series.find((o: any) => o.seriesName === "Budget");
+  const spent = series.find((o: any) => o.seriesName === "Spent");
+  const categoryItems = series.filter(
+    (o: any) =>
+      o.seriesName !== "Budget" &&
+      o.seriesName !== "Spent" &&
+      resolveValue(o) > 0
+  );
+
+  const hasBudget = resolveValue(budget) > 0;
 
   let html = '<div style="padding:4px 6px;width:240px;font-family:inherit;">';
   html += `<div style="font-weight:700;color:#fff;margin-bottom:4px;">${series[0].axisValueLabel}</div>`;
 
   if (hasBudget) {
-    series.forEach((item: any, index: number) => {
-      const nameColor = index < 2 ? item.color : "#adb5bd";
-      const valueColor = index < 2 ? item.color : "#ffffff";
+    [budget, spent].filter(Boolean).forEach((item: any) => {
       html +=
         '<div style="display:flex;align-items:center;gap:6px;justify-content:space-between;">';
-      if (index > 1) {
-        html += `<span style="width:12px;height:12px;border-radius:6px;background:${item.color};display:inline-block;"></span>`;
-      }
-      html += `<span style="flex:1;color:${nameColor};">${item.seriesName}</span>`;
-      html += `<span style="color:${valueColor};${index < 2 ? "font-weight:700;" : ""}">${formatCurrency(item.value)}</span>`;
+      html += `<span style="flex:1;color:${item.color};">${item.seriesName}</span>`;
+      html += `<span style="color:${item.color};font-weight:700;">${formatCurrency(resolveValue(item))}</span>`;
       html += "</div>";
     });
-    html +=
-      '<div style="font-size:10px;font-style:italic;margin-top:6px;">Click on the dot to view details</div>';
+
+    if (categoryItems.length > 0) {
+      html +=
+        '<div style="margin:6px 0;border-top:1px solid rgba(173,181,189,0.35);"></div>';
+
+      categoryItems.forEach((item: any) => {
+        html +=
+          '<div style="display:flex;align-items:center;gap:6px;justify-content:space-between;">';
+        html += `<span style="width:12px;height:12px;border-radius:6px;background:${item.color};display:inline-block;"></span>`;
+        html += `<span style="flex:1;color:#adb5bd;">${item.seriesName}</span>`;
+        html += `<span style="color:#ffffff;">${formatCurrency(resolveValue(item))}</span>`;
+        html += "</div>";
+      });
+    }
   } else {
     html += '<div style="color:#adb5bd;">Budget missing for the month.</div>';
   }
