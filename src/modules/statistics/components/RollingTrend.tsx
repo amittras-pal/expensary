@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { Suspense, useCallback, useMemo, useState } from "react";
 import {
   ActionIcon,
   Divider,
@@ -20,22 +20,47 @@ import {
 } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import OverlayLoader from "../../../components/loaders/OverlayLoader";
 import { useErrorHandler } from "../../../hooks/error-handler";
 import { useMediaMatch } from "../../../hooks/media-match";
 import { getRollingStats } from "../../../services/statistics.service";
 import { BarLineClickParams } from "../types";
-import BudgetVsSpentChart from "./BudgetVsSpentChart";
 import MonthBreakdown from "./MonthBreakdown";
 import RollingSummary from "./RollingSummary";
-import TrendTable from "./TrendTable";
 import { APP_TITLE } from "../../../constants/app";
 
 type Slot = { month: number; year: number };
 
+export type RollingTrendOutletContext = {
+  xAxisLabels: string[];
+  budgets: { value: number }[];
+  spends: {
+    value: number;
+    itemStyle: { color: string; borderWidth: number; borderColor: string };
+  }[];
+  yearChangeMarkers: { xAxis: number }[];
+  loadingStats: boolean;
+  showCategoryStack: boolean;
+  categoriesSeries: Record<string, { value: number }[]>;
+  categoryColorMap: Record<string, string>;
+  handleChartClick: (event: BarLineClickParams, chart?: any) => void;
+  tableMonthLabels: string[];
+  tableBudgets: number[];
+  tableSpends: number[];
+  tableCategoriesSeries: Record<string, { value: number }[]>;
+  handleTableCellClick: ({
+    monthIndex,
+    metric,
+  }: {
+    monthIndex: number;
+    metric: string;
+  }) => void;
+};
+
 export default function RollingTrend() {
   const [months, setMonths] = useState<number>(6);
   const [showCategoryStack, setShowCategoryStack] = useState<boolean>(false);
-  const [showTable, setShowTable] = useState<boolean>(false);
   const [focusIndex, setFocusIndex] = useState<number>(-1);
   const [focusCategory, setFocusCategory] = useState<string | null>(null);
   const [focusDrawerOpen, { open, close }] = useDisclosure(false, {
@@ -47,8 +72,13 @@ export default function RollingTrend() {
   const { onError } = useErrorHandler();
   const isMobile = useMediaMatch();
   const { colors } = useMantineTheme();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const showTable = location.pathname.endsWith("/table");
 
-    useDocumentTitle(`${APP_TITLE} | Analytics: ${showTable ? "Category Variation" : "Expense Trend"}`);
+  useDocumentTitle(
+    `${APP_TITLE} | Analytics: ${showTable ? "Category Variation" : "Expense Trend"}`
+  );
 
   // Compute the ordered month/year slots for the selected window.
   const slots = useMemo<Slot[]>(
@@ -269,6 +299,41 @@ export default function RollingTrend() {
     [open, slots.length]
   );
 
+  const outletContext = useMemo<RollingTrendOutletContext>(
+    () => ({
+      xAxisLabels,
+      budgets,
+      spends,
+      yearChangeMarkers,
+      loadingStats,
+      showCategoryStack,
+      categoriesSeries,
+      categoryColorMap,
+      handleChartClick,
+      tableMonthLabels,
+      tableBudgets,
+      tableSpends,
+      tableCategoriesSeries,
+      handleTableCellClick,
+    }),
+    [
+      xAxisLabels,
+      budgets,
+      spends,
+      yearChangeMarkers,
+      loadingStats,
+      showCategoryStack,
+      categoriesSeries,
+      categoryColorMap,
+      handleChartClick,
+      tableMonthLabels,
+      tableBudgets,
+      tableSpends,
+      tableCategoriesSeries,
+      handleTableCellClick,
+    ]
+  );
+
   const focusSlot = focusIndex > -1 ? slots[focusIndex] : null;
 
   return (
@@ -305,7 +370,7 @@ export default function RollingTrend() {
             <ActionIcon
               size="md"
               variant="default"
-              onClick={() => setShowTable((v) => !v)}
+              onClick={() => navigate(showTable ? "/statistics" : "/statistics/table")}
             >
               {showTable ? (
                 <IconChartAreaLine size={18} />
@@ -324,28 +389,9 @@ export default function RollingTrend() {
         </Flex>
       </Flex>
       <Divider my="sm" style={{ width: "100%" }} />
-      {showTable ? (
-        <TrendTable
-          monthLabels={tableMonthLabels}
-          budgets={tableBudgets}
-          spends={tableSpends}
-          categoriesSeries={tableCategoriesSeries}
-          categoryColorMap={categoryColorMap}
-          onAmountCellClick={handleTableCellClick}
-        />
-      ) : (
-        <BudgetVsSpentChart
-          xAxisLabels={xAxisLabels}
-          budgets={budgets}
-          spends={spends}
-          yearChangeMarkers={yearChangeMarkers}
-          loading={loadingStats}
-          showCategoryStack={showCategoryStack}
-          categoriesSeries={categoriesSeries}
-          categoryColorMap={categoryColorMap}
-          onPointClick={handleChartClick}
-        />
-      )}
+      <Suspense fallback={<OverlayLoader visible />}>
+        <Outlet context={outletContext} />
+      </Suspense>
       <Drawer
         opened={focusDrawerOpen}
         onClose={close}

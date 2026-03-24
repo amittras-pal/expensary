@@ -18,6 +18,12 @@ const ExportExpenses = lazy(() => import("./modules/report/ExportExpenses"));
 const GlobalSearch = lazy(() => import("./modules/search/GlobalSearch"));
 const About = lazy(() => import("./components/app-info/About"));
 const StatsEngine = lazy(() => import("./modules/statistics"));
+const StatisticsChartView = lazy(
+  () => import("./modules/statistics/routes/StatisticsChartView")
+);
+const StatisticsTableView = lazy(
+  () => import("./modules/statistics/routes/StatisticsTableView")
+);
 
 const PlansList = lazy(() => import("./modules/plans/views/ListView"));
 const PlansTimeline = lazy(() => import("./modules/plans/views/TimelineView"));
@@ -56,7 +62,14 @@ const router = createBrowserRouter([
           { path: "/account", element: <User /> },
           { path: "/search", element: <GlobalSearch /> },
           { path: "/about-app", element: <About /> },
-          { path: "/statistics", element: <StatsEngine /> },
+          {
+            path: "/statistics",
+            element: <StatsEngine />,
+            children: [
+              { index: true, element: <StatisticsChartView /> },
+              { path: "table", element: <StatisticsTableView /> },
+            ],
+          },
         ],
       },
       { path: "/login", element: <Login /> },
