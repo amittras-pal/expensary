@@ -37,13 +37,19 @@ function getPointXValue(axisPoint: unknown): number | null {
   return null;
 }
 
-function getClickOffsets(rawEvent: unknown): { offsetX: number; offsetY: number } | null {
+function getClickOffsets(
+  rawEvent: unknown
+): { offsetX: number; offsetY: number } | null {
   const zrEvent = rawEvent as ZrPointerEvent;
   const nativeEvent = zrEvent?.event;
   const offsetX =
-    typeof zrEvent?.offsetX === "number" ? zrEvent.offsetX : nativeEvent?.offsetX;
+    typeof zrEvent?.offsetX === "number"
+      ? zrEvent.offsetX
+      : nativeEvent?.offsetX;
   const offsetY =
-    typeof zrEvent?.offsetY === "number" ? zrEvent.offsetY : nativeEvent?.offsetY;
+    typeof zrEvent?.offsetY === "number"
+      ? zrEvent.offsetY
+      : nativeEvent?.offsetY;
 
   if (typeof offsetX !== "number" || typeof offsetY !== "number") {
     return null;
@@ -66,20 +72,20 @@ export function resolveClickedIndexFromPixel(
   }
 
   let axisPoint: unknown = Number.NaN;
-  axisPoint = chart.convertFromPixel(
-    { seriesIndex: event.seriesIndex ?? 0 },
-    [offsets.offsetX, offsets.offsetY]
-  );
+  axisPoint = chart.convertFromPixel({ seriesIndex: event.seriesIndex ?? 0 }, [
+    offsets.offsetX,
+    offsets.offsetY,
+  ]);
 
   const firstAttempt = getPointXValue(axisPoint);
   if (firstAttempt !== null) {
     return Math.round(firstAttempt);
   }
 
-  axisPoint = chart.convertFromPixel(
-    { xAxisIndex: 0 },
-    [offsets.offsetX, offsets.offsetY]
-  );
+  axisPoint = chart.convertFromPixel({ xAxisIndex: 0 }, [
+    offsets.offsetX,
+    offsets.offsetY,
+  ]);
 
   const fallbackAttempt = getPointXValue(axisPoint);
   return fallbackAttempt === null ? null : Math.round(fallbackAttempt);
@@ -106,7 +112,9 @@ export function buildCategorySeries(
 
     for (const slot of slots) {
       const month = trendBySlotKey.get(toSlotKey(slot.month, slot.year));
-      const category = month?.categories.find((entry) => entry.name === categoryName);
+      const category = month?.categories.find(
+        (entry) => entry.name === categoryName
+      );
       result[categoryName].push({ value: category?.amount ?? 0 });
     }
   }

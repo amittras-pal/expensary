@@ -28,9 +28,9 @@ import { useMediaMatch } from "../../../hooks/media-match";
 import { getRollingStats } from "../../../services/statistics.service";
 import { BarLineClickParams } from "../types";
 import {
+  PixelConvertibleChart,
   buildCategorySeries,
   isBudgetOrSpent,
-  PixelConvertibleChart,
   resolveClickedIndexFromPixel,
 } from "../utils/chart-utils";
 import MonthBreakdown from "./MonthBreakdown";
@@ -219,7 +219,9 @@ export default function RollingTrend() {
       }
 
       setFocusIndex(clickedIndex);
-      setFocusCategory(isBudgetOrSpent(event.seriesName) ? null : event.seriesName);
+      setFocusCategory(
+        isBudgetOrSpent(event.seriesName) ? null : event.seriesName
+      );
       open();
     },
     [budgets, open]
