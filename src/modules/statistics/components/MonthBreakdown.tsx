@@ -26,7 +26,9 @@ export default function MonthBreakdown({
   const { onError } = useErrorHandler();
   const { colors } = useMantineTheme();
   const payload = useMemo(() => {
-    const date = dayjs().month(month - 1).year(year);
+    const date = dayjs()
+      .month(month - 1)
+      .year(year);
     return {
       startDate: date.startOf("month").toDate(),
       endDate: date.endOf("month").toDate(),
@@ -42,16 +44,18 @@ export default function MonthBreakdown({
   const conditioned = useMemo(
     () =>
       summary?.response
-        ? Object.entries(summary.response.summary).map(([category, breakdown]) => ({
-            name: category,
-            total: breakdown.total,
-            color: breakdown.subCategories[0]?.color,
-            children: breakdown.subCategories.map((subc) => ({
-              name: subc.label,
-              value: subc.value,
-              color: subc.color,
-            })),
-          }))
+        ? Object.entries(summary.response.summary).map(
+            ([category, breakdown]) => ({
+              name: category,
+              total: breakdown.total,
+              color: breakdown.subCategories[0]?.color,
+              children: breakdown.subCategories.map((subc) => ({
+                name: subc.label,
+                value: subc.value,
+                color: subc.color,
+              })),
+            })
+          )
         : [],
     [summary?.response]
   );

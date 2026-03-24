@@ -1,9 +1,6 @@
 import axios from "../config/axios";
 import { ENDPOINTS } from "../constants/endpoints";
-import {
-  ResponseBody,
-  RollingStatsResponse,
-} from "./response.type";
+import { ResponseBody, RollingStatsResponse } from "./response.type";
 
 export function getRollingStats(months: number = 6) {
   return axios

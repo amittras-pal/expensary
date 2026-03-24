@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Box, Button, Group, Loader, Stack, Text } from "@mantine/core";
 import { modals } from "@mantine/modals";
+import { notifications } from "@mantine/notifications";
 import { IconPlayerPlay, IconPlus } from "@tabler/icons-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { _20Min } from "../../constants/app";
@@ -14,7 +15,6 @@ import {
 } from "../../services/recurring-expense.service";
 import ExpenseRule from "./ExpenseRule";
 import RecurringExpenseForm from "./RecurringExpenseForm";
-import { notifications } from "@mantine/notifications";
 
 export default function RecurringExpenses() {
   const { onError } = useErrorHandler();
@@ -22,10 +22,7 @@ export default function RecurringExpenses() {
   const [showForm, setShowForm] = useState(false);
   const client = useQueryClient();
 
-  const {
-    data: response,
-    isLoading,
-  } = useQuery({
+  const { data: response, isLoading } = useQuery({
     queryKey: ["recurring-expenses"],
     queryFn: getRecurringExpenses,
     onError,
@@ -50,9 +47,10 @@ export default function RecurringExpenses() {
       notifications.show({
         title: res.message,
         color: res.response === 0 ? "indigo" : "green",
-        message: undefined
-      })
-      client.invalidateQueries(["recurring-expenses"])},
+        message: undefined,
+      });
+      client.invalidateQueries(["recurring-expenses"]);
+    },
     onError,
   });
 
@@ -86,24 +84,26 @@ export default function RecurringExpenses() {
             on a configured date.
           </Text>
         </Box>
-        {rules.length > 0 && <Group gap="xs" justify="flex-end" style={{ width: "100%" }}>
-          <Button
-            variant="subtle"
-            size="sm"
-            leftSection={<IconPlayerPlay size={16} />}
-            onClick={() => processRules()}
-            loading={isProcessing}
-          >
-            Process
-          </Button>
-          <Button
-            size="sm"
-            leftSection={<IconPlus size={16} />}
-            onClick={openCreateForm}
-          >
-            Add Rule
-          </Button>
-        </Group>}
+        {rules.length > 0 && (
+          <Group gap="xs" justify="flex-end" style={{ width: "100%" }}>
+            <Button
+              variant="subtle"
+              size="sm"
+              leftSection={<IconPlayerPlay size={16} />}
+              onClick={() => processRules()}
+              loading={isProcessing}
+            >
+              Process
+            </Button>
+            <Button
+              size="sm"
+              leftSection={<IconPlus size={16} />}
+              onClick={openCreateForm}
+            >
+              Add Rule
+            </Button>
+          </Group>
+        )}
       </Group>
 
       {isLoading && (

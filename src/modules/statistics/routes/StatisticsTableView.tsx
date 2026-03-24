@@ -1,6 +1,6 @@
 import { useOutletContext } from "react-router-dom";
-import TrendTable from "../components/TrendTable";
 import { RollingTrendOutletContext } from "../components/RollingTrend";
+import TrendTable from "../components/TrendTable";
 
 export default function StatisticsTableView() {
   const {

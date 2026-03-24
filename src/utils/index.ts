@@ -18,7 +18,7 @@ export function isLoggedIn() {
   if (!activeAccountId) return false;
 
   return getStoredDeviceAccounts().some(
-    (account) => account.accountId === activeAccountId,
+    (account) => account.accountId === activeAccountId
   );
 }
 
@@ -43,7 +43,7 @@ export function getStoredDeviceAccounts(): IDeviceAccount[] {
   }
 
   return parsed.filter(
-    (account) => Boolean(account?.accountId) && Boolean(account?.email),
+    (account) => Boolean(account?.accountId) && Boolean(account?.email)
   );
 }
 

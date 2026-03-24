@@ -22,13 +22,13 @@ import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import OverlayLoader from "../../../components/loaders/OverlayLoader";
+import { APP_TITLE } from "../../../constants/app";
 import { useErrorHandler } from "../../../hooks/error-handler";
 import { useMediaMatch } from "../../../hooks/media-match";
 import { getRollingStats } from "../../../services/statistics.service";
 import { BarLineClickParams } from "../types";
 import MonthBreakdown from "./MonthBreakdown";
 import RollingSummary from "./RollingSummary";
-import { APP_TITLE } from "../../../constants/app";
 
 type Slot = { month: number; year: number };
 
@@ -218,11 +218,7 @@ export default function RollingTrend() {
 
       let clickedIndex = event.dataIndex;
 
-      if (
-        typeof clickedIndex !== "number" &&
-        chart &&
-        event.event
-      ) {
+      if (typeof clickedIndex !== "number" && chart && event.event) {
         const zrEvent = event.event as any;
         const nativeEvent = zrEvent?.event as PointerEvent | undefined;
         const offsetX =
@@ -251,10 +247,10 @@ export default function RollingTrend() {
               (typeof axisPoint === "number" && Number.isFinite(axisPoint))
             )
           ) {
-            axisPoint = chart.convertFromPixel(
-              { xAxisIndex: 0 },
-              [offsetX, offsetY]
-            );
+            axisPoint = chart.convertFromPixel({ xAxisIndex: 0 }, [
+              offsetX,
+              offsetY,
+            ]);
           }
         }
 
@@ -370,7 +366,9 @@ export default function RollingTrend() {
             <ActionIcon
               size="md"
               variant="default"
-              onClick={() => navigate(showTable ? "/statistics" : "/statistics/table")}
+              onClick={() =>
+                navigate(showTable ? "/statistics" : "/statistics/table")
+              }
             >
               {showTable ? (
                 <IconChartAreaLine size={18} />
