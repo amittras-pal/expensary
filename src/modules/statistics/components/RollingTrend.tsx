@@ -311,7 +311,7 @@ export default function RollingTrend() {
               size="md"
               variant="default"
               onClick={() =>
-                navigate(showTable ? "/statistics" : "/statistics/table")
+                navigate(showTable ? "/analytics" : "/analytics/table")
               }
             >
               {showTable ? (

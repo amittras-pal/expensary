@@ -172,3 +172,13 @@
 .stats-table.mtrace-ag-mod .ag-root-wrapper .ag-header-cell.trend-year-end-col {
   border-right: 1px solid var(--mantine-color-dark-3) !important;
 }
+
+.stats-table.mtrace-ag-mod .ag-root-wrapper .ag-cell.trend-cell-selected {
+  background-color: color-mix(
+    in srgb,
+    var(--mantine-color-primary-9) 36%,
+    transparent
+  ) !important;
+  outline: 1px solid var(--mantine-color-primary-6);
+  outline-offset: -1px;
+}

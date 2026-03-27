@@ -25,10 +25,10 @@ export const ROUTES: RouteItem[] = [
   },
   {
     icon: IconChartHistogram,
-    label: "Spend Statistics",
-    path: "/statistics",
-    exactMatch: true,
-    shortcut: "T",
+    label: "Spend Analytics",
+    path: "/analytics",
+    exactMatch: false,
+    shortcut: "A",
   },
   {
     icon: IconSearch,
