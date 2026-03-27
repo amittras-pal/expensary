@@ -67,7 +67,7 @@ const router = createBrowserRouter([
           { path: "/search", element: <GlobalSearch /> },
           { path: "/about-app", element: <About /> },
           {
-            path: "/statistics",
+            path: "/analytics",
             element: <StatsEngine />,
             children: [
               { index: true, element: <StatisticsChartView /> },
