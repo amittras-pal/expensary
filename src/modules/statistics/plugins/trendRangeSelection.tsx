@@ -194,6 +194,21 @@ export function useTrendRangeSelection({
   const activeTouchSelectionRef = useRef(false);
   const lastTouchPointRef = useRef<Point | null>(null);
   const autoScrollFrameRef = useRef<number | null>(null);
+  const selectionRef = useRef<RangeSelection | null>(null);
+  const rowsRef = useRef(rows);
+  const columnKeysRef = useRef(columnKeys);
+
+  useEffect(() => {
+    selectionRef.current = selection;
+  }, [selection]);
+
+  useEffect(() => {
+    rowsRef.current = rows;
+  }, [rows]);
+
+  useEffect(() => {
+    columnKeysRef.current = columnKeys;
+  }, [columnKeys]);
 
   const clearLongPressTimer = () => {
     if (longPressTimerRef.current == null) return;
@@ -344,7 +359,7 @@ export function useTrendRangeSelection({
       return;
     }
 
-    const currentSelection = selection;
+    const currentSelection = selectionRef.current;
 
     isDraggingRef.current = false;
     dragStartRef.current = null;
@@ -356,7 +371,11 @@ export function useTrendRangeSelection({
 
     movedDuringDragRef.current = false;
 
-    const computedSummary = buildSummary(rows, columnKeys, currentSelection);
+    const computedSummary = buildSummary(
+      rowsRef.current,
+      columnKeysRef.current,
+      currentSelection
+    );
     if (!computedSummary.length) {
       clearSelection();
       return;
