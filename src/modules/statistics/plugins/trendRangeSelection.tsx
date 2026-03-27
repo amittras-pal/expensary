@@ -4,26 +4,31 @@ import { IconArrowDown, IconArrowUp } from "@tabler/icons-react";
 import { useMediaMatch } from "../../../hooks/media-match";
 import { formatCurrency } from "../../../utils";
 
+// Cell payload shape used by trend amount columns.
 type TrendCellValue = {
   amount: number;
   delta: number | null;
 };
 
+// Generic row shape accepted by the range-selection hook.
 type TrendRow = {
   metric: string;
   [key: string]: unknown;
 };
 
+// Concrete table coordinate used by the selection engine.
 type RangeCell = {
   rowIndex: number;
   monthIndex: number;
 };
 
+// Selection is represented by a start/end pair; normalization handles drag direction.
 type RangeSelection = {
   start: RangeCell;
   end: RangeCell;
 };
 
+// Drawer-level analytics generated per selected row.
 type RangeSummaryEntry = {
   metric: string;
   total: number;
@@ -77,15 +82,26 @@ type Point = {
   y: number;
 };
 
+// Drawer props for showing computed selection analytics.
+type TrendRangeSummaryDrawerProps = {
+  opened: boolean;
+  onClose: () => void;
+  summary: RangeSummaryEntry[];
+  selectedRangeLabel: string;
+};
+
+// Touch/drag tuning values for initiating selection and edge auto-scroll.
 const LONG_PRESS_MS = 350;
 const MOVE_CANCEL_THRESHOLD = 8;
 const EDGE_SCROLL_THRESHOLD = 36;
 const EDGE_SCROLL_STEP = 14;
 
+// Extract a normalized pointer location from native mouse events.
 function toPointFromMouseEvent(event: MouseEvent): Point {
   return { x: event.clientX, y: event.clientY };
 }
 
+// Extract pointer location from ag-grid event wrappers when available.
 function toPointFromUnknownEvent(event: unknown): Point | null {
   if (!event || typeof event !== "object") return null;
 
@@ -105,6 +121,7 @@ function getDelta(current: number, previous: number): number | null {
   return ((current - previous) / Math.abs(previous)) * 100;
 }
 
+// Trend amount columns are keyed as m_0, m_1, ... and must be filtered explicitly.
 function isAmountField(field?: string): field is `m_${number}` {
   return Boolean(field && field.startsWith("m_"));
 }
@@ -115,6 +132,7 @@ function parseMonthIndex(field?: string): number | null {
   return Number.isNaN(monthIndex) ? null : monthIndex;
 }
 
+// Normalize drag direction into deterministic row/column bounds.
 function normalizeSelection(selection: RangeSelection) {
   const rowStart = Math.min(selection.start.rowIndex, selection.end.rowIndex);
   const rowEnd = Math.max(selection.start.rowIndex, selection.end.rowIndex);
@@ -127,7 +145,7 @@ function normalizeSelection(selection: RangeSelection) {
 function toRangeCell(
   event: GridMouseCellEventLike
 ): RangeCell | null {
-  const field = event.colDef.field;
+  const field = event.colDef?.field;
   const rowIndex = event.rowIndex;
   const monthIndex = parseMonthIndex(field);
 
@@ -152,6 +170,7 @@ function valuesForRow(
   return values;
 }
 
+// Build per-row summary tiles for the selected row/column rectangle.
 function buildSummary(
   rows: TrendRow[],
   columnKeys: string[],
@@ -170,8 +189,8 @@ function buildSummary(
     const total = values.reduce((sum, value) => sum + value, 0);
     const max = Math.max(...values);
     const min = Math.min(...values);
-    const startValue = values[0];
-    const endValue = values[values.length - 1];
+    const startValue = values.at(0) ?? 0;
+    const endValue = values.at(-1) ?? startValue;
 
     result.push({
       metric: row.metric,
@@ -193,6 +212,7 @@ function areSameCell(first: RangeCell, second: RangeCell): boolean {
   );
 }
 
+// Main hook that coordinates drag selection, auto-scroll, summary calculation, and drawer state.
 export function useTrendRangeSelection({
   enabled,
   rows,
@@ -217,6 +237,7 @@ export function useTrendRangeSelection({
   const rowsRef = useRef(rows);
   const columnKeysRef = useRef(columnKeys);
 
+  // Keep latest dynamic inputs in refs so global listeners always read fresh values.
   useEffect(() => {
     selectionRef.current = selection;
   }, [selection]);
@@ -231,16 +252,17 @@ export function useTrendRangeSelection({
 
   const clearLongPressTimer = () => {
     if (longPressTimerRef.current == null) return;
-    window.clearTimeout(longPressTimerRef.current);
+    globalThis.clearTimeout(longPressTimerRef.current);
     longPressTimerRef.current = null;
   };
 
   const stopAutoScroll = () => {
     if (autoScrollFrameRef.current == null) return;
-    window.cancelAnimationFrame(autoScrollFrameRef.current);
+    globalThis.cancelAnimationFrame(autoScrollFrameRef.current);
     autoScrollFrameRef.current = null;
   };
 
+  // Resolve the ag-grid center/body viewport pair used for hit-testing and programmatic scroll.
   const findViewport = () => {
     const root = containerRef.current;
     if (!root) return null;
@@ -313,6 +335,7 @@ export function useTrendRangeSelection({
     setSelection({ start: startCell, end: currentCell });
   };
 
+  // Start a single auto-scroll loop and keep extending selection while pointer stays near edges.
   const ensureAutoScroll = () => {
     if (autoScrollFrameRef.current != null) return;
 
@@ -326,7 +349,7 @@ export function useTrendRangeSelection({
       const viewport = findViewport();
 
       if (!point || !viewport) {
-        autoScrollFrameRef.current = window.requestAnimationFrame(step);
+        autoScrollFrameRef.current = globalThis.requestAnimationFrame(step);
         return;
       }
 
@@ -358,18 +381,20 @@ export function useTrendRangeSelection({
       }
 
       updateSelectionFromPoint(point);
-      autoScrollFrameRef.current = window.requestAnimationFrame(step);
+      autoScrollFrameRef.current = globalThis.requestAnimationFrame(step);
     };
 
-    autoScrollFrameRef.current = window.requestAnimationFrame(step);
+    autoScrollFrameRef.current = globalThis.requestAnimationFrame(step);
   };
 
+  // Reset selection + summary + drawer in one place so close/disable paths stay consistent.
   const clearSelection = () => {
     setSelection(null);
     setSummary([]);
     setDrawerOpened(false);
   };
 
+  // Finalize drag, reject invalid ranges, and compute drawer summary for valid ranges.
   const finalizeDrag = () => {
     if (!enabled || !isDraggingRef.current) {
       isDraggingRef.current = false;
@@ -432,6 +457,7 @@ export function useTrendRangeSelection({
     }
   }, [enabled]);
 
+  // Desktop drag session: extend selection and autoscroll until mouse is released.
   useEffect(() => {
     if (!enabled) return undefined;
 
@@ -455,14 +481,15 @@ export function useTrendRangeSelection({
       finalizeDrag();
     };
 
-    window.addEventListener("mousemove", onMouseMove);
-    window.addEventListener("mouseup", onMouseUp);
+    globalThis.addEventListener("mousemove", onMouseMove);
+    globalThis.addEventListener("mouseup", onMouseUp);
     return () => {
-      window.removeEventListener("mousemove", onMouseMove);
-      window.removeEventListener("mouseup", onMouseUp);
+      globalThis.removeEventListener("mousemove", onMouseMove);
+      globalThis.removeEventListener("mouseup", onMouseUp);
     };
   }, [enabled]);
 
+  // Touch session: long-press enters selection mode, touch-move extends range, touch-end finalizes.
   useEffect(() => {
     if (!enabled) return undefined;
 
@@ -483,7 +510,7 @@ export function useTrendRangeSelection({
       if (!startCell) return;
 
       longPressStartPointRef.current = point;
-      longPressTimerRef.current = window.setTimeout(() => {
+      longPressTimerRef.current = globalThis.setTimeout(() => {
         activeTouchSelectionRef.current = true;
         dragStartRef.current = startCell;
         isDraggingRef.current = true;
@@ -534,20 +561,21 @@ export function useTrendRangeSelection({
     };
 
     root.addEventListener("touchstart", onTouchStart, { passive: true });
-    window.addEventListener("touchmove", onTouchMove, { passive: false });
-    window.addEventListener("touchend", onTouchEnd);
-    window.addEventListener("touchcancel", onTouchEnd);
+    globalThis.addEventListener("touchmove", onTouchMove, { passive: false });
+    globalThis.addEventListener("touchend", onTouchEnd);
+    globalThis.addEventListener("touchcancel", onTouchEnd);
 
     return () => {
       clearLongPressTimer();
       stopAutoScroll();
       root.removeEventListener("touchstart", onTouchStart);
-      window.removeEventListener("touchmove", onTouchMove);
-      window.removeEventListener("touchend", onTouchEnd);
-      window.removeEventListener("touchcancel", onTouchEnd);
+      globalThis.removeEventListener("touchmove", onTouchMove);
+      globalThis.removeEventListener("touchend", onTouchEnd);
+      globalThis.removeEventListener("touchcancel", onTouchEnd);
     };
   }, [containerRef, enabled]);
 
+  // Expose normalized month range for drawer subtitle.
   const selectedMonthRange = useMemo<SelectedMonthRange | null>(() => {
     if (!selection) return null;
     const { colStart, colEnd } = normalizeSelection(selection);
@@ -573,6 +601,7 @@ export function useTrendRangeSelection({
     setSelection({ start: startCell, end: startCell });
   };
 
+  // Keep existing ag-grid mouseover selection updates for desktop compatibility.
   const handleCellMouseOver = (event: GridMouseCellEventLike) => {
     if (!enabled || !isDraggingRef.current || !activeMouseSelectionRef.current) {
       return;
@@ -603,9 +632,10 @@ export function useTrendRangeSelection({
       return false;
     }
 
-    return isAmountField(event.colDef.field);
+    return isAmountField(event.colDef?.field);
   };
 
+  // Used by table cellClass callback to highlight current rectangular selection.
   const isCellInSelection = (rowIndex: number | null | undefined, field?: string) => {
     if (!enabled || !selection || rowIndex == null || rowIndex < 0) return false;
 
@@ -635,13 +665,6 @@ export function useTrendRangeSelection({
   };
 }
 
-type TrendRangeSummaryDrawerProps = {
-  opened: boolean;
-  onClose: () => void;
-  summary: RangeSummaryEntry[];
-  selectedRangeLabel: string;
-};
-
 export function TrendRangeSummaryDrawer({
   opened,
   onClose,
@@ -649,6 +672,39 @@ export function TrendRangeSummaryDrawer({
   selectedRangeLabel,
 }: Readonly<TrendRangeSummaryDrawerProps>) {
   const isMobile = useMediaMatch();
+
+  // Compute display styles/icons outside JSX to keep render markup straightforward.
+  const resolveDeltaView = (overallDelta: number | null) => {
+    if (overallDelta == null) {
+      return {
+        deltaColor: "dimmed",
+        hasDelta: false,
+        DeltaIcon: IconArrowDown,
+      };
+    }
+
+    if (overallDelta > 0) {
+      return {
+        deltaColor: "red",
+        hasDelta: Math.abs(overallDelta) > 0,
+        DeltaIcon: IconArrowUp,
+      };
+    }
+
+    if (overallDelta < 0) {
+      return {
+        deltaColor: "green",
+        hasDelta: true,
+        DeltaIcon: IconArrowDown,
+      };
+    }
+
+    return {
+      deltaColor: "dimmed",
+      hasDelta: false,
+      DeltaIcon: IconArrowDown,
+    };
+  };
 
   return (
     <Drawer
@@ -664,21 +720,9 @@ export function TrendRangeSummaryDrawer({
         </Text>
         <Divider />
         {summary.map((entry) => {
-          const deltaColor =
-            entry.overallDelta == null
-              ? "dimmed"
-              : entry.overallDelta > 0
-                ? "red"
-                : entry.overallDelta < 0
-                  ? "green"
-                  : "dimmed";
-          const hasDelta =
-            typeof entry.overallDelta === "number" &&
-            Math.abs(entry.overallDelta) > 0;
-          const DeltaIcon =
-            entry.overallDelta != null && entry.overallDelta > 0
-              ? IconArrowUp
-              : IconArrowDown;
+          const { deltaColor, hasDelta, DeltaIcon } = resolveDeltaView(
+            entry.overallDelta
+          );
 
           return (
             <Paper
