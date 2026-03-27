@@ -225,11 +225,31 @@ export function useTrendRangeSelection({
     const root = containerRef.current;
     if (!root) return null;
 
-    const element = document.elementFromPoint(point.x, point.y) as HTMLElement | null;
-    if (!element) return null;
+    const resolveCell = (x: number, y: number) => {
+      const element = document.elementFromPoint(x, y) as HTMLElement | null;
+      if (!element) return null;
 
-    const cell = element.closest(".ag-cell") as HTMLElement | null;
-    if (!cell || !root.contains(cell)) return null;
+      const cell = element.closest(".ag-cell") as HTMLElement | null;
+      if (!cell || !root.contains(cell)) return null;
+      return cell;
+    };
+
+    let cell = resolveCell(point.x, point.y);
+
+    // When the finger moves outside the center viewport, clamp to the nearest
+    // in-bounds point so range expansion can continue with edge auto-scroll.
+    if (!cell) {
+      const viewport = findViewport();
+      const rect = viewport?.centerViewport.getBoundingClientRect();
+
+      if (rect) {
+        const clampedX = Math.min(Math.max(point.x, rect.left + 1), rect.right - 1);
+        const clampedY = Math.min(Math.max(point.y, rect.top + 1), rect.bottom - 1);
+        cell = resolveCell(clampedX, clampedY);
+      }
+    }
+
+    if (!cell) return null;
 
     const field = cell.getAttribute("col-id") ?? undefined;
     const rowElement = cell.closest(".ag-row") as HTMLElement | null;
@@ -408,7 +428,6 @@ export function useTrendRangeSelection({
 
       const touch = event.touches[0];
       const point = { x: touch.clientX, y: touch.clientY };
-      const lastPoint = lastTouchPointRef.current;
       lastTouchPointRef.current = point;
 
       if (!activeTouchSelectionRef.current) {
@@ -422,14 +441,6 @@ export function useTrendRangeSelection({
           longPressStartPointRef.current = null;
         }
         return;
-      }
-
-      const viewport = findViewport();
-      if (viewport && lastPoint) {
-        const deltaX = point.x - lastPoint.x;
-        const deltaY = point.y - lastPoint.y;
-        viewport.centerViewport.scrollLeft -= deltaX;
-        viewport.bodyViewport.scrollTop -= deltaY;
       }
 
       updateSelectionFromPoint(point);
@@ -453,17 +464,17 @@ export function useTrendRangeSelection({
     };
 
     root.addEventListener("touchstart", onTouchStart, { passive: true });
-    root.addEventListener("touchmove", onTouchMove, { passive: false });
-    root.addEventListener("touchend", onTouchEnd);
-    root.addEventListener("touchcancel", onTouchEnd);
+    window.addEventListener("touchmove", onTouchMove, { passive: false });
+    window.addEventListener("touchend", onTouchEnd);
+    window.addEventListener("touchcancel", onTouchEnd);
 
     return () => {
       clearLongPressTimer();
       stopAutoScroll();
       root.removeEventListener("touchstart", onTouchStart);
-      root.removeEventListener("touchmove", onTouchMove);
-      root.removeEventListener("touchend", onTouchEnd);
-      root.removeEventListener("touchcancel", onTouchEnd);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("touchend", onTouchEnd);
+      window.removeEventListener("touchcancel", onTouchEnd);
     };
   }, [containerRef, enabled, isMobile]);
 
