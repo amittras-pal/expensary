@@ -63,6 +63,7 @@ type GridMouseCellEventLike = {
   colDef: {
     field?: string;
   };
+  event?: unknown;
 };
 
 type GridClickedCellEventLike = {
@@ -80,6 +81,24 @@ const LONG_PRESS_MS = 350;
 const MOVE_CANCEL_THRESHOLD = 8;
 const EDGE_SCROLL_THRESHOLD = 36;
 const EDGE_SCROLL_STEP = 14;
+
+function toPointFromMouseEvent(event: MouseEvent): Point {
+  return { x: event.clientX, y: event.clientY };
+}
+
+function toPointFromUnknownEvent(event: unknown): Point | null {
+  if (!event || typeof event !== "object") return null;
+
+  const maybeEvent = event as { clientX?: unknown; clientY?: unknown };
+  if (
+    typeof maybeEvent.clientX === "number" &&
+    typeof maybeEvent.clientY === "number"
+  ) {
+    return { x: maybeEvent.clientX, y: maybeEvent.clientY };
+  }
+
+  return null;
+}
 
 function getDelta(current: number, previous: number): number | null {
   if (previous === 0) return current === 0 ? 0 : 100;
@@ -180,7 +199,6 @@ export function useTrendRangeSelection({
   columnKeys,
   containerRef,
 }: Readonly<UseTrendRangeSelectionArgs>): UseTrendRangeSelectionResult {
-  const isMobile = useMediaMatch();
   const [selection, setSelection] = useState<RangeSelection | null>(null);
   const [drawerOpened, setDrawerOpened] = useState(false);
   const [summary, setSummary] = useState<RangeSummaryEntry[]>([]);
@@ -192,7 +210,8 @@ export function useTrendRangeSelection({
   const longPressTimerRef = useRef<number | null>(null);
   const longPressStartPointRef = useRef<Point | null>(null);
   const activeTouchSelectionRef = useRef(false);
-  const lastTouchPointRef = useRef<Point | null>(null);
+  const activeMouseSelectionRef = useRef(false);
+  const lastPointerPointRef = useRef<Point | null>(null);
   const autoScrollFrameRef = useRef<number | null>(null);
   const selectionRef = useRef<RangeSelection | null>(null);
   const rowsRef = useRef(rows);
@@ -298,12 +317,12 @@ export function useTrendRangeSelection({
     if (autoScrollFrameRef.current != null) return;
 
     const step = () => {
-      if (!activeTouchSelectionRef.current) {
+      if (!activeTouchSelectionRef.current && !activeMouseSelectionRef.current) {
         autoScrollFrameRef.current = null;
         return;
       }
 
-      const point = lastTouchPointRef.current;
+      const point = lastPointerPointRef.current;
       const viewport = findViewport();
 
       if (!point || !viewport) {
@@ -356,6 +375,8 @@ export function useTrendRangeSelection({
       isDraggingRef.current = false;
       dragStartRef.current = null;
       movedDuringDragRef.current = false;
+      activeTouchSelectionRef.current = false;
+      activeMouseSelectionRef.current = false;
       return;
     }
 
@@ -363,6 +384,9 @@ export function useTrendRangeSelection({
 
     isDraggingRef.current = false;
     dragStartRef.current = null;
+    activeTouchSelectionRef.current = false;
+    activeMouseSelectionRef.current = false;
+    stopAutoScroll();
 
     if (!currentSelection || !movedDuringDragRef.current) {
       movedDuringDragRef.current = false;
@@ -370,6 +394,12 @@ export function useTrendRangeSelection({
     }
 
     movedDuringDragRef.current = false;
+
+    const { colStart, colEnd } = normalizeSelection(currentSelection);
+    if (colStart === colEnd) {
+      clearSelection();
+      return;
+    }
 
     const computedSummary = buildSummary(
       rowsRef.current,
@@ -392,8 +422,9 @@ export function useTrendRangeSelection({
       clearLongPressTimer();
       stopAutoScroll();
       activeTouchSelectionRef.current = false;
+      activeMouseSelectionRef.current = false;
       longPressStartPointRef.current = null;
-      lastTouchPointRef.current = null;
+      lastPointerPointRef.current = null;
       isDraggingRef.current = false;
       dragStartRef.current = null;
       movedDuringDragRef.current = false;
@@ -404,16 +435,36 @@ export function useTrendRangeSelection({
   useEffect(() => {
     if (!enabled) return undefined;
 
-    const onMouseUp = () => finalizeDrag();
+    const onMouseMove = (event: MouseEvent) => {
+      if (!activeMouseSelectionRef.current) return;
 
+      if ((event.buttons & 1) !== 1) {
+        finalizeDrag();
+        return;
+      }
+
+      const point = toPointFromMouseEvent(event);
+      lastPointerPointRef.current = point;
+      updateSelectionFromPoint(point);
+      ensureAutoScroll();
+      event.preventDefault();
+    };
+
+    const onMouseUp = () => {
+      if (!activeMouseSelectionRef.current && !isDraggingRef.current) return;
+      finalizeDrag();
+    };
+
+    window.addEventListener("mousemove", onMouseMove);
     window.addEventListener("mouseup", onMouseUp);
     return () => {
+      window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("mouseup", onMouseUp);
     };
-  }, [columnKeys, enabled, rows, selection]);
+  }, [enabled]);
 
   useEffect(() => {
-    if (!enabled || !isMobile) return undefined;
+    if (!enabled) return undefined;
 
     const root = containerRef.current;
     if (!root) return undefined;
@@ -426,7 +477,7 @@ export function useTrendRangeSelection({
       const startCell = toCellFromPoint(point);
 
       activeTouchSelectionRef.current = false;
-      lastTouchPointRef.current = point;
+      lastPointerPointRef.current = point;
       clearLongPressTimer();
 
       if (!startCell) return;
@@ -447,7 +498,7 @@ export function useTrendRangeSelection({
 
       const touch = event.touches[0];
       const point = { x: touch.clientX, y: touch.clientY };
-      lastTouchPointRef.current = point;
+      lastPointerPointRef.current = point;
 
       if (!activeTouchSelectionRef.current) {
         const startPoint = longPressStartPointRef.current;
@@ -473,12 +524,12 @@ export function useTrendRangeSelection({
       stopAutoScroll();
 
       if (!activeTouchSelectionRef.current) {
-        lastTouchPointRef.current = null;
+        lastPointerPointRef.current = null;
         return;
       }
 
       activeTouchSelectionRef.current = false;
-      lastTouchPointRef.current = null;
+      lastPointerPointRef.current = null;
       finalizeDrag();
     };
 
@@ -495,7 +546,7 @@ export function useTrendRangeSelection({
       window.removeEventListener("touchend", onTouchEnd);
       window.removeEventListener("touchcancel", onTouchEnd);
     };
-  }, [containerRef, enabled, isMobile]);
+  }, [containerRef, enabled]);
 
   const selectedMonthRange = useMemo<SelectedMonthRange | null>(() => {
     if (!selection) return null;
@@ -508,15 +559,24 @@ export function useTrendRangeSelection({
     const startCell = toRangeCell(event);
     if (!startCell) return;
 
+    const pointerPoint = toPointFromUnknownEvent(event.event);
+
     dragStartRef.current = startCell;
     isDraggingRef.current = true;
+    activeMouseSelectionRef.current = true;
+    activeTouchSelectionRef.current = false;
     movedDuringDragRef.current = false;
+    if (pointerPoint) {
+      lastPointerPointRef.current = pointerPoint;
+    }
 
     setSelection({ start: startCell, end: startCell });
   };
 
   const handleCellMouseOver = (event: GridMouseCellEventLike) => {
-    if (!enabled || !isDraggingRef.current) return;
+    if (!enabled || !isDraggingRef.current || !activeMouseSelectionRef.current) {
+      return;
+    }
 
     const startCell = dragStartRef.current;
     const currentCell = toRangeCell(event);
@@ -528,6 +588,11 @@ export function useTrendRangeSelection({
     }
 
     setSelection({ start: startCell, end: currentCell });
+    const pointerPoint = toPointFromUnknownEvent(event.event);
+    if (pointerPoint) {
+      lastPointerPointRef.current = pointerPoint;
+      ensureAutoScroll();
+    }
   };
 
   const shouldHandleCellClick = (event: GridClickedCellEventLike) => {
