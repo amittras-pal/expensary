@@ -1,5 +1,13 @@
 import { RefObject, useEffect, useMemo, useRef, useState } from "react";
-import { Divider, Drawer, Flex, Paper, Stack, Text, ThemeIcon } from "@mantine/core";
+import {
+  Divider,
+  Drawer,
+  Flex,
+  Paper,
+  Stack,
+  Text,
+  ThemeIcon,
+} from "@mantine/core";
 import { IconArrowDown, IconArrowUp } from "@tabler/icons-react";
 import { useMediaMatch } from "../../../hooks/media-match";
 import { formatCurrency } from "../../../utils";
@@ -59,7 +67,10 @@ type UseTrendRangeSelectionResult = {
   handleCellMouseDown: (event: GridMouseCellEventLike) => void;
   handleCellMouseOver: (event: GridMouseCellEventLike) => void;
   shouldHandleCellClick: (event: GridClickedCellEventLike) => boolean;
-  isCellInSelection: (rowIndex: number | null | undefined, field?: string) => boolean;
+  isCellInSelection: (
+    rowIndex: number | null | undefined,
+    field?: string
+  ) => boolean;
   closeDrawer: () => void;
 };
 
@@ -123,7 +134,7 @@ function getDelta(current: number, previous: number): number | null {
 
 // Trend amount columns are keyed as m_0, m_1, ... and must be filtered explicitly.
 function isAmountField(field?: string): field is `m_${number}` {
-  return Boolean(field && field.startsWith("m_"));
+  return Boolean(field?.startsWith("m_"));
 }
 
 function parseMonthIndex(field?: string): number | null {
@@ -136,15 +147,16 @@ function parseMonthIndex(field?: string): number | null {
 function normalizeSelection(selection: RangeSelection) {
   const rowStart = Math.min(selection.start.rowIndex, selection.end.rowIndex);
   const rowEnd = Math.max(selection.start.rowIndex, selection.end.rowIndex);
-  const colStart = Math.min(selection.start.monthIndex, selection.end.monthIndex);
+  const colStart = Math.min(
+    selection.start.monthIndex,
+    selection.end.monthIndex
+  );
   const colEnd = Math.max(selection.start.monthIndex, selection.end.monthIndex);
 
   return { rowStart, rowEnd, colStart, colEnd };
 }
 
-function toRangeCell(
-  event: GridMouseCellEventLike
-): RangeCell | null {
+function toRangeCell(event: GridMouseCellEventLike): RangeCell | null {
   const field = event.colDef?.field;
   const rowIndex = event.rowIndex;
   const monthIndex = parseMonthIndex(field);
@@ -299,8 +311,14 @@ export function useTrendRangeSelection({
       const rect = viewport?.centerViewport.getBoundingClientRect();
 
       if (rect) {
-        const clampedX = Math.min(Math.max(point.x, rect.left + 1), rect.right - 1);
-        const clampedY = Math.min(Math.max(point.y, rect.top + 1), rect.bottom - 1);
+        const clampedX = Math.min(
+          Math.max(point.x, rect.left + 1),
+          rect.right - 1
+        );
+        const clampedY = Math.min(
+          Math.max(point.y, rect.top + 1),
+          rect.bottom - 1
+        );
         cell = resolveCell(clampedX, clampedY);
       }
     }
@@ -310,7 +328,8 @@ export function useTrendRangeSelection({
     const field = cell.getAttribute("col-id") ?? undefined;
     const rowElement = cell.closest(".ag-row") as HTMLElement | null;
     const rowIndexAttr = rowElement?.getAttribute("row-index");
-    const rowIndex = rowIndexAttr == null ? null : Number.parseInt(rowIndexAttr, 10);
+    const rowIndex =
+      rowIndexAttr == null ? null : Number.parseInt(rowIndexAttr, 10);
 
     if (rowIndex == null || Number.isNaN(rowIndex)) return null;
 
@@ -340,7 +359,10 @@ export function useTrendRangeSelection({
     if (autoScrollFrameRef.current != null) return;
 
     const step = () => {
-      if (!activeTouchSelectionRef.current && !activeMouseSelectionRef.current) {
+      if (
+        !activeTouchSelectionRef.current &&
+        !activeMouseSelectionRef.current
+      ) {
         autoScrollFrameRef.current = null;
         return;
       }
@@ -603,7 +625,11 @@ export function useTrendRangeSelection({
 
   // Keep existing ag-grid mouseover selection updates for desktop compatibility.
   const handleCellMouseOver = (event: GridMouseCellEventLike) => {
-    if (!enabled || !isDraggingRef.current || !activeMouseSelectionRef.current) {
+    if (
+      !enabled ||
+      !isDraggingRef.current ||
+      !activeMouseSelectionRef.current
+    ) {
       return;
     }
 
@@ -636,13 +662,18 @@ export function useTrendRangeSelection({
   };
 
   // Used by table cellClass callback to highlight current rectangular selection.
-  const isCellInSelection = (rowIndex: number | null | undefined, field?: string) => {
-    if (!enabled || !selection || rowIndex == null || rowIndex < 0) return false;
+  const isCellInSelection = (
+    rowIndex: number | null | undefined,
+    field?: string
+  ) => {
+    if (!enabled || !selection || rowIndex == null || rowIndex < 0)
+      return false;
 
     const monthIndex = parseMonthIndex(field);
     if (monthIndex === null) return false;
 
-    const { rowStart, rowEnd, colStart, colEnd } = normalizeSelection(selection);
+    const { rowStart, rowEnd, colStart, colEnd } =
+      normalizeSelection(selection);
 
     return (
       rowIndex >= rowStart &&
@@ -725,13 +756,7 @@ export function TrendRangeSummaryDrawer({
           );
 
           return (
-            <Paper
-              key={entry.metric}
-              p="sm"
-              withBorder
-              radius="md"
-              bg="dark.6"
-            >
+            <Paper key={entry.metric} p="sm" withBorder radius="md" bg="dark.6">
               <Flex justify="space-between" align="center" gap="sm">
                 <Text fw={700}>{entry.metric}</Text>
                 <Text c="dimmed" size="xs">
