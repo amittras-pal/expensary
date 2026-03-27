@@ -125,6 +125,7 @@ export default function TrendTable({
     enabled: ENABLE_RANGE_SELECTION,
     rows,
     columnKeys,
+    containerRef: ref,
   });
 
   const selectedRangeLabel = useMemo(() => {

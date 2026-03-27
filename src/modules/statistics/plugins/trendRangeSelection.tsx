@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { RefObject, useEffect, useMemo, useRef, useState } from "react";
 import { Divider, Drawer, Flex, Paper, Stack, Text, ThemeIcon } from "@mantine/core";
 import { IconArrowDown, IconArrowUp } from "@tabler/icons-react";
 import { useMediaMatch } from "../../../hooks/media-match";
@@ -43,6 +43,7 @@ type UseTrendRangeSelectionArgs = {
   enabled: boolean;
   rows: TrendRow[];
   columnKeys: string[];
+  containerRef: RefObject<HTMLDivElement>;
 };
 
 type UseTrendRangeSelectionResult = {
@@ -69,6 +70,16 @@ type GridClickedCellEventLike = {
     field?: string;
   };
 };
+
+type Point = {
+  x: number;
+  y: number;
+};
+
+const LONG_PRESS_MS = 350;
+const MOVE_CANCEL_THRESHOLD = 8;
+const EDGE_SCROLL_THRESHOLD = 36;
+const EDGE_SCROLL_STEP = 14;
 
 function getDelta(current: number, previous: number): number | null {
   if (previous === 0) return current === 0 ? 0 : 100;
@@ -167,7 +178,9 @@ export function useTrendRangeSelection({
   enabled,
   rows,
   columnKeys,
+  containerRef,
 }: Readonly<UseTrendRangeSelectionArgs>): UseTrendRangeSelectionResult {
+  const isMobile = useMediaMatch();
   const [selection, setSelection] = useState<RangeSelection | null>(null);
   const [drawerOpened, setDrawerOpened] = useState(false);
   const [summary, setSummary] = useState<RangeSummaryEntry[]>([]);
@@ -176,6 +189,126 @@ export function useTrendRangeSelection({
   const dragStartRef = useRef<RangeCell | null>(null);
   const movedDuringDragRef = useRef(false);
   const suppressNextClickRef = useRef(false);
+  const longPressTimerRef = useRef<number | null>(null);
+  const longPressStartPointRef = useRef<Point | null>(null);
+  const activeTouchSelectionRef = useRef(false);
+  const lastTouchPointRef = useRef<Point | null>(null);
+  const autoScrollFrameRef = useRef<number | null>(null);
+
+  const clearLongPressTimer = () => {
+    if (longPressTimerRef.current == null) return;
+    window.clearTimeout(longPressTimerRef.current);
+    longPressTimerRef.current = null;
+  };
+
+  const stopAutoScroll = () => {
+    if (autoScrollFrameRef.current == null) return;
+    window.cancelAnimationFrame(autoScrollFrameRef.current);
+    autoScrollFrameRef.current = null;
+  };
+
+  const findViewport = () => {
+    const root = containerRef.current;
+    if (!root) return null;
+
+    const centerViewport = root.querySelector<HTMLElement>(
+      ".ag-center-cols-viewport"
+    );
+    const bodyViewport = root.querySelector<HTMLElement>(".ag-body-viewport");
+
+    if (!centerViewport || !bodyViewport) return null;
+
+    return { centerViewport, bodyViewport };
+  };
+
+  const toCellFromPoint = (point: Point): RangeCell | null => {
+    const root = containerRef.current;
+    if (!root) return null;
+
+    const element = document.elementFromPoint(point.x, point.y) as HTMLElement | null;
+    if (!element) return null;
+
+    const cell = element.closest(".ag-cell") as HTMLElement | null;
+    if (!cell || !root.contains(cell)) return null;
+
+    const field = cell.getAttribute("col-id") ?? undefined;
+    const rowElement = cell.closest(".ag-row") as HTMLElement | null;
+    const rowIndexAttr = rowElement?.getAttribute("row-index");
+    const rowIndex = rowIndexAttr == null ? null : Number.parseInt(rowIndexAttr, 10);
+
+    if (rowIndex == null || Number.isNaN(rowIndex)) return null;
+
+    return toRangeCell({
+      rowIndex,
+      colDef: { field },
+    });
+  };
+
+  const updateSelectionFromPoint = (point: Point) => {
+    if (!isDraggingRef.current) return;
+
+    const startCell = dragStartRef.current;
+    const currentCell = toCellFromPoint(point);
+
+    if (!startCell || !currentCell) return;
+
+    if (!areSameCell(startCell, currentCell)) {
+      movedDuringDragRef.current = true;
+    }
+
+    setSelection({ start: startCell, end: currentCell });
+  };
+
+  const ensureAutoScroll = () => {
+    if (autoScrollFrameRef.current != null) return;
+
+    const step = () => {
+      if (!activeTouchSelectionRef.current) {
+        autoScrollFrameRef.current = null;
+        return;
+      }
+
+      const point = lastTouchPointRef.current;
+      const viewport = findViewport();
+
+      if (!point || !viewport) {
+        autoScrollFrameRef.current = window.requestAnimationFrame(step);
+        return;
+      }
+
+      const { centerViewport } = viewport;
+      const rect = centerViewport.getBoundingClientRect();
+
+      if (point.x <= rect.left + EDGE_SCROLL_THRESHOLD) {
+        centerViewport.scrollLeft = Math.max(
+          0,
+          centerViewport.scrollLeft - EDGE_SCROLL_STEP
+        );
+      } else if (point.x >= rect.right - EDGE_SCROLL_THRESHOLD) {
+        centerViewport.scrollLeft = Math.min(
+          centerViewport.scrollWidth,
+          centerViewport.scrollLeft + EDGE_SCROLL_STEP
+        );
+      }
+
+      if (point.y <= rect.top + EDGE_SCROLL_THRESHOLD) {
+        viewport.bodyViewport.scrollTop = Math.max(
+          0,
+          viewport.bodyViewport.scrollTop - EDGE_SCROLL_STEP
+        );
+      } else if (point.y >= rect.bottom - EDGE_SCROLL_THRESHOLD) {
+        viewport.bodyViewport.scrollTop = Math.min(
+          viewport.bodyViewport.scrollHeight,
+          viewport.bodyViewport.scrollTop + EDGE_SCROLL_STEP
+        );
+      }
+
+      updateSelectionFromPoint(point);
+      autoScrollFrameRef.current = window.requestAnimationFrame(step);
+    };
+
+    autoScrollFrameRef.current = window.requestAnimationFrame(step);
+  };
 
   const clearSelection = () => {
     setSelection(null);
@@ -217,6 +350,11 @@ export function useTrendRangeSelection({
   useEffect(() => {
     if (!enabled) {
       clearSelection();
+      clearLongPressTimer();
+      stopAutoScroll();
+      activeTouchSelectionRef.current = false;
+      longPressStartPointRef.current = null;
+      lastTouchPointRef.current = null;
       isDraggingRef.current = false;
       dragStartRef.current = null;
       movedDuringDragRef.current = false;
@@ -234,6 +372,100 @@ export function useTrendRangeSelection({
       window.removeEventListener("mouseup", onMouseUp);
     };
   }, [columnKeys, enabled, rows, selection]);
+
+  useEffect(() => {
+    if (!enabled || !isMobile) return undefined;
+
+    const root = containerRef.current;
+    if (!root) return undefined;
+
+    const onTouchStart = (event: TouchEvent) => {
+      if (event.touches.length !== 1) return;
+
+      const touch = event.touches[0];
+      const point = { x: touch.clientX, y: touch.clientY };
+      const startCell = toCellFromPoint(point);
+
+      activeTouchSelectionRef.current = false;
+      lastTouchPointRef.current = point;
+      clearLongPressTimer();
+
+      if (!startCell) return;
+
+      longPressStartPointRef.current = point;
+      longPressTimerRef.current = window.setTimeout(() => {
+        activeTouchSelectionRef.current = true;
+        dragStartRef.current = startCell;
+        isDraggingRef.current = true;
+        movedDuringDragRef.current = false;
+        setSelection({ start: startCell, end: startCell });
+        ensureAutoScroll();
+      }, LONG_PRESS_MS);
+    };
+
+    const onTouchMove = (event: TouchEvent) => {
+      if (event.touches.length !== 1) return;
+
+      const touch = event.touches[0];
+      const point = { x: touch.clientX, y: touch.clientY };
+      const lastPoint = lastTouchPointRef.current;
+      lastTouchPointRef.current = point;
+
+      if (!activeTouchSelectionRef.current) {
+        const startPoint = longPressStartPointRef.current;
+        if (!startPoint) return;
+
+        const movedX = Math.abs(point.x - startPoint.x);
+        const movedY = Math.abs(point.y - startPoint.y);
+        if (movedX > MOVE_CANCEL_THRESHOLD || movedY > MOVE_CANCEL_THRESHOLD) {
+          clearLongPressTimer();
+          longPressStartPointRef.current = null;
+        }
+        return;
+      }
+
+      const viewport = findViewport();
+      if (viewport && lastPoint) {
+        const deltaX = point.x - lastPoint.x;
+        const deltaY = point.y - lastPoint.y;
+        viewport.centerViewport.scrollLeft -= deltaX;
+        viewport.bodyViewport.scrollTop -= deltaY;
+      }
+
+      updateSelectionFromPoint(point);
+      ensureAutoScroll();
+      event.preventDefault();
+    };
+
+    const onTouchEnd = () => {
+      clearLongPressTimer();
+      longPressStartPointRef.current = null;
+      stopAutoScroll();
+
+      if (!activeTouchSelectionRef.current) {
+        lastTouchPointRef.current = null;
+        return;
+      }
+
+      activeTouchSelectionRef.current = false;
+      lastTouchPointRef.current = null;
+      finalizeDrag();
+    };
+
+    root.addEventListener("touchstart", onTouchStart, { passive: true });
+    root.addEventListener("touchmove", onTouchMove, { passive: false });
+    root.addEventListener("touchend", onTouchEnd);
+    root.addEventListener("touchcancel", onTouchEnd);
+
+    return () => {
+      clearLongPressTimer();
+      stopAutoScroll();
+      root.removeEventListener("touchstart", onTouchStart);
+      root.removeEventListener("touchmove", onTouchMove);
+      root.removeEventListener("touchend", onTouchEnd);
+      root.removeEventListener("touchcancel", onTouchEnd);
+    };
+  }, [containerRef, enabled, isMobile]);
 
   const selectedMonthRange = useMemo<SelectedMonthRange | null>(() => {
     if (!selection) return null;
