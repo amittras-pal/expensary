@@ -48,7 +48,7 @@ export default function App() {
       Modal: { defaultProps: { overlayProps: { blur: 5 } } },
       Drawer: { defaultProps: { overlayProps: { blur: 5 } } },
       Tooltip: {
-        defaultProps: { events: { hover: true, touch: true, focus: true } },
+        defaultProps: { events: { hover: true, touch: true, focus: false } },
       },
     }),
     [color]
