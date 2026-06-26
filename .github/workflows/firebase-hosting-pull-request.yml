@@ -22,4 +22,4 @@ jobs:
         run: npm install -g firebase-tools
 
       - name: Deploy to Preview Channel
-        run: firebase hosting:channel:deploy pr-${{ github.event.pull_request.number }} --expires 7d --project expensary
+        run: firebase hosting:channel:deploy pr-${{ github.run_number }} --expires 2h --project expensary
