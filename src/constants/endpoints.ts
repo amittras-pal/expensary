@@ -25,4 +25,5 @@ export const ENDPOINTS = Object.freeze({
   rollingStats: "/statistics/rolling-stats",
   recurringExpenses: "/recurring-expenses",
   processRecurringExpenses: "/recurring-expenses/process",
+  predictCategory: "/ml/categorise-expense",
 });

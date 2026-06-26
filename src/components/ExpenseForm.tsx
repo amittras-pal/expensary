@@ -19,6 +19,7 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
+import { useDebouncedValue } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import {
   IconCheck,
@@ -39,8 +40,11 @@ import { getCategories } from "../services/categories.service";
 import { createExpense, editExpense } from "../services/expense.service";
 import { getPlansLite } from "../services/plans.service";
 import { ResponseBody } from "../services/response.type";
+import { predictCategory } from "../services/ml.service";
 import { groupCategories, roundOff } from "../utils";
 import CategorySelectItem from "./CategorySelectItem";
+
+const CONFIDENCE_THRESHOLD = 0.65;
 
 interface IExpenseFormProps {
   data: IExpense | null;
@@ -58,6 +62,7 @@ export default function ExpenseForm({
   const params = useParams();
   const [amount, setAmount] = useState<string>(data?.amount.toString() ?? "0");
   const [addMore, setAddMore] = useState(false);
+  const [flashCategory, setFlashCategory] = useState(false);
 
   const minDate = useMemo(() => {
     const userDate = dayjs(userData?.createdAt).toDate().getTime();
@@ -96,7 +101,7 @@ export default function ExpenseForm({
     setError,
     watch,
     setFocus,
-    formState: { errors, isValid, submitCount },
+    formState: { errors, isValid, submitCount, touchedFields, dirtyFields },
   } = useForm<FormSchema>({
     mode: "onChange",
     shouldFocusError: true,
@@ -167,6 +172,35 @@ export default function ExpenseForm({
     onSuccess: handleSuccess,
     onError,
   });
+
+  const watchTitle = watch("title");
+  const watchDescription = watch("description");
+  const [debouncedTitle] = useDebouncedValue(watchTitle, 1500);
+  const [debouncedDescription] = useDebouncedValue(watchDescription, 1500);
+
+  const { mutate: doPredictCategory, isLoading: predictingCategory } = useMutation({
+    mutationFn: predictCategory,
+    onSuccess: (res) => {
+      if (res.response && res.response.confidence > CONFIDENCE_THRESHOLD) {
+        setValue("categoryId", res.response.categoryId, { shouldValidate: true });
+        setFlashCategory(true);
+        setTimeout(() => setFlashCategory(false), 1000);
+      }
+    },
+    // Silently ignore errors
+    onError: () => { },
+  });
+
+  useEffect(() => {
+    // Only predict if we have a title and the user hasn't manually interacted with the category.
+    const isCategoryUserModified = touchedFields.categoryId || dirtyFields.categoryId;
+    if (debouncedTitle && !isCategoryUserModified) {
+      doPredictCategory({
+        title: debouncedTitle,
+        description: debouncedDescription || undefined,
+      });
+    }
+  }, [debouncedTitle, debouncedDescription, touchedFields.categoryId, dirtyFields.categoryId, doPredictCategory]);
 
   const handleSave: SubmitHandler<FormSchema> = (values) => {
     const payload: Partial<IExpense> = {
@@ -285,12 +319,23 @@ export default function ExpenseForm({
             placeholder={
               loadingCategories ? "Loading Categories" : "Pick a category"
             }
-            disabled={loadingCategories}
+            disabled={loadingCategories || predictingCategory}
             value={watch("categoryId")}
             error={errors.categoryId?.message}
             onChange={(e) => setFieldValue("categoryId", e ?? "")}
             renderOption={CategorySelectItem}
             data={categoryOptions}
+            styles={{
+              input: flashCategory
+                ? {
+                    borderColor: "var(--mantine-color-green-filled)",
+                    backgroundColor: "var(--mantine-color-green-light)",
+                    transition: "all 0.3s ease-in-out",
+                  }
+                : {
+                    transition: "all 0.3s ease-in-out",
+                  },
+            }}
           />
         )}
         <DateTimePicker
