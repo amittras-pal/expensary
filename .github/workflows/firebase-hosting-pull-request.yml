@@ -25,4 +25,18 @@ jobs:
         run: firebase hosting:channel:create pr-${{ github.run_number }} --expires 2h --project expensary || true
 
       - name: Deploy to Preview Channel
-        run: firebase hosting:channel:deploy pr-${{ github.run_number }} --expires 2h --project expensary
+        run: |
+          set +e
+          OUTPUT=$(firebase hosting:channel:deploy pr-${{ github.run_number }} --expires 2h --project expensary --json 2>&1)
+          EXIT_CODE=$?
+          set -e
+          echo "$OUTPUT"
+          
+          if [ $EXIT_CODE -ne 0 ]; then
+            if echo "$OUTPUT" | grep -q "is the current active version"; then
+              echo "Deployment succeeded! Ignoring Firebase CLI retry bug."
+              exit 0
+            else
+              exit $EXIT_CODE
+            fi
+          fi
