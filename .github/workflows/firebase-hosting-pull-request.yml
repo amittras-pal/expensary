@@ -11,11 +11,11 @@ jobs:
       VITE_API_BASE_URL: "${{ secrets.VITE_API_BASE_URL }}"
       VITE_APP_TITLE: "${{ secrets.VITE_APP_TITLE }}"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
       - run: npm i && npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_EXPENSARY }}'
           projectId: expensary
-          firebaseToolsVersion: 12.8.1
+          firebaseToolsVersion: latest
