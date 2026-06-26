@@ -1,10 +1,4 @@
-import {
-  FocusEventHandler,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Alert,
   Box,
@@ -26,9 +20,15 @@ import {
   IconChevronRight,
   IconCurrencyRupee,
 } from "@tabler/icons-react";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
+import {
+  FocusEventHandler,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { _20Min, eqSanityRX } from "../constants/app";
@@ -38,9 +38,9 @@ import { useMediaMatch } from "../hooks/media-match";
 import { ExpenseForm as FormSchema, expenseSchema } from "../schemas/schemas";
 import { getCategories } from "../services/categories.service";
 import { createExpense, editExpense } from "../services/expense.service";
+import { predictCategory } from "../services/ml.service";
 import { getPlansLite } from "../services/plans.service";
 import { ResponseBody } from "../services/response.type";
-import { predictCategory } from "../services/ml.service";
 import { groupCategories, roundOff } from "../utils";
 import CategorySelectItem from "./CategorySelectItem";
 
@@ -192,9 +192,9 @@ export default function ExpenseForm({
   });
 
   useEffect(() => {
-    // Only predict if we have a title and the user hasn't manually interacted with the category.
+    // Only predict if we are creating a new expense, have a title and the user hasn't manually interacted with the category.
     const isCategoryUserModified = touchedFields.categoryId || dirtyFields.categoryId;
-    if (debouncedTitle && !isCategoryUserModified) {
+    if (!data && debouncedTitle && !isCategoryUserModified) {
       doPredictCategory({
         title: debouncedTitle,
         description: debouncedDescription || undefined,
@@ -328,13 +328,13 @@ export default function ExpenseForm({
             styles={{
               input: flashCategory
                 ? {
-                    borderColor: "var(--mantine-color-green-filled)",
-                    backgroundColor: "var(--mantine-color-green-light)",
-                    transition: "all 0.3s ease-in-out",
-                  }
+                  borderColor: "var(--mantine-color-green-filled)",
+                  backgroundColor: "var(--mantine-color-green-light)",
+                  transition: "all 0.3s ease-in-out",
+                }
                 : {
-                    transition: "all 0.3s ease-in-out",
-                  },
+                  transition: "all 0.3s ease-in-out",
+                },
             }}
           />
         )}
