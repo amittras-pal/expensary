@@ -1,4 +1,3 @@
-import { Suspense, useMemo } from "react";
 import { MantineProvider, createTheme } from "@mantine/core";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
@@ -6,6 +5,7 @@ import { useLocalStorage } from "@mantine/hooks";
 import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
 import "@mantine/notifications/styles.css";
+import { Suspense, useMemo } from "react";
 import { Outlet } from "react-router-dom";
 import OverlayLoader from "./components/loaders/OverlayLoader";
 import PreLoader from "./components/loaders/PreLoader";
@@ -17,6 +17,7 @@ import { primaryColor } from "./constants/app";
 import UserProvider from "./context/user.context";
 import "./theme/globals.scss";
 
+// Set up mantine theme.
 const theme = createTheme({
   defaultRadius: "sm",
   fontFamilyMonospace: "Monaco, Courier, monospace",
