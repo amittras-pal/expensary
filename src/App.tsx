@@ -26,6 +26,7 @@ const theme = createTheme({
 });
 
 export default function App() {
+  console.log("Latest App Version... Loaded!!");
   const [color] = useLocalStorage({
     key: "primary-color",
     defaultValue: primaryColor,
