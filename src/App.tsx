@@ -1,4 +1,3 @@
-import { Suspense, useMemo } from "react";
 import { MantineProvider, createTheme } from "@mantine/core";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
@@ -6,6 +5,7 @@ import { useLocalStorage } from "@mantine/hooks";
 import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
 import "@mantine/notifications/styles.css";
+import { Suspense, useMemo } from "react";
 import { Outlet } from "react-router-dom";
 import OverlayLoader from "./components/loaders/OverlayLoader";
 import PreLoader from "./components/loaders/PreLoader";
@@ -17,6 +17,7 @@ import { primaryColor } from "./constants/app";
 import UserProvider from "./context/user.context";
 import "./theme/globals.scss";
 
+// Set up mantine theme.
 const theme = createTheme({
   defaultRadius: "sm",
   fontFamilyMonospace: "Monaco, Courier, monospace",
@@ -25,6 +26,7 @@ const theme = createTheme({
 });
 
 export default function App() {
+  console.log("Latest App Version... Loaded!!");
   const [color] = useLocalStorage({
     key: "primary-color",
     defaultValue: primaryColor,
@@ -47,7 +49,7 @@ export default function App() {
       Modal: { defaultProps: { overlayProps: { blur: 5 } } },
       Drawer: { defaultProps: { overlayProps: { blur: 5 } } },
       Tooltip: {
-        defaultProps: { events: { hover: true, touch: true, focus: true } },
+        defaultProps: { events: { hover: true, touch: true, focus: false } },
       },
     }),
     [color]
